@@ -17,10 +17,7 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import de.gamedevbaden.crucified.es.components.DynamicTransform;
-import de.gamedevbaden.crucified.es.components.Model;
-import de.gamedevbaden.crucified.es.components.PhysicsCharacterControl;
-import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
+import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 
@@ -29,7 +26,7 @@ import java.util.HashMap;
 /**
  * The <code>{@link PhysicAppState}</code> takes care of all physical entities.
  * Currently there is RigidBody and CharacterControl support (most things are handled with those two)
- * This state will set new {@link DynamicTransform} components when physics position and rotation changes.
+ * This state will set new {@link Transform} components when physics position and rotation changes.
  *
  * Created by Domenic on 13.04.2017.
  */
@@ -37,9 +34,14 @@ public class PhysicAppState extends AbstractAppState {
 
     private EntitySet characters;
     private EntitySet rigidBodies;
+    private EntityData entityData;
 
     private HashMap<EntityId, CustomCharacterControl> characterControls;
     private HashMap<EntityId, RigidBodyControl> rigidBodyControls;
+
+    private HashMap<EntityId, Integer> movingEntities; // contains all entities who are moving right now
+    // the integer value is used to make some steps until the
+    // entity is removed from the list
 
     private AppStateManager stateManager;
     private BulletAppState bulletAppState;
@@ -49,6 +51,7 @@ public class PhysicAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         this.stateManager = stateManager;
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
+        this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
         this.bulletAppState = new BulletAppState();
         this.bulletAppState.setDebugEnabled(true);
@@ -56,10 +59,11 @@ public class PhysicAppState extends AbstractAppState {
 
         this.characterControls = new HashMap<>();
         this.rigidBodyControls = new HashMap<>();
+        this.movingEntities = new HashMap<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, DynamicTransform.class);
-        this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, DynamicTransform.class);
+        this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
+        this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
 
 
         super.initialize(stateManager, app);
@@ -93,10 +97,9 @@ public class PhysicAppState extends AbstractAppState {
             for (Entity entity : rigidBodies.getChangedEntities()) {
                 if (entity.get(PhysicsRigidBody.class).isKinematic()) {
                     RigidBodyControl rigidBodyControl = getRigidBodyControl(entity.getId());
-                    DynamicTransform transform = entity.get(DynamicTransform.class);
+                    Transform transform = entity.get(Transform.class);
                     rigidBodyControl.setPhysicsLocation(transform.getTranslation());
                     rigidBodyControl.setPhysicsRotation(transform.getRotation());
-                    //   rigidBodyControl.getCollisionShapeType().setScale(transform.getScale());
                 }
 
             }
@@ -111,15 +114,12 @@ public class PhysicAppState extends AbstractAppState {
         // apply new transforms for rigid bodies
         for (Entity entity : rigidBodies) {
             com.jme3.bullet.objects.PhysicsRigidBody rigidBody = rigidBodyControls.get(entity.getId());
-            if (entity.get(PhysicsRigidBody.class).isKinematic()) {
-
-            } else {
+            if (!entity.get(PhysicsRigidBody.class).isKinematic()) {
                 Vector3f location = rigidBody.getPhysicsLocation();
                 Quaternion rotation = rigidBody.getPhysicsRotation();
-                Vector3f scale = entity.get(DynamicTransform.class).getScale();
+                Vector3f scale = entity.get(Transform.class).getScale();
                 applyNewChanges(entity, location, rotation, scale);
             }
-
         }
 
         // apply new transforms for characters
@@ -127,7 +127,7 @@ public class PhysicAppState extends AbstractAppState {
             CustomCharacterControl characterControl = characterControls.get(entity.getId());
             Vector3f location = characterControl.getPhysicsRigidBody().getPhysicsLocation();
             Quaternion rotation = characterControl.getCharacterRotation(); //ToDo: Shall that be changed? Player Rotation is just a thing of the view, so how could we implement this instantly
-            Vector3f scale = entity.get(DynamicTransform.class).getScale();
+            Vector3f scale = entity.get(Transform.class).getScale();
             applyNewChanges(entity, location, rotation, scale);
         }
 
@@ -141,17 +141,38 @@ public class PhysicAppState extends AbstractAppState {
      * @param scale the scale
      */
     private void applyNewChanges(Entity entity, Vector3f location, Quaternion rotation, Vector3f scale) {
-        DynamicTransform currentTransform = entity.get(DynamicTransform.class);
+        Transform currentTransform = entity.get(Transform.class);
 
         // we only will set a new FixedTransformation if the spatial has really changed its position, rotation or scale
         if (location.equals(currentTransform.getTranslation()) &&
             rotation.equals(currentTransform.getRotation()) &&
             scale.equals(currentTransform.getScale())) {
+            if (movingEntities.containsKey(entity.getId())) {
+                Integer tickCounter = movingEntities.get(entity.getId());
+                movingEntities.put(entity.getId(), new Integer((tickCounter + 1)));
+                if (movingEntities.get(entity.getId()) > 30) {
+                    entityData.removeComponent(entity.getId(), OnMovement.class);
+                    movingEntities.remove(entity.getId());
+                }
+
+            }
             return;
         }
 
         // create new FixedTransformation for entity
-        entity.set(new DynamicTransform(location, rotation, scale));
+        entity.set(new Transform(location, rotation, scale));
+
+        // create a marker that this entity is on movement right now
+        // so clients could then interpolate between the positions for those entities
+        if (!movingEntities.containsKey(entity.getId())) {
+            entityData.setComponent(entity.getId(), new OnMovement());
+            movingEntities.put(entity.getId(), new Integer(0));
+        } else {
+            // reset tick counter
+            Integer tickCounter = movingEntities.get(entity.getId());
+            tickCounter = 0;
+        }
+
     }
 
 
@@ -187,10 +208,9 @@ public class PhysicAppState extends AbstractAppState {
 
     private void addRigidBodyControl(Entity entity) {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
-        DynamicTransform transform = entity.get(DynamicTransform.class);
+        Transform transform = entity.get(Transform.class);
         int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
         CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelPath(), transform.getScale());
-        System.out.println(collisionShape + " " + shapeType);
         RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         addPhysicsControl(rigidBodyControl);
         rigidBodyControl.setPhysicsLocation(transform.getTranslation());

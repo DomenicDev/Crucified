@@ -20,7 +20,8 @@ public class TestMain extends SimpleApplication {
 
         stateManager.attach(new EntityDataState());
         stateManager.attach(new ModelLoaderAppState());
-        stateManager.attach(new VisualizationAppState());
+        stateManager.attach(new ModelViewAppState());
+        stateManager.attach(new MovementInterpolator());
         //    stateManager.attach(new CameraAppState());
         stateManager.attach(new PhysicAppState());
 

@@ -22,61 +22,13 @@ import java.util.HashMap;
  */
 public class PlayerAnimationAppState extends AbstractAppState {
 
-    private VisualizationAppState visualizationAppState;
+    private ModelViewAppState modelViewAppState;
     private HashMap<EntityId, PlayerAnimator> animators;
-
-    private enum Animation {
-
-        Idle("idle", 240),
-        Walk("walk", 300),
-        Run("run", 250);
-
-        Animation(String animName, float blendTime) {
-            this.animName = animName;
-            this.blendTime = blendTime;
-        }
-
-        private String animName;
-        private float blendTime;
-
-        public String getAnimName() {
-            return animName;
-        }
-
-        public float getBlendTime() {
-            return blendTime;
-        }
-    }
-
-    private enum AnimationChannel {
-
-        /**
-         * Contains both legs and feet
-         */
-        LowerBody,
-
-        /**
-         * Right shoulder and arm
-         */
-        RightUpperBody,
-
-        /**
-         * Left shoulder and arm
-         */
-        LeftUpperBody,
-
-        /**
-         * Spines, neck and head (without arms)
-         */
-        UpperBody;
-
-    }
-
     private EntitySet animatedPlayers;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        this.visualizationAppState = stateManager.getState(VisualizationAppState.class);
+        this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
         this.animators = new HashMap<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
@@ -92,7 +44,7 @@ public class PlayerAnimationAppState extends AbstractAppState {
             System.out.println("hdhsd");
 
             for (Entity entity : animatedPlayers.getAddedEntities()) {
-                Spatial playerModel = visualizationAppState.getSpatial(entity.getId());
+                Spatial playerModel = modelViewAppState.getSpatial(entity.getId());
                 AnimControl control = playerModel.getControl(AnimControl.class);
                 PlayerAnimator animator = new PlayerAnimator(control);
                 control.addListener(new PlayerAnimListener(animator, entity.get(PlayerControl.class)));
@@ -151,6 +103,60 @@ public class PlayerAnimationAppState extends AbstractAppState {
 
     }
 
+    @Override
+    public void cleanup() {
+        animators.clear();
+        animators = null;
+        super.cleanup();
+    }
+
+    private enum Animation {
+
+        Idle("idle", 240),
+        Walk("walk", 300),
+        Run("run", 250);
+
+        private String animName;
+        private float blendTime;
+
+        Animation(String animName, float blendTime) {
+            this.animName = animName;
+            this.blendTime = blendTime;
+        }
+
+        public String getAnimName() {
+            return animName;
+        }
+
+        public float getBlendTime() {
+            return blendTime;
+        }
+    }
+
+    private enum AnimationChannel {
+
+        /**
+         * Contains both legs and feet
+         */
+        LowerBody,
+
+        /**
+         * Right shoulder and arm
+         */
+        RightUpperBody,
+
+        /**
+         * Left shoulder and arm
+         */
+        LeftUpperBody,
+
+        /**
+         * Spines, neck and head (without arms)
+         */
+        UpperBody;
+
+    }
+
     private class PlayerAnimListener implements AnimEventListener {
 
         private PlayerAnimator animator;
@@ -202,10 +208,6 @@ public class PlayerAnimationAppState extends AbstractAppState {
 
         }
     }
-
-
-
-
 
     private class PlayerAnimator {
 
@@ -294,12 +296,5 @@ public class PlayerAnimationAppState extends AbstractAppState {
             return true;
         }
 
-    }
-
-    @Override
-    public void cleanup() {
-        animators.clear();
-        animators = null;
-        super.cleanup();
     }
 }

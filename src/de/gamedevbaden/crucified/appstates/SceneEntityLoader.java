@@ -9,10 +9,9 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
-import de.gamedevbaden.crucified.es.components.DynamicTransform;
-import de.gamedevbaden.crucified.es.components.FixedTransformation;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
+import de.gamedevbaden.crucified.es.components.Transform;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.userdata.EntityType;
 
@@ -38,7 +37,7 @@ public class SceneEntityLoader extends AbstractAppState {
      * This method searches the supplied scene for spatials with the user data "type" on them
      * and will create the specific entity object for that model.
      *
-     * @param scene
+     * @param scene the scene which shall be searched for entities
      */
     public void createEntitiesFromScene(Node scene) {
         scene.depthFirstTraversal(spatial -> {
@@ -51,7 +50,7 @@ public class SceneEntityLoader extends AbstractAppState {
 
                     // NOTE: WE ADD THE MODEL COMPONENT HERE !!! No need to add it in switch case later
                     // all models should have been added with an AssetLinkNode
-                    // with that AssetLinkNode we can get the origin of the model
+                    // with that AssetLinkNode we can get the origin of the model ( = model path )
                     if (spatial.getParent() instanceof AssetLinkNode) {
                         ModelKey key = ((AssetLinkNode) spatial.getParent()).getAssetLoaderKeys().get(0);
                         entityData.setComponent(entityId, new Model(key.getName()));
@@ -61,36 +60,36 @@ public class SceneEntityLoader extends AbstractAppState {
 
                         case DefaultModel:
                             entityData.setComponents(entityId,
-                                    createFixedTransform(spatial));
+                                    createTransform(spatial));
                             break;
 
                         case StaticPhysicObjectMeshShape:
                             entityData.setComponents(entityId,
-                                    createDynamicTransform(spatial),
+                                    createTransform(spatial),
                                     new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
                             break;
 
                         case DynamicPhysicObjectMeshShape:
                             entityData.setComponents(entityId,
-                                    createDynamicTransform(spatial),
+                                    createTransform(spatial),
                                     new PhysicsRigidBody(10, false, CollisionShapeType.MESH_COLLISION_SHAPE));
                             break;
 
                         case StaticPhysicsObjectBoxShape:
                             entityData.setComponents(entityId,
-                                    createDynamicTransform(spatial),
+                                    createTransform(spatial),
                                     new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE));
                             break;
 
                         case DynamicPhysicsObjectBoxShape:
                             entityData.setComponents(entityId,
-                                    createDynamicTransform(spatial),
+                                    createTransform(spatial),
                                     new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
                             break;
 
                         case StaticTerrain:
                             entityData.setComponents(entityId,
-                                    createDynamicTransform(spatial),
+                                    createTransform(spatial),
                                     new PhysicsRigidBody(0, false, CollisionShapeType.TERRAIN_COLLISION_SHAPE));
                             break;
 
@@ -106,13 +105,8 @@ public class SceneEntityLoader extends AbstractAppState {
         });
     }
 
-
-    private FixedTransformation createFixedTransform(Spatial spatial) {
-        return new FixedTransformation(spatial.getWorldTranslation(), spatial.getWorldRotation(), spatial.getWorldScale());
-    }
-
-    private DynamicTransform createDynamicTransform(Spatial spatial) {
-        return new DynamicTransform(spatial.getWorldTranslation(), spatial.getWorldRotation(), spatial.getWorldScale());
+    private Transform createTransform(Spatial spatial) {
+        return new Transform(spatial.getWorldTranslation(), spatial.getWorldRotation(), spatial.getWorldScale());
     }
 
 

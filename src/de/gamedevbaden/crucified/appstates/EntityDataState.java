@@ -1,9 +1,6 @@
 package de.gamedevbaden.crucified.appstates;
 
-import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.base.DefaultEntityData;
 
@@ -15,12 +12,13 @@ public class EntityDataState extends AbstractAppState {
 
     private EntityData entityData;
 
-    @Override
-    public void initialize(AppStateManager stateManager, Application app) {
+    public EntityDataState() {
         this.entityData = new DefaultEntityData();
-        super.initialize(stateManager, app);
     }
 
+    public EntityDataState(EntityData entityData) {
+        this.entityData = entityData;
+    }
 
     public EntityData getEntityData() {
         return entityData;
@@ -28,6 +26,9 @@ public class EntityDataState extends AbstractAppState {
 
     @Override
     public void cleanup() {
+        if (entityData == null) {
+            return;
+        }
         entityData.close();
         entityData = null;
         super.cleanup();

@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial;
 
 /**
  * The <code>ModelLoaderAppState</code> is just there to load models.
- * It is used by {@link VisualizationAppState} and {@link PhysicAppState} mainly.
+ * It is used by {@link ModelViewAppState} and {@link PhysicAppState} mainly.
  * Created by Domenic on 14.04.2017.
  */
 public class ModelLoaderAppState extends AbstractAppState {
@@ -38,6 +38,7 @@ public class ModelLoaderAppState extends AbstractAppState {
     @Override
     public void cleanup() {
         assetManager.clearCache();
+        assetManager = null;
         super.cleanup();
     }
 }

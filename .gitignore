@@ -176,7 +176,7 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
-# SQL Server files
+# SQL ServerTest files
 App_Data/*.mdf
 App_Data/*.ldf
 
@@ -228,3 +228,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+!/src/de/gamedevbaden/crucified/appstates/VisualizationAppState.java

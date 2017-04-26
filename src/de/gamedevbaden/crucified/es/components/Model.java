@@ -1,11 +1,13 @@
 package de.gamedevbaden.crucified.es.components;
 
+import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
 /**
  * Tells the ES what model the entity has.
  * Created by Domenic on 11.04.2017.
  */
+@Serializable
 public class Model implements EntityComponent {
 
     private String modelPath;

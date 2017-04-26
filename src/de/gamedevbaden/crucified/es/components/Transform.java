@@ -2,38 +2,27 @@ package de.gamedevbaden.crucified.es.components;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
 /**
- * This component is used for entities with dynamically changing transforms.
- * Such entities are treated a little bit different (for example on client side).
+ * This component has information about the position, rotation and scale of the entity
  *
  * Created by Domenic on 16.04.2017.
  */
-public class DynamicTransform implements EntityComponent {
+@Serializable
+public class Transform implements EntityComponent {
 
     private Vector3f location;
     private Quaternion quaternion;
     private Vector3f scale;
 
-    public DynamicTransform() {
+    public Transform() {
     }
 
-    public DynamicTransform(Vector3f location, Quaternion quaternion, Vector3f scale) {
+    public Transform(Vector3f location, Quaternion quaternion, Vector3f scale) {
         this.location = location;
         this.quaternion = quaternion;
-        this.scale = scale;
-    }
-
-    public void setLocation(Vector3f location) {
-        this.location = location;
-    }
-
-    public void setQuaternion(Quaternion quaternion) {
-        this.quaternion = quaternion;
-    }
-
-    public void setScale(Vector3f scale) {
         this.scale = scale;
     }
 
@@ -47,5 +36,14 @@ public class DynamicTransform implements EntityComponent {
 
     public Vector3f getScale() {
         return scale;
+    }
+
+    @Override
+    public String toString() {
+        return "Transform{" +
+                "location=" + location +
+                ", quaternion=" + quaternion +
+                ", scale=" + scale +
+                '}';
     }
 }
