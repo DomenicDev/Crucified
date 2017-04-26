@@ -1,7 +1,6 @@
 package de.gamedevbaden.crucified.es.components;
 
 import com.simsilica.es.EntityComponent;
-import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 
 /**
  * Created by Domenic on 13.04.2017.
@@ -10,15 +9,17 @@ public class PhysicsRigidBody implements EntityComponent {
 
     private float mass;
     private boolean kinematic;
-    private CollisionShapeType collisionShape;
+    private int collisionShapeType;
+
+
 
     public PhysicsRigidBody() {
     }
 
-    public PhysicsRigidBody(float mass, boolean kinematic, CollisionShapeType collisionShape) {
+    public PhysicsRigidBody(float mass, boolean kinematic, int collisionType) {
         this.mass = mass;
         this.kinematic = kinematic;
-        this.collisionShape = collisionShape;
+        this.collisionShapeType = collisionType;
     }
 
     public float getMass() {
@@ -29,7 +30,7 @@ public class PhysicsRigidBody implements EntityComponent {
         return kinematic;
     }
 
-    public CollisionShapeType getCollisionShape() {
-        return collisionShape;
+    public int getCollisionShapeType() {
+        return collisionShapeType;
     }
 }

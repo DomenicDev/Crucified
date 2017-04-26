@@ -3,18 +3,20 @@ package de.gamedevbaden.crucified.enums;
 /**
  * Created by Domenic on 25.04.2017.
  */
-public enum Models {
+public enum ModelType {
 
     TestScene("Models/Plane.j3o"),
+    TestTerrain("Scenes/Terrains/TestTerrain.j3o"),
     TestBox("Models/TestBox.j3o"),
+    Ground("Models/Ground.j3o"),
     Player("Models/Player/Player.j3o");
 
 
-    Models(String modelPath) {
+    private String modelPath;
+
+    ModelType(String modelPath) {
         this.modelPath = modelPath;
     }
-
-    private String modelPath;
 
     public String getModelPath() {
         return modelPath;

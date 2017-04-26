@@ -10,18 +10,18 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.es.components.DynamicTransform;
+import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.PhysicsCharacterControl;
 import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
-import de.gamedevbaden.crucified.es.utils.physics.BoxCollisionShape;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
-import de.gamedevbaden.crucified.es.utils.physics.CustomMeshCollisionShape;
-import de.gamedevbaden.crucified.es.utils.physics.SphereCollisionShape;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 
 import java.util.HashMap;
@@ -58,8 +58,8 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodyControls = new HashMap<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(PhysicsCharacterControl.class, DynamicTransform.class);
-        this.rigidBodies = entityData.getEntities(PhysicsRigidBody.class, DynamicTransform.class);
+        this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, DynamicTransform.class);
+        this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, DynamicTransform.class);
 
 
         super.initialize(stateManager, app);
@@ -96,7 +96,7 @@ public class PhysicAppState extends AbstractAppState {
                     DynamicTransform transform = entity.get(DynamicTransform.class);
                     rigidBodyControl.setPhysicsLocation(transform.getTranslation());
                     rigidBodyControl.setPhysicsRotation(transform.getRotation());
-                    //   rigidBodyControl.getCollisionShape().setScale(transform.getScale());
+                    //   rigidBodyControl.getCollisionShapeType().setScale(transform.getScale());
                 }
 
             }
@@ -188,8 +188,10 @@ public class PhysicAppState extends AbstractAppState {
     private void addRigidBodyControl(Entity entity) {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
         DynamicTransform transform = entity.get(DynamicTransform.class);
-        CollisionShapeType shapeType = entity.get(PhysicsRigidBody.class).getCollisionShape();
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(getCollisionShape(shapeType), rigidBody.getMass());
+        int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
+        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelPath(), transform.getScale());
+        System.out.println(collisionShape + " " + shapeType);
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         addPhysicsControl(rigidBodyControl);
         rigidBodyControl.setPhysicsLocation(transform.getTranslation());
         rigidBodyControl.setPhysicsRotation(transform.getRotation());
@@ -210,21 +212,34 @@ public class PhysicAppState extends AbstractAppState {
         bulletAppState.getPhysicsSpace().remove(control);
     }
 
-    private CollisionShape getCollisionShape(CollisionShapeType type) {
-        if (type instanceof BoxCollisionShape) {
-            BoxCollisionShape box = (BoxCollisionShape) type;
-            return new com.jme3.bullet.collision.shapes.BoxCollisionShape(box.getExtent());
-        } else if (type instanceof SphereCollisionShape) {
-            SphereCollisionShape sphere = (SphereCollisionShape) type;
-            return new com.jme3.bullet.collision.shapes.SphereCollisionShape(sphere.getRadius());
-        } else if (type instanceof CustomMeshCollisionShape) {
-            CustomMeshCollisionShape mesh = (CustomMeshCollisionShape) type;
-            Spatial model = modelLoader.loadModel(mesh.getModelPath());
-            model.setLocalScale(mesh.getModelScale());
+    private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {
+        if (type == CollisionShapeType.BOX_COLLISION_SHAPE) {
+            Spatial model = modelLoader.loadModel(modelPath);
+            model.setLocalScale(scale);
+            return CollisionShapeFactory.createBoxShape(model);
+        } else if (type == CollisionShapeType.MESH_COLLISION_SHAPE) {
+            Spatial model = modelLoader.loadModel(modelPath);
             if (model != null) {
+                model.setLocalScale(scale);
                 return CollisionShapeFactory.createMeshShape(model);
             }
             return null;
+        } else if (type == CollisionShapeType.TERRAIN_COLLISION_SHAPE) {
+            Spatial model = modelLoader.loadModel(modelPath);
+            TerrainQuad terrain = null;
+            if (model instanceof TerrainQuad) {
+                terrain = (TerrainQuad) model;
+            } else if (model instanceof Node) { // should always be this case
+                Node node = (Node) model;
+                if (node.getChild(0) instanceof TerrainQuad) {
+                    terrain = (TerrainQuad) node.getChild(0);
+                }
+            }
+            if (terrain != null) {
+                model.setLocalScale(scale);
+                // the method will recognize that this is a terrain
+                return CollisionShapeFactory.createMeshShape(model);
+            }
         }
         return null;
 

@@ -4,6 +4,8 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.light.AmbientLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -19,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * <code>VisualizationAppState</code> represents all entities with a @link{Models} component visually in the scene graph.
+ * <code>VisualizationAppState</code> represents all entities with a @link{ModelType} component visually in the scene graph.
  *
  * For "static" entities changed transformation will be applied as soon as received whereas dynamic (mobile) entities
  * are treated a little different. In order to get fluent movements interpolation for this entities is used.
@@ -52,6 +54,9 @@ public class VisualizationAppState extends AbstractAppState {
         this.staticEntities = entityData.getEntities(FixedTransformation.class, Model.class);
         this.dynamicEntities = entityData.getEntities(DynamicTransform.class, Model.class);
         super.initialize(stateManager, app);
+
+        AmbientLight ambientLight = new AmbientLight(ColorRGBA.White);
+        rootNode.addLight(ambientLight);
     }
 
     /**
@@ -208,9 +213,7 @@ public class VisualizationAppState extends AbstractAppState {
                     }
                 }
             }
-            for (EntityId id : entityIdsToRemove) {
-                retardedEntities.remove(id);
-            }
+            retardedEntities.removeAll(entityIdsToRemove);
         }
     }
 

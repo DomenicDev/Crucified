@@ -5,6 +5,7 @@ out/
 build/
 nbproject/
 .idea/
+dist/
 *.iml
 *.dll
 build.xml

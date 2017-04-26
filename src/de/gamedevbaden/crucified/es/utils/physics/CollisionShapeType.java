@@ -1,8 +1,12 @@
 package de.gamedevbaden.crucified.es.utils.physics;
 
 /**
- * Created by Domenic on 14.04.2017.
+ * Created by Domenic on 25.04.2017.
  */
-public abstract class CollisionShapeType {
+public class CollisionShapeType {
+
+    public static final int BOX_COLLISION_SHAPE = 1;
+    public static final int MESH_COLLISION_SHAPE = 2;
+    public static final int TERRAIN_COLLISION_SHAPE = 3;
 
 }

@@ -1,25 +1,56 @@
 package de.gamedevbaden.crucified.enums;
 
-import com.simsilica.es.EntityComponent;
-import de.gamedevbaden.crucified.es.components.FixedTransformation;
-import de.gamedevbaden.crucified.es.components.MeshCollisionShape;
-import de.gamedevbaden.crucified.es.components.Model;
-
 /**
+ * This enum contains all the different types of objects the game has.
+ * Some are rather on an abstract level and others are more specific.
+ *
+ * <code>Type</code> is added as user data to all models.
+ *
  * Created by Domenic on 25.04.2017.
  */
 public enum Type {
 
-    StaticPhysicObject(Model.class, FixedTransformation.class, MeshCollisionShape.class),
-    ;
 
-    Type(Class<? extends EntityComponent>... components ) {
-        this.components = components;
-    }
+    /**
+     * Use this for models with just a Transform and a Model.
+     * There is no physics and other things included,
+     * only the model with its location/rotation/scale in the game world.
+     * Examples: Grass
+     */
+    DefaultModel,
 
-    private Class<? extends EntityComponent>[] components;
+    /**
+     * Use this for static physical objects with a custom collision shape.
+     * Note: Collisions between mesh-accurate bodies will not be possible then!
+     * Examples: Complex Tree, Buildings
+     */
+    StaticPhysicObjectMeshShape,
 
-    public Class<? extends EntityComponent>[] getComponents() {
-        return components;
-    }
+    /**
+     * Use this for physical objects with a mass > 0 and also use the custom collision shape of the model.
+     * Note: Collisions between mesh-accurate bodies will not be possible then!
+     * Example: ???
+     */
+    DynamicPhysicObjectMeshShape,
+
+    /**
+     * Use this for static physical objects. They will get a BoxCollisionShape made out of the bounding boxes of the
+     * model.
+     * Examples: Simple Tree, Bushes
+     */
+    StaticPhysicsObjectBoxShape,
+
+    /**
+     * Use this for dynamic physical objects (mass > 0). They will get a BoxCollisionShape made out of the bounding
+     * boxes of the model.
+     * Examples: Items (such as a sword, torch, ...)
+     */
+    DynamicPhysicsObjectBoxShape,
+
+    /**
+     * Use this for static terrain. An optimized CollisionShape will be added for that terrain.
+     */
+    StaticTerrain
+
+
 }
