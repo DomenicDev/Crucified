@@ -4,87 +4,114 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
+import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import com.simsilica.es.Filters;
-import de.gamedevbaden.crucified.appstates.PlayerInputAppState.InputMapping;
-//import de.gamedevbaden.crucified.es.components.Physics;
-import de.gamedevbaden.crucified.es.components.PlayerControlledMovement;
-import de.gamedevbaden.crucified.es.components.OwnPlayer;
+import de.gamedevbaden.crucified.es.components.CharacterMovementState;
+import de.gamedevbaden.crucified.es.components.PhysicsCharacterControl;
 
 /**
- * Moves the
- *
- * Created by Domenic on 12.04.2017.
+ * This AppState turns the state of {@link CharacterMovementState} into a walk direction for physic control.
+ * It is also possible to set the view direction of the character control in here.
+ * Created by Domenic on 01.05.2017.
  */
 public class PhysicsPlayerMovementAppState extends AbstractAppState {
 
-    // there should just be one player controlled entity
-    private EntitySet player;
-    private Camera cam;
-
-    private final Vector3f lastWalkDirection = new Vector3f();
-    private final Vector3f walkDirection = new Vector3f();
-    private final Vector3f camDirection = new Vector3f();
-    private final Vector3f camLeft = new Vector3f();
-
+    private EntitySet physicalPlayers;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        this.cam = app.getCamera();
-
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-      //  this.player = entityData.getEntities(Filters.fieldEquals(Physics.class, "type", Physics.BETTER_CHARACTER_CONTROL), OwnPlayer.class, Physics.class, PlayerControlledMovement.class);
+        // get all physical player controlled entities
+        this.physicalPlayers = entityData.getEntities(PhysicsCharacterControl.class, CharacterMovementState.class);
 
         super.initialize(stateManager, app);
     }
 
-
     @Override
     public void update(float tpf) {
-        player.applyChanges();
 
-        // reset walk direction
-        walkDirection.set(Vector3f.ZERO);
+        if (physicalPlayers.applyChanges()) {
 
-        camDirection.set(cam.getDirection());
-        camDirection.y = 0;
-        camDirection.normalizeLocal();
+            for (Entity entity : physicalPlayers.getAddedEntities()) {
+                updateEntity(entity);
+            }
 
-        camLeft.set(cam.getLeft());
-        camLeft.y = 0;
-        camLeft.normalizeLocal();
-
-        if (InputMapping.Forward.isPressed()) {
-            walkDirection.addLocal(camDirection).multLocal(2.5f);
+            for (Entity entity : physicalPlayers.getChangedEntities()) {
+                updateEntity(entity);
+            }
         }
-        if (InputMapping.Backward.isPressed()) {
-            walkDirection.addLocal(camDirection.negateLocal());
-        }
-        if (InputMapping.Left.isPressed()) {
-            walkDirection.addLocal(camLeft);
-        }
-        if (InputMapping.Right.isPressed()) {
-            walkDirection.addLocal(camLeft.negateLocal());
-        }
-        if (InputMapping.Shift.isPressed()) {
-            walkDirection.multLocal(2);
-        }
-        walkDirection.setY(0);
-        // apply walk direction
+    }
 
-
-        if (lastWalkDirection.equals(walkDirection)) {
+    public void setViewDirection(EntityId entityId, Vector3f viewDirection) {
+        if (entityId == null || viewDirection == null) {
             return;
         }
-
-        for (Entity entity : player) {
-            entity.set(new PlayerControlledMovement(walkDirection));
+        Entity entity = physicalPlayers.getEntity(entityId);
+        if (entity != null) {
+            PhysicsCharacterControl characterControl = entity.get(PhysicsCharacterControl.class);
+            Vector3f walkDirection = characterControl.getWalkDirection(); // we take the old walk direction
+            entity.set(new PhysicsCharacterControl(walkDirection, viewDirection));
         }
+    }
 
-        lastWalkDirection.set(walkDirection);
+    private void updateEntity(Entity entity) {
+        Vector3f walkDirection = calculateWalkDirection(entity);
+        Vector3f viewDirection = entity.get(PhysicsCharacterControl.class).getViewDirection();
+        entity.set(new PhysicsCharacterControl(walkDirection, viewDirection));
+    }
 
+
+    private Vector3f calculateWalkDirection(Entity entity) {
+        CharacterMovementState movementState = entity.get(CharacterMovementState.class);
+        PhysicsCharacterControl characterControl = entity.get(PhysicsCharacterControl.class);
+
+        Vector3f viewDirection = characterControl.getViewDirection().clone();
+        viewDirection.setY(0);
+        viewDirection.normalizeLocal();
+
+        Vector3f leftDirection = viewDirection.cross(Vector3f.UNIT_Y).negate();
+        leftDirection.setY(0);
+        leftDirection.normalizeLocal();
+
+        Vector3f walkDirection = new Vector3f();
+
+        float runningMultSpeed = 2;
+
+        switch (movementState.getMovementState()) {
+            case CharacterMovementState.IDLE:
+                return walkDirection; // (0,0,0)
+            case CharacterMovementState.MOVING_FORWARD:
+                return walkDirection.addLocal(viewDirection);
+            case CharacterMovementState.MOVING_FORWARD_LEFT:
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection);
+            case CharacterMovementState.MOVING_FORWARD_RIGHT:
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal());
+            case CharacterMovementState.MOVING_BACK:
+                return walkDirection.addLocal(viewDirection.negateLocal());
+            case CharacterMovementState.MOVING_BACK_LEFT:
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection);
+            case CharacterMovementState.MOVING_BACK_RIGHT:
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal());
+            case CharacterMovementState.MOVING_LEFT:
+                return walkDirection.addLocal(leftDirection);
+            case CharacterMovementState.MOVING_RIGHT:
+                return walkDirection.addLocal(leftDirection.negateLocal());
+            case CharacterMovementState.RUNNING_FORWARD:
+                return walkDirection.addLocal(viewDirection).multLocal(runningMultSpeed);
+            case CharacterMovementState.RUNNING_FORWARD_LEFT:
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection).multLocal(runningMultSpeed);
+            case CharacterMovementState.RUNNING_FORWARD_RIGHT:
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal()).multLocal(runningMultSpeed);
+            case CharacterMovementState.RUNNING_BACK:
+                return walkDirection.addLocal(viewDirection.negateLocal()).multLocal(runningMultSpeed);
+            case CharacterMovementState.RUNNING_BACK_LEFT:
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection).multLocal(runningMultSpeed);
+            case CharacterMovementState.RUNNING_BACK_RIGHT:
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).multLocal(runningMultSpeed);
+            default:
+                return walkDirection;
+        }
     }
 }

@@ -20,10 +20,7 @@ import com.jme3.renderer.Camera;
  */
 public class CameraAppState extends AbstractAppState implements AnalogListener, ActionListener {
 
-    private Application app;
-    private Camera cam;
-    private final Matrix3f mat = new Matrix3f();;
-    private float rotationSpeed = 1f;
+    private final Matrix3f mat = new Matrix3f();
     private final String[] mappings = new String[]{
             "CAM_Left",
             "CAM_Right",
@@ -31,13 +28,17 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
             "CAM_Down",
             "MouseRightZoom"
         };
-    private InputManager inputManager;    
     private final Quaternion camRotation = new Quaternion();
-    private float fieldOfView = 45;
-    private boolean zoomIn = false;
+    ;
     private final int zommSpeed = 25;
     private final int maxFieldOfView = 45;
     private final int minFieldOfView = 30;
+    private Application app;
+    private Camera cam;
+    private float rotationSpeed = 1f;
+    private InputManager inputManager;
+    private float fieldOfView = 45;
+    private boolean zoomIn = false;
     // values for how much the camera can look "down" or "up"
     /**
      * 85 degrees is actually up to the sky (enough).
@@ -46,7 +47,8 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
     /**
      * Remember, -90 (degrees) is down to the bottom
      */
-    private int maxDown = -90; 
+    private int maxDown = -90;
+
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {

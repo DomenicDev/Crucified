@@ -70,6 +70,7 @@ public class MovementInterpolator extends AbstractAppState {
 
         }
 
+        // interpolate for all moving entities
         for (Entity entity : movingEntities) {
 
             Spatial model = modelViewAppState.getSpatial(entity.getId());

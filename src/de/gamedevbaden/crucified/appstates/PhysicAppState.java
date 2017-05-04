@@ -20,6 +20,7 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
+import de.gamedevbaden.crucified.physics.PhysicConstants;
 
 import java.util.HashMap;
 
@@ -38,7 +39,6 @@ public class PhysicAppState extends AbstractAppState {
 
     private HashMap<EntityId, CustomCharacterControl> characterControls;
     private HashMap<EntityId, RigidBodyControl> rigidBodyControls;
-
     private HashMap<EntityId, Integer> movingEntities; // contains all entities who are moving right now
     // the integer value is used to make some steps until the
     // entity is removed from the list
@@ -79,6 +79,10 @@ public class PhysicAppState extends AbstractAppState {
 
             for (Entity entity : characters.getAddedEntities()) {
                 addCharacterControl(entity);
+            }
+
+            for (Entity entity : characters.getChangedEntities()) {
+                updateCharacterControl(entity);
             }
 
             for (Entity entity : characters.getRemovedEntities()) {
@@ -126,7 +130,7 @@ public class PhysicAppState extends AbstractAppState {
         for (Entity entity : characters) {
             CustomCharacterControl characterControl = characterControls.get(entity.getId());
             Vector3f location = characterControl.getPhysicsRigidBody().getPhysicsLocation();
-            Quaternion rotation = characterControl.getCharacterRotation(); //ToDo: Shall that be changed? Player Rotation is just a thing of the view, so how could we implement this instantly
+            Quaternion rotation = characterControl.getCharacterRotation(); //ToDo: Shall that be changed? PlayerControlled Rotation is just a thing of the view, so how could we implement this instantly
             Vector3f scale = entity.get(Transform.class).getScale();
             applyNewChanges(entity, location, rotation, scale);
         }
@@ -143,14 +147,14 @@ public class PhysicAppState extends AbstractAppState {
     private void applyNewChanges(Entity entity, Vector3f location, Quaternion rotation, Vector3f scale) {
         Transform currentTransform = entity.get(Transform.class);
 
-        // we only will set a new FixedTransformation if the spatial has really changed its position, rotation or scale
+        // we only will set a new Transform if the spatial has really changed its position, rotation or scale
         if (location.equals(currentTransform.getTranslation()) &&
             rotation.equals(currentTransform.getRotation()) &&
             scale.equals(currentTransform.getScale())) {
             if (movingEntities.containsKey(entity.getId())) {
-                Integer tickCounter = movingEntities.get(entity.getId());
-                movingEntities.put(entity.getId(), new Integer((tickCounter + 1)));
-                if (movingEntities.get(entity.getId()) > 30) {
+                int tickCounter = movingEntities.get(entity.getId());
+                movingEntities.put(entity.getId(), ++tickCounter);
+                if (tickCounter > 30) {
                     entityData.removeComponent(entity.getId(), OnMovement.class);
                     movingEntities.remove(entity.getId());
                 }
@@ -159,19 +163,15 @@ public class PhysicAppState extends AbstractAppState {
             return;
         }
 
-        // create new FixedTransformation for entity
+        // create new Transform for this entity
         entity.set(new Transform(location, rotation, scale));
 
         // create a marker that this entity is on movement right now
         // so clients could then interpolate between the positions for those entities
         if (!movingEntities.containsKey(entity.getId())) {
             entityData.setComponent(entity.getId(), new OnMovement());
-            movingEntities.put(entity.getId(), new Integer(0));
-        } else {
-            // reset tick counter
-            Integer tickCounter = movingEntities.get(entity.getId());
-            tickCounter = 0;
         }
+        movingEntities.put(entity.getId(), 0);
 
     }
 
@@ -195,10 +195,17 @@ public class PhysicAppState extends AbstractAppState {
     }
 
     private void addCharacterControl(Entity entity) {
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        CustomCharacterControl characterControl = new CustomCharacterControl(pcc.getWidth(), pcc.getHeight(), pcc.getMass()); //Todo:
+        //    PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
         addPhysicsControl(characterControl);
         characterControls.put(entity.getId(), characterControl);
+    }
+
+    private void updateCharacterControl(Entity entity) {
+        CustomCharacterControl characterControl = characterControls.get(entity.getId());
+        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        characterControl.setWalkDirection(pcc.getWalkDirection());
+        characterControl.setViewDirection(pcc.getViewDirection());
     }
 
     private void removeCharacterControl(Entity entity) {
@@ -210,7 +217,7 @@ public class PhysicAppState extends AbstractAppState {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
         Transform transform = entity.get(Transform.class);
         int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
-        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelPath(), transform.getScale());
+        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelType().getModelPath(), transform.getScale());
         RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         addPhysicsControl(rigidBodyControl);
         rigidBodyControl.setPhysicsLocation(transform.getTranslation());
@@ -282,6 +289,9 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodies.clear();
         this.rigidBodies = null;
 
+        if (stateManager.hasState(bulletAppState)) {
+            stateManager.detach(bulletAppState);
+        }
         this.bulletAppState = null;
 
         super.cleanup();

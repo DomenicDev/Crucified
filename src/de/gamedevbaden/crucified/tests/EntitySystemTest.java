@@ -24,10 +24,9 @@ public class EntitySystemTest extends SimpleApplication {
         stateManager.attach(new ModelViewAppState());
         stateManager.attach(new CameraAppState());
         stateManager.attach(new PhysicAppState());
-        stateManager.attach(new CharacterControlAppState());
-        stateManager.attach(new PlayerInputAppState());
+        stateManager.attach(new InputAppState());
+
         stateManager.attach(new PhysicsPlayerMovementAppState());
-        stateManager.attach(new PlayerAnimationAppState());
 
         stateManager.attach(new GameState());
 

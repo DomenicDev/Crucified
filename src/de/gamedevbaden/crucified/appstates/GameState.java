@@ -29,7 +29,7 @@ public class GameState extends AbstractAppState {
 //        // create one player
 //        player = entityData.createEntity();
 //        entityData.setComponents(player,
-//                new Model(ModelType.Player.name()),
+//                new Model(ModelType.PlayerControlled.name()),
 //                new PhysicsCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT),
 //                new Transform(new Vector3f(), new Quaternion(), new Vector3f(1,1,1)));
 //         //       new PhysicsCharacterViewDirection(Vector3f.UNIT_X));

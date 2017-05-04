@@ -1,34 +1,31 @@
 package de.gamedevbaden.crucified.es.components;
 
+import com.jme3.math.Vector3f;
+import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
 /**
  * Created by Domenic on 13.04.2017.
  */
+@Serializable
 public class PhysicsCharacterControl implements EntityComponent {
 
-    private float width;
-    private float height;
-    private float mass;
+    private Vector3f walkDirection;
+    private Vector3f viewDirection;
 
     public PhysicsCharacterControl() {
     }
 
-    public PhysicsCharacterControl(float width, float height, float mass) {
-        this.width = width;
-        this.height = height;
-        this.mass = mass;
+    public PhysicsCharacterControl(Vector3f walkDirection, Vector3f viewDirection) {
+        this.walkDirection = walkDirection;
+        this.viewDirection = viewDirection;
     }
 
-    public float getWidth() {
-        return width;
+    public Vector3f getWalkDirection() {
+        return walkDirection;
     }
 
-    public float getHeight() {
-        return height;
-    }
-
-    public float getMass() {
-        return mass;
+    public Vector3f getViewDirection() {
+        return viewDirection;
     }
 }

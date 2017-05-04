@@ -1,17 +1,15 @@
-package de.gamedevbaden.crucified.tests.SimpleClientServerTest;
+package de.gamedevbaden.crucified.net.client;
 
-import com.jme3.app.SimpleApplication;
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
+import com.jme3.input.controls.ActionListener;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.MessageConnection;
 import com.jme3.network.Network;
-import com.jme3.renderer.RenderManager;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.client.EntityDataClientService;
-import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.appstates.ModelLoaderAppState;
-import de.gamedevbaden.crucified.appstates.ModelViewAppState;
-import de.gamedevbaden.crucified.appstates.MovementInterpolator;
 import de.gamedevbaden.crucified.net.NetworkedEntityData;
 
 import java.io.IOException;
@@ -20,27 +18,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Domenic on 26.04.2017.
+ * Created by Domenic on 16.04.2017.
  */
-public class ClienTest extends SimpleApplication {
+public class ClientAppState extends AbstractAppState implements ActionListener {
 
+    private Client client;
     private EntityData entityData;
 
-    public static void main(String[] args) {
-        //   NetworkUtils.initSerializers();
-        new ClienTest().start();
+    @Override
+    public void initialize(AppStateManager stateManager, Application app) {
+        super.initialize(stateManager, app);
     }
 
-    @Override
-    public void simpleInitApp() {
+    public boolean connectToServer(String hostIp, int port) {
 
-        setPauseOnLostFocus(false);
-
-        flyCam.setMoveSpeed(10);
-
-        Client client;
         try {
-            client = Network.connectToServer("localhost", 5555);
+            client = Network.connectToServer(hostIp, port);
             client.getServices().addService(new EntityDataClientService(MessageConnection.CHANNEL_DEFAULT_RELIABLE));
             this.entityData = client.getServices().getService(EntityDataClientService.class).getEntityData();
             final CountDownLatch startedSignal = new CountDownLatch(1);
@@ -52,7 +45,7 @@ public class ClienTest extends SimpleApplication {
 
                 @Override
                 public void clientDisconnected(com.jme3.network.Client c, ClientStateListener.DisconnectInfo info) {
-                    System.out.println("ClienTest disconnected.");
+                    System.out.println("ClientTest disconnected.");
                 }
             });
             client.start();
@@ -61,6 +54,10 @@ public class ClienTest extends SimpleApplication {
             System.out.println("Waiting for connection setup.");
             startedSignal.await();
             System.out.println("Connected.");
+
+
+            return true;
+
         } catch (IOException ex) {
             Logger.getLogger(NetworkedEntityData.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException e) {
@@ -68,14 +65,15 @@ public class ClienTest extends SimpleApplication {
         }
 
 
-        stateManager.attach(new EntityDataState(entityData));
-        stateManager.attach(new ModelLoaderAppState());
-        stateManager.attach(new ModelViewAppState());
-        stateManager.attach(new MovementInterpolator());
-
+        return false;
     }
 
     @Override
-    public void simpleRender(RenderManager rm) {
+    public void onAction(String name, boolean isPressed, float tpf) {
+
+    }
+
+    public EntityData getEntityData() {
+        return entityData;
     }
 }

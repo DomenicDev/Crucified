@@ -9,6 +9,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
 import de.gamedevbaden.crucified.es.components.Transform;
@@ -53,7 +54,7 @@ public class SceneEntityLoader extends AbstractAppState {
                     // with that AssetLinkNode we can get the origin of the model ( = model path )
                     if (spatial.getParent() instanceof AssetLinkNode) {
                         ModelKey key = ((AssetLinkNode) spatial.getParent()).getAssetLoaderKeys().get(0);
-                        entityData.setComponent(entityId, new Model(key.getName()));
+                        entityData.setComponent(entityId, new Model(ModelType.getModelType(key.getName())));
                     }
 
                     switch (t.getType()) {

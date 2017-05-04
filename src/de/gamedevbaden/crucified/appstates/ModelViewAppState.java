@@ -144,7 +144,7 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private Spatial getSpatial(Entity entity) {
-        return modelLoaderAppState.loadModel(entity.get(Model.class).getModelPath());
+        return modelLoaderAppState.loadModel(entity.get(Model.class).getModelType().getModelPath());
     }
 
     @Override
