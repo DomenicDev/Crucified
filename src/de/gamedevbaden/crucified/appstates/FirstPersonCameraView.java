@@ -11,6 +11,7 @@ import com.jme3.scene.Spatial;
 import com.simsilica.es.EntityId;
 
 /**
+ * ToDo: Optimize update with camera node. There should not be any checks whether the camera is attached or not
  * Created by Domenic on 05.05.2017.
  */
 public class FirstPersonCameraView extends AbstractAppState {
@@ -59,20 +60,20 @@ public class FirstPersonCameraView extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
+        if (cameraNode.getParent() == null && playerModel != null && playerModel instanceof Node) {
+            ((Node) playerModel).attachChild(cameraNode);
+            cameraNode.setLocalTranslation(offset);
+        }
     }
 
     @Override
     public void render(RenderManager rm) {
         // we call this in render() to avaoid this known "shaking" effect of the camera
         if (playerModel != null) {
-            camLocation.set(playerModel.getLocalTranslation()).addLocal(offset);
-            cam.setLocation(camLocation);
+            cam.setLocation(cameraNode.getWorldTranslation());
         } else {
             playerModel = modelState.getSpatial(playerId);
-            if (playerModel != null && playerModel instanceof Node) {
-                ((Node) playerModel).attachChild(cameraNode);
-                cameraNode.setLocalTranslation(offset);
-            }
+
         }
     }
 }

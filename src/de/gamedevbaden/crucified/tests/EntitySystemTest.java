@@ -28,8 +28,6 @@ public class EntitySystemTest extends SimpleApplication {
 
         stateManager.attach(new PhysicsPlayerMovementAppState());
 
-        stateManager.attach(new GameState());
-
 
         AmbientLight light = new AmbientLight(ColorRGBA.White);
         rootNode.addLight(light);
