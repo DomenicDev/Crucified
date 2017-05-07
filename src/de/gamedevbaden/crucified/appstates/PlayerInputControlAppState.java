@@ -81,7 +81,7 @@ public class PlayerInputControlAppState extends AbstractAppState {
         if (playerControlledEntities.applyChanges()) {
 
             for (Entity entity : playerControlledEntities.getAddedEntities()) {
-                if (!inputCollectorHashMap.containsKey(entity)) {
+                if (!inputCollectorHashMap.containsKey(entity.getId())) {
                     inputCollectorHashMap.put(entity.getId(), new PlayerInputCollector());
                 }
             }
@@ -100,6 +100,7 @@ public class PlayerInputControlAppState extends AbstractAppState {
 
     @Override
     public void cleanup() {
+        this.playerControlledEntities.release();
         this.playerControlledEntities.clear();
         this.playerControlledEntities = null;
 

@@ -82,8 +82,8 @@ public class MovementInterpolator extends AbstractAppState {
             Quaternion oldRotation = tc.getOldRotation();
             Quaternion newRotation = tc.getNewRotation();
 
-            Vector3f interpolatedTranslation = new Vector3f(oldTranslation).interpolateLocal(newTranslation, tpf / 0.06f);
-            Quaternion interpolatedRotation = oldRotation.slerp(oldRotation, newRotation, tpf / 0.06f);
+            Vector3f interpolatedTranslation = new Vector3f(oldTranslation).interpolateLocal(newTranslation, tpf / 0.1f);
+            Quaternion interpolatedRotation = oldRotation.slerp(oldRotation, newRotation, tpf / 0.1f);
 
             // apply interpolation to model
             model.setLocalTranslation(interpolatedTranslation);
@@ -100,6 +100,7 @@ public class MovementInterpolator extends AbstractAppState {
     @Override
     public void cleanup() {
         movingEntities.release();
+        movingEntities.clear();
         movingEntities = null;
 
         transforms.clear();

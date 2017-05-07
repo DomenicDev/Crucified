@@ -38,7 +38,6 @@ public class ModelLoaderAppState extends AbstractAppState {
     @Override
     public void cleanup() {
         assetManager.clearCache();
-        assetManager = null;
         super.cleanup();
     }
 }

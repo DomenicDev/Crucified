@@ -283,9 +283,11 @@ public class PhysicAppState extends AbstractAppState {
         this.characterControls = null;
         this.rigidBodyControls = null;
 
+        this.characters.release();
         this.characters.clear();
         this.characters = null;
 
+        this.rigidBodies.release();
         this.rigidBodies.clear();
         this.rigidBodies = null;
 

@@ -18,6 +18,7 @@ import de.gamedevbaden.crucified.es.components.Model;
 import java.util.HashMap;
 
 /**
+ * A system which handles the player animations.
  * Created by Domenic on 29.04.2017.
  */
 public class CharacterAnimationAppState extends AbstractAppState {
@@ -30,7 +31,7 @@ public class CharacterAnimationAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(new FieldFilter(Model.class, "category", ObjectCategory.Player), Model.class, CharacterMovementState.class, CharacterEquipmentState.class);
+        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "category", ObjectCategory.Player), Model.class, CharacterMovementState.class, CharacterEquipmentState.class);
         this.animControls = new HashMap<>();
         this.modelAppState = stateManager.getState(ModelViewAppState.class);
         super.initialize(stateManager, app);
@@ -84,4 +85,14 @@ public class CharacterAnimationAppState extends AbstractAppState {
         }
     }
 
+    @Override
+    public void cleanup() {
+        for (Entity entity : characters) {
+            removeAnimControl(entity);
+        }
+        this.characters.release();
+        this.characters.clear();
+        this.characters = null;
+        super.cleanup();
+    }
 }

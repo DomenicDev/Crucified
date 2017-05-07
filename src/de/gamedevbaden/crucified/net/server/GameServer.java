@@ -23,12 +23,14 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
+ * This class manages the server.
+ *
  * Created by Domenic on 16.04.2017.
  */
 public class GameServer extends AbstractAppState implements ConnectionListener {
 
     private float timer;
-    private float updateTime = 1 / 10; // updates per second
+    private float updateTime = 1f / 10f; // 10 updates per second
 
     private int port;
     private Server server;
@@ -93,13 +95,13 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     @Override
     public void connectionAdded(Server server, HostedConnection conn) {
 
-
         System.out.println("conn added");
 
+        //ToDo: Later, we don't want to directly create a player entity, only when game starts
 
         EntityId player = entityData.createEntity();
         entityData.setComponents(player,
-                new Model(ModelType.TestBox),
+                new Model(ModelType.Player),
                 new Transform(new Vector3f(0, 2, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new PlayerControlled(),

@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/SceneModels/Rocks/3TD_LayeredGrayStone_001.JPG
+        NormalMap : Textures/SceneModels/Rocks/3TD_LayeredGrayStone_001_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

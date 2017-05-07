@@ -50,29 +50,23 @@ public class ServerTest extends SimpleApplication {
 
         stateManager.attach(new GameEventHandler(dgsi));
 
+        stateManager.attach(new SceneEntityLoader());
+
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("C", new KeyTrigger(KeyInput.KEY_C));
-        inputManager.addListener(new ActionListener() {
-            @Override
-            public void onAction(String name, boolean isPressed, float tpf) {
-                if (!isPressed) {
-                    return;
-                }
-                if (name.equals("Space")) {
-                    if (stateManager.getState(SceneEntityLoader.class) == null) {
-                        System.out.println("START");
-                        stateManager.attach(new SceneEntityLoader());
-                    }
-                } else {
-                    EntityData entityData = server.getServer().getServices().getService(EntityDataHostedService.class).getEntityData();
-                    EntityId entityId = entityData.createEntity();
-                    entityData.setComponents(entityId,
-                            new Transform(new Vector3f((float) (Math.random() * 5f), 3, 0), new Quaternion(), new Vector3f(1, 1, 1)),
-                            new Model(ModelType.TestBox),
-                            new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
-                }
-
+        inputManager.addListener((ActionListener) (name, isPressed, tpf) -> {
+            if (!isPressed) {
+                return;
             }
+            if (name.equals("C")) {
+                EntityData entityData = server.getServer().getServices().getService(EntityDataHostedService.class).getEntityData();
+                EntityId entityId = entityData.createEntity();
+                entityData.setComponents(entityId,
+                        new Transform(new Vector3f((float) (Math.random() * 5f), 3, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                        new Model(ModelType.TestBox),
+                        new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
+            }
+
         }, "Space", "C");
 
 

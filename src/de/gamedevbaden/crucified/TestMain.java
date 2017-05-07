@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
@@ -34,10 +35,11 @@ public class TestMain extends SimpleApplication {
 
         stateManager.attach(new EntityDataState());
 
+        stateManager.attach(new BulletAppState());
         // game related app states
         stateManager.attach(new ModelLoaderAppState());
         stateManager.attach(new ModelViewAppState());
-        stateManager.attach(new MovementInterpolator());
+        //  stateManager.attach(new MovementInterpolator());
         stateManager.attach(new InputAppState());
         stateManager.attach(new PlayerInputControlAppState());
         stateManager.attach(new PhysicAppState());
@@ -54,6 +56,7 @@ public class TestMain extends SimpleApplication {
         stateManager.attach(new PlayerInit());
 
         stateManager.attach(new CameraAppState());
+
 
     }
 
@@ -77,7 +80,7 @@ public class TestMain extends SimpleApplication {
 
             stateManager.attach(new GameSessionAppState(gameSession));
             stateManager.attach(new GameEventAppState());
-
+            stateManager.attach(new FirstPersonCameraView(player, new Vector3f(0, 2, 0)));
         }
 
 

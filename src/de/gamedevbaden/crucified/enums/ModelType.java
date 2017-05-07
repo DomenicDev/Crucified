@@ -9,7 +9,7 @@ public enum ModelType {
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),
     TestBox("Models/TestBox.j3o"),
     Ground("Models/Ground.j3o"),
-    Player("Models/PlayerControlled/PlayerControlled.j3o");
+    Player("Models/Player/Player.j3o");
 
 
     private String modelPath;

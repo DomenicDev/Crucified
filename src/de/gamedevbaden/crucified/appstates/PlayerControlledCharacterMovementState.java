@@ -109,7 +109,7 @@ public class PlayerControlledCharacterMovementState extends AbstractAppState {
 
     @Override
     public void cleanup() {
-
+        this.playerControlledCharacters.release();
         this.playerControlledCharacters.clear();
         this.playerControlledCharacters = null;
 

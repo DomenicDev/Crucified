@@ -26,6 +26,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     private Vector3f lastCamDirection;
     private float camUpdateTime;
 
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.gameSession = stateManager.getState(GameSessionAppState.class).getGameSession();
@@ -40,6 +41,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
 
         super.initialize(stateManager, app);
     }
+
 
     @Override
     public void update(float tpf) {

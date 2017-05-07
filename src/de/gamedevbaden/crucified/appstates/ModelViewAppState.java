@@ -29,7 +29,7 @@ import java.util.HashMap;
  */
 public class ModelViewAppState extends AbstractAppState {
 
-    private HashMap<EntityId, Spatial> entities;
+    private HashMap<EntityId, Spatial> spatials;
     private HashMap<EntityId, Transform> lastTransforms; // stores the Transform of the spatial before the change.
     // used to interpolate between positions for dynamic objects
     private EntitySet visibleEntities;
@@ -45,7 +45,7 @@ public class ModelViewAppState extends AbstractAppState {
         this.rootNode = ((SimpleApplication) app).getRootNode();
         this.modelLoaderAppState = stateManager.getState(ModelLoaderAppState.class);
 
-        this.entities = new HashMap<>();
+        this.spatials = new HashMap<>();
         this.lastTransforms = new HashMap<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
@@ -64,7 +64,7 @@ public class ModelViewAppState extends AbstractAppState {
      * @return the spatial for that entity or null if there is no spatial
      */
     public Spatial getSpatial(EntityId entityId) {
-        return entities.get(entityId);
+        return spatials.get(entityId);
     }
 
     @Override
@@ -89,11 +89,11 @@ public class ModelViewAppState extends AbstractAppState {
 
 
     private void addSpatial(Entity entity) {
-        if (entities.containsKey(entity.getId())) {
+        if (spatials.containsKey(entity.getId())) {
             return;
         }
         Spatial spatial = getSpatial(entity);
-        entities.put(entity.getId(), spatial);
+        spatials.put(entity.getId(), spatial);
         Transform transform = entity.get(Transform.class);
         spatial.setLocalTranslation(transform.getTranslation());
         spatial.setLocalRotation(transform.getRotation());
@@ -103,7 +103,7 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private void updateSpatial(Entity entity) {
-        Spatial spatial = entities.get(entity.getId());
+        Spatial spatial = spatials.get(entity.getId());
         storeOldTransform(entity, spatial); // store the last transform (could be needed for interpolation
         if (spatial != null) {
             Transform transform = entity.get(Transform.class);
@@ -139,7 +139,7 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private void removeSpatial(Entity entity) {
-        Spatial spatial = entities.remove(entity.getId());
+        Spatial spatial = spatials.remove(entity.getId());
         rootNode.detachChild(spatial);
     }
 
@@ -149,13 +149,17 @@ public class ModelViewAppState extends AbstractAppState {
 
     @Override
     public void cleanup() {
-        entities.clear();
-        entities = null;
+        for (Entity entity : visibleEntities) {
+            removeSpatial(entity);
+        }
+        spatials.clear();
+        spatials = null;
 
         lastTransforms.clear();
         lastTransforms = null;
 
         visibleEntities.release();
+        visibleEntities.clear();
         visibleEntities = null;
 
         modelLoaderAppState = null;

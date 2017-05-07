@@ -1,5 +1,6 @@
 package de.gamedevbaden.crucified.physics;
 
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.math.Quaternion;
@@ -24,4 +25,8 @@ public class CustomCharacterControl extends BetterCharacterControl {
         return rotation.clone();
     }
 
+    @Override
+    public PhysicsSpace getPhysicsSpace() {
+        return super.getPhysicsSpace();
+    }
 }
