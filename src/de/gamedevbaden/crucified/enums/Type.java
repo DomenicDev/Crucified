@@ -50,7 +50,16 @@ public enum Type {
     /**
      * Use this for static terrain. An optimized CollisionShape will be added for that terrain.
      */
-    StaticTerrain
+    StaticTerrain,
 
+    /**
+     * A door one can interact with.
+     */
+    Door,
+
+    /**
+     *
+     */
+    PickupableItem,
 
 }

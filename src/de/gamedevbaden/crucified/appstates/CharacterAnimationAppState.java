@@ -10,7 +10,7 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.controls.CharacterAnimControl;
-import de.gamedevbaden.crucified.enums.ObjectCategory;
+import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.CharacterEquipmentState;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.Model;
@@ -31,7 +31,7 @@ public class CharacterAnimationAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "category", ObjectCategory.Player), Model.class, CharacterMovementState.class, CharacterEquipmentState.class);
+        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "modelType", ModelType.Player), Model.class, CharacterMovementState.class, CharacterEquipmentState.class);
         this.animControls = new HashMap<>();
         this.modelAppState = stateManager.getState(ModelViewAppState.class);
         super.initialize(stateManager, app);

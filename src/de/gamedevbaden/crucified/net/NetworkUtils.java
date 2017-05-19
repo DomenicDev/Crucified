@@ -2,7 +2,6 @@ package de.gamedevbaden.crucified.net;
 
 
 import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.serializers.FieldSerializer;
 import de.gamedevbaden.crucified.es.components.*;
 
 /**
@@ -12,16 +11,16 @@ public class NetworkUtils {
 
 
     public static void initSerializers() {
-
-//        Serializer.registerClass(FixedTransformation.class, new FieldSerializer());
-        Serializer.registerClass(Transform.class, new FieldSerializer());
-        Serializer.registerClass(Model.class, new FieldSerializer());
-//        Serializer.registerClass(Name.class, new FieldSerializer());
-        Serializer.registerClass(OnMovement.class, new FieldSerializer());
-        Serializer.registerClass(PhysicsRigidBody.class, new FieldSerializer());
-        Serializer.registerClass(PhysicsCharacterControl.class, new FieldSerializer());
-        Serializer.registerClass(CharacterMovementState.class, new FieldSerializer());
+        Serializer.registerClass(Transform.class);
+        Serializer.registerClass(Model.class);
+        Serializer.registerClass(OnMovement.class);
+        Serializer.registerClass(PhysicsRigidBody.class);
+        Serializer.registerClass(PhysicsCharacterControl.class);
+        Serializer.registerClass(CharacterMovementState.class);
         Serializer.registerClass(PlayerControlled.class);
+        Serializer.registerClass(SoundComponent.class);
+        Serializer.registerClass(InteractionComponent.class);
+        Serializer.registerClass(Pickable.class);
     }
 
 }

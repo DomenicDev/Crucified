@@ -4,17 +4,28 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.ModelKey;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.es.components.Model;
-import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
-import de.gamedevbaden.crucified.es.components.Transform;
+import de.gamedevbaden.crucified.es.components.*;
+import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
+import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
+import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.userdata.EntityType;
+import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
+import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
+import de.gamedevbaden.crucified.userdata.events.SoundEvent;
+import de.gamedevbaden.crucified.userdata.triggers.TriggerTypeData;
+
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is used to create entities from a scene.
@@ -24,6 +35,8 @@ import de.gamedevbaden.crucified.userdata.EntityType;
  * Created by Domenic on 25.04.2017.
  */
 public class SceneEntityLoader extends AbstractAppState {
+
+    private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
 
     private EntityData entityData;
 
@@ -41,68 +54,155 @@ public class SceneEntityLoader extends AbstractAppState {
      * @param scene the scene which shall be searched for entities
      */
     public void createEntitiesFromScene(Node scene) {
-        scene.depthFirstTraversal(spatial -> {
+        // The initialization is done in several steps:
 
-            if (spatial instanceof Node) {
-                EntityType t = spatial.getUserData("type");
-                if (t != null) {
+        // 1. Create a HashMap to store the reference of a spatial (with entity data)
+        // this map is filled when calling initEntities()
+        HashMap<Spatial, EntityId> spatialEntities = new HashMap<>();
 
-                    EntityId entityId = entityData.createEntity();
+        // 2. Search for entities in the scene graph and create "real" entity objects
+        initEntities(scene, spatialEntities);
 
-                    // NOTE: WE ADD THE MODEL COMPONENT HERE !!! No need to add it in switch case later
-                    // all models should have been added with an AssetLinkNode
-                    // with that AssetLinkNode we can get the origin of the model ( = model path )
-                    if (spatial.getParent() instanceof AssetLinkNode) {
-                        ModelKey key = ((AssetLinkNode) spatial.getParent()).getAssetLoaderKeys().get(0);
-                        entityData.setComponent(entityId, new Model(ModelType.getModelType(key.getName())));
-                    }
+        // 3. Search for trigger entities
+        // because trigger might depend on other entities we initialize the triggers after the "normal" entities
+        initTriggers(scene, spatialEntities);
+    }
 
-                    switch (t.getType()) {
+    private void initEntities(Node rootNode, HashMap<Spatial, EntityId> entities) {
+        rootNode.depthFirstTraversal(spatial -> {
 
-                        case DefaultModel:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial));
-                            break;
+            EntityType t = spatial.getUserData("type");
+            if (t != null) {
 
-                        case StaticPhysicObjectMeshShape:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial),
-                                    new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
-                            break;
+                EntityId entityId = entityData.createEntity();
 
-                        case DynamicPhysicObjectMeshShape:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial),
-                                    new PhysicsRigidBody(10, false, CollisionShapeType.MESH_COLLISION_SHAPE));
-                            break;
+                // NOTE: WE ADD THE MODEL COMPONENT HERE !!! No need to add it in switch case later
+                // all models should have been added with an AssetLinkNode
+                // with that AssetLinkNode we can get the origin of the model ( = model path )
+                if (spatial.getParent() instanceof AssetLinkNode) {
+                    ModelKey key = ((AssetLinkNode) spatial.getParent()).getAssetLoaderKeys().get(0);
+                    ModelType modelType = ModelType.getModelType(key.getName());
+                    if (modelType == null)
+                        log.log(Level.SEVERE, "The model type for " + key.getName() + " has not been added yet!");
+                    entityData.setComponent(entityId, new Model(ModelType.getModelType(key.getName())));
+                }
 
-                        case StaticPhysicsObjectBoxShape:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial),
-                                    new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE));
-                            break;
+                switch (t.getType()) {
 
-                        case DynamicPhysicsObjectBoxShape:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial),
-                                    new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
-                            break;
+                    case DefaultModel:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial));
+                        break;
 
-                        case StaticTerrain:
-                            entityData.setComponents(entityId,
-                                    createTransform(spatial),
-                                    new PhysicsRigidBody(0, false, CollisionShapeType.TERRAIN_COLLISION_SHAPE));
-                            break;
+                    case StaticPhysicObjectMeshShape:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
+                        break;
 
+                    case DynamicPhysicObjectMeshShape:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(10, false, CollisionShapeType.MESH_COLLISION_SHAPE));
+                        break;
 
-                        default:
-                            break;
+                    case StaticPhysicsObjectBoxShape:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE));
+                        break;
 
-                    }
+                    case DynamicPhysicsObjectBoxShape:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
+                        break;
+
+                    case StaticTerrain:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(0, false, CollisionShapeType.TERRAIN_COLLISION_SHAPE));
+                        break;
+
+                    case Door:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new PhysicsRigidBody(0, true, CollisionShapeType.BOX_COLLISION_SHAPE),
+                                new InteractionComponent(InteractionType.PlayTestSound));
+
+                        break;
+                    case PickupableItem:
+                        entityData.setComponents(entityId,
+                                createTransform(spatial),
+                                new Pickable());
+                        break;
+                    default:
+                        break;
 
                 }
+
+                entities.put(spatial, entityId);
+
             }
 
+        });
+    }
+
+    private void initTriggers(Node scene, HashMap<Spatial, EntityId> spatialEntities) {
+        scene.depthFirstTraversal(spatial -> {
+            //----------- TRIGGERS AND EVENTS --------------------------//
+
+            EventGroupData eventGroupData = spatial.getUserData("eventgroup");
+            if (eventGroupData != null && spatial instanceof Node) {
+
+                EntityId eventGroup = entityData.createEntity();
+                entityData.setComponent(eventGroup, new EventGroup(eventGroupData.getAmountOfTriggers()));
+
+                System.out.println("created entity group");
+
+                // look for triggers and events
+                spatial.depthFirstTraversal(spatial1 -> {
+
+                    if (spatial1.getUserData("trigger") != null) {
+                        TriggerTypeData triggerData = spatial1.getUserData("trigger");
+                        BoundingVolume volume = spatial1.getWorldBound();
+                        TriggerType triggerType = triggerData.getTriggerType();
+
+                        EntityId trigger = entityData.createEntity();
+                        entityData.setComponents(trigger,
+                                createTransform(spatial1),
+                                new Trigger(eventGroup, triggerType, volume)
+                        );
+
+
+                    } else if (spatial1.getUserData("event") != null) {
+
+                        Object event = spatial1.getUserData("event");
+
+                        if (event instanceof SoundEvent) {
+                            SoundEvent soundEvent = (SoundEvent) event;
+
+                            System.out.println("created sound event");
+
+                            EntityId eventEntity = entityData.createEntity();
+                            entityData.setComponents(eventEntity,
+                                    new Event(eventGroup, new PlaySoundEventType(soundEvent.getSound(), soundEvent.isPositional())),
+                                    createTransform(spatial1));
+
+                        } else if (event instanceof OpenCloseEventUserData) {
+                            OpenCloseEventUserData openCloseEvent = (OpenCloseEventUserData) event;
+                            String spatialName = openCloseEvent.getSpatialName();
+                            Spatial target = ((Node) spatial).getChild(spatialName);
+                            EntityId targetId = spatialEntities.get(target);
+
+                            EntityId eventEntity = entityData.createEntity();
+                            entityData.setComponents(eventEntity,
+                                    new Event(eventGroup, new OpenCloseEvent(targetId)),
+                                    createTransform(spatial));
+                        }
+                    }
+                });
+            }
         });
     }
 

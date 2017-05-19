@@ -17,4 +17,12 @@ public interface GameSession {
 
     void applyViewDirection(Vector3f viewDirection);
 
+    /**
+     * Is called when the player triggers an InteractionTrigger, e.g.
+     * opening a door, picking up an item
+     *
+     * @param interactedEntity the trigger entity id
+     */
+    void interactWithEntity(EntityId interactedEntity);
+
 }

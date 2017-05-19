@@ -8,8 +8,12 @@ import com.simsilica.es.EntityId;
  */
 public interface GameEventListener {
 
+    void onItemPickup(EntityId actor, EntityId itemToPickup);
+
     void onInputChange(EntityId entityId, String mappingName, boolean isPressed);
 
     void onViewDirectionChange(EntityId entityId, Vector3f newViewDirection);
+
+    void onInteraction(EntityId playerId, EntityId interactedEntity);
 
 }

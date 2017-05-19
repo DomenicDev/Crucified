@@ -9,7 +9,10 @@ public enum ModelType {
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),
     TestBox("Models/TestBox.j3o"),
     Ground("Models/Ground.j3o"),
-    Player("Models/Player/Player.j3o");
+    Player("Models/Player/Player.j3o"),
+    TriggerableDoor("Models/TriggerableDoor.j3o"),
+    Door("Models/Door.j3o"),
+    TestPickup("Models/PickableItem.j3o");
 
 
     private String modelPath;

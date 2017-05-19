@@ -23,12 +23,12 @@ public class EntityType implements Savable {
     @Override
     public void write(JmeExporter ex) throws IOException {
         OutputCapsule out = ex.getCapsule(this);
-        out.write(type, "type", null);
+        out.write(type, "type", Type.DefaultModel);
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
         InputCapsule in = im.getCapsule(this);
-        type = in.readEnum("type", Type.class, null);
+        type = in.readEnum("type", Type.class, Type.DefaultModel);
     }
 }

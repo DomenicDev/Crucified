@@ -5,11 +5,14 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
+import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.PlayerControlled;
 import de.gamedevbaden.crucified.utils.InputChangeListener;
 import de.gamedevbaden.crucified.utils.PlayerInputCollector;
+
+import java.util.HashMap;
 
 /**
  * This AppState applies the player input to the {@link CharacterMovementState} component.
@@ -20,9 +23,11 @@ public class PlayerControlledCharacterMovementState extends AbstractAppState {
     private EntityData entityData;
     private EntitySet playerControlledCharacters;
     private PlayerInputControlAppState inputControlAppState;
+    private HashMap<EntityId, InputChangeListener> listeners;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        this.listeners = new HashMap<>();
         this.inputControlAppState = stateManager.getState(PlayerInputControlAppState.class);
 
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
@@ -53,10 +58,11 @@ public class PlayerControlledCharacterMovementState extends AbstractAppState {
 
         InputChangeListener listener = (entityId, changedInput, playerInputCollector) -> this.entityData.setComponent(entityId, new CharacterMovementState(calculateMovementState(playerInputCollector)));
         inputControlAppState.addInputChangeListener(entity.getId(), listener);
+        listeners.put(entity.getId(), listener);
     }
 
     private void removeEntity(Entity entity) {
-        inputControlAppState.removeInputListener(entity.getId());
+        inputControlAppState.removeInputListener(entity.getId(), listeners.get(entity.getId()));
     }
 
     private int calculateMovementState(PlayerInputCollector collector) {
@@ -112,6 +118,9 @@ public class PlayerControlledCharacterMovementState extends AbstractAppState {
         this.playerControlledCharacters.release();
         this.playerControlledCharacters.clear();
         this.playerControlledCharacters = null;
+
+        this.listeners.clear();
+        this.listeners = null;
 
         this.inputControlAppState = null;
         this.entityData = null;

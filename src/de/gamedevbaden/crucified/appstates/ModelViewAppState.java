@@ -92,13 +92,23 @@ public class ModelViewAppState extends AbstractAppState {
         if (spatials.containsKey(entity.getId())) {
             return;
         }
+        // load spatial
         Spatial spatial = getSpatial(entity);
         spatials.put(entity.getId(), spatial);
+
+        // apply transform for that spatial
         Transform transform = entity.get(Transform.class);
         spatial.setLocalTranslation(transform.getTranslation());
         spatial.setLocalRotation(transform.getRotation());
         spatial.setLocalScale(transform.getScale());
-        storeOldTransform(entity, spatial); // store the initial transform as old transform
+
+        // tag the spatial with its entity id
+        spatial.setUserData("entityId", entity.getId().getId());
+
+        // store the initial transform as old transform
+        storeOldTransform(entity, spatial);
+
+        // finally attach to the scene
         rootNode.attachChild(spatial);
     }
 
@@ -144,6 +154,7 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private Spatial getSpatial(Entity entity) {
+        System.out.println(entity.get(Transform.class).getTranslation() + " " + entity.get(Model.class).getModelType());
         return modelLoaderAppState.loadModel(entity.get(Model.class).getModelType().getModelPath());
     }
 

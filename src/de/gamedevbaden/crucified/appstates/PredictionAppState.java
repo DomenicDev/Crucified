@@ -16,7 +16,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.*;
 import com.simsilica.es.filter.FieldFilter;
-import de.gamedevbaden.crucified.enums.InputMapping;
+import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
@@ -94,7 +94,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
         // register input for walk direction apply
         this.inputManager = app.getInputManager();
-        for (InputMapping input : InputMapping.values()) {
+        for (InputCommand input : InputCommand.values()) {
             this.inputManager.addListener(this, input.name());
         }
 
@@ -120,10 +120,18 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelType().getModelPath(), transform.getScale());
         RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+        staticBodyControls.put(entity.getId(), rigidBodyControl);
+        updateRigidBodyControl(entity);
+    }
+
+    private void updateRigidBodyControl(Entity entity) {
+        Transform transform = entity.get(Transform.class);
+        PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
+        RigidBodyControl rigidBodyControl = staticBodyControls.get(entity.getId());
+
         rigidBodyControl.setPhysicsLocation(transform.getTranslation());
         rigidBodyControl.setPhysicsRotation(transform.getRotation());
         rigidBodyControl.setKinematic(rigidBody.isKinematic());
-        staticBodyControls.put(entity.getId(), rigidBodyControl);
     }
 
     private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {
@@ -169,6 +177,10 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
             for (Entity entity : staticRigidBodies.getAddedEntities()) {
                 addRigidBodyControl(entity);
+            }
+
+            for (Entity entity : staticRigidBodies.getChangedEntities()) {
+                updateRigidBodyControl(entity);
             }
 
         }
@@ -306,19 +318,19 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
-        InputMapping input = InputMapping.valueOf(name);
+        InputCommand input = InputCommand.valueOf(name);
         input.setPressed(isPressed);
 
         PlayerInputCollector collector = this.inputCollector;
-        if (input == InputMapping.Forward) {
+        if (input == InputCommand.Forward) {
             collector.setForward(input.isPressed());
-        } else if (input == InputMapping.Backward) {
+        } else if (input == InputCommand.Backward) {
             collector.setBackward(input.isPressed());
-        } else if (input == InputMapping.Left) {
+        } else if (input == InputCommand.Left) {
             collector.setLeft(input.isPressed());
-        } else if (input == InputMapping.Right) {
+        } else if (input == InputCommand.Right) {
             collector.setRight(input.isPressed());
-        } else if (input == InputMapping.Shift) {
+        } else if (input == InputCommand.Shift) {
             collector.setRunning(input.isPressed());
         }
 

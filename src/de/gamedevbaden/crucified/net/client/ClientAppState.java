@@ -10,7 +10,6 @@ import com.jme3.network.MessageConnection;
 import com.jme3.network.Network;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.client.EntityDataClientService;
-import de.gamedevbaden.crucified.net.NetworkedEntityData;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -59,7 +58,7 @@ public class ClientAppState extends AbstractAppState implements ActionListener {
             return true;
 
         } catch (IOException ex) {
-            Logger.getLogger(NetworkedEntityData.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientAppState.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

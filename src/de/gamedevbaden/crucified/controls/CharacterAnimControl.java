@@ -108,30 +108,30 @@ public class CharacterAnimControl extends AbstractControl implements AnimEventLi
             setAnimation(AnimationChannel.UpperBody.getLastPlayedAnim(), AnimationChannel.RightUpperBody, AnimationChannel.LeftUpperBody);
         }
 
-//        if (InputMapping.Forward.isPressed()) {
-//            if (InputMapping.Shift.isPressed() && !isAnimationForChannels(Animation.Run.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
+//        if (InputCommand.Forward.isPressed()) {
+//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Run.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
 //                setAnimation(Animation.Run, AnimationChannel.UpperBody, LoopMode.DontLoop);
 //                setAnimation(Animation.Run, AnimationChannel.LowerBody, LoopMode.DontLoop);
-//            } else if (!InputMapping.Shift.isPressed() && !isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
+//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
 //                setAnimation(Animation.Walk, AnimationChannel.UpperBody, LoopMode.DontLoop);
 //                setAnimation(Animation.Walk, AnimationChannel.LowerBody, LoopMode.DontLoop);
 //            }
-//        } else if (InputMapping.Backward.isPressed()) {
-//            if (InputMapping.Shift.isPressed() && !isAnimationForChannels(Animation.Runback.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
+//        } else if (InputCommand.Backward.isPressed()) {
+//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Runback.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
 //                setAnimation(Animation.Runback, AnimationChannel.UpperBody, LoopMode.DontLoop);
 //                setAnimation(Animation.Runback, AnimationChannel.LowerBody, LoopMode.DontLoop);
-//            } else if (!InputMapping.Shift.isPressed() && !isAnimationForChannels(Animation.WalkBack.getAnimName(), AnimationChannel.UpperBody, AnimationChannel.LowerBody)) {
+//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.WalkBack.getAnimName(), AnimationChannel.UpperBody, AnimationChannel.LowerBody)) {
 //                setAnimation(Animation.WalkBack, AnimationChannel.UpperBody, LoopMode.DontLoop);
 //                setAnimation(Animation.WalkBack, AnimationChannel.LowerBody, LoopMode.DontLoop);
 //            }
-//        } else if (InputMapping.Left.isPressed()) {
+//        } else if (InputCommand.Left.isPressed()) {
 //            if (!isAnimationForChannels(Animation.SideLeft.getAnimName(), AnimationChannel.LowerBody)) {
 //                setAnimation(Animation.SideLeft, AnimationChannel.LowerBody, LoopMode.DontLoop);
 //            }
 //            if (!isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.UpperBody)) {
 //                setAnimation(Animation.Walk, AnimationChannel.UpperBody, LoopMode.DontLoop);
 //            }
-//        } else if (InputMapping.Right.isPressed()) {
+//        } else if (InputCommand.Right.isPressed()) {
 //            if (!isAnimationForChannels(Animation.SideRight.getAnimName(), AnimationChannel.LowerBody)) {
 //                setAnimation(Animation.SideRight, AnimationChannel.LowerBody, LoopMode.DontLoop);
 //            }

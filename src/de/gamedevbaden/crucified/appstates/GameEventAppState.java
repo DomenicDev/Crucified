@@ -7,7 +7,8 @@ import com.jme3.input.InputManager;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import de.gamedevbaden.crucified.enums.InputMapping;
+import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.game.GameSession;
 
 
@@ -17,7 +18,7 @@ import de.gamedevbaden.crucified.game.GameSession;
  * <p>
  * Created by Domenic on 02.05.2017.
  */
-public class GameEventAppState extends AbstractAppState implements ActionListener {
+public class GameEventAppState extends AbstractAppState implements ActionListener, PlayerInteractionState.PlayerInteractionListener {
 
     private GameSession gameSession;
     private InputManager inputManager;
@@ -25,7 +26,6 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
 
     private Vector3f lastCamDirection;
     private float camUpdateTime;
-
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -35,9 +35,17 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
         this.lastCamDirection = cam.getDirection(new Vector3f());
 
         // init listener for input events
-        for (InputMapping input : InputMapping.values()) {
-            this.inputManager.addListener(this, input.name());
+        for (InputCommand input : InputCommand.values()) {
+            if (input != InputCommand.Interaction) { // interaction is handled differently
+                this.inputManager.addListener(this, input.name());
+            }
         }
+
+        // add interaction listener
+        PlayerInteractionState playerInteractionState = stateManager.getState(PlayerInteractionState.class);
+        playerInteractionState.addInteractionListener(this);
+
+
 
         super.initialize(stateManager, app);
     }
@@ -63,6 +71,16 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
         gameSession.applyInput(name, isPressed);
+    }
+
+    @Override
+    public void onInteractionWith(EntityId interactedEntity) {
+        gameSession.interactWithEntity(interactedEntity);
+    }
+
+    @Override
+    public void onItemPickup(EntityId entityToPickup) {
+        gameSession.pickUpItem(entityToPickup);
     }
 
     @Override

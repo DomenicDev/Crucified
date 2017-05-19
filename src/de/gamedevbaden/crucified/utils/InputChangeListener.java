@@ -1,7 +1,7 @@
 package de.gamedevbaden.crucified.utils;
 
 import com.simsilica.es.EntityId;
-import de.gamedevbaden.crucified.enums.InputMapping;
+import de.gamedevbaden.crucified.enums.InputCommand;
 
 /**
  * A listener who listens for input changes.
@@ -9,6 +9,6 @@ import de.gamedevbaden.crucified.enums.InputMapping;
  */
 public interface InputChangeListener {
 
-    void onInputChange(EntityId entityId, InputMapping changedInput, PlayerInputCollector playerInputCollector);
+    void onInputChange(EntityId entityId, InputCommand changedInput, PlayerInputCollector playerInputCollector);
 
 }

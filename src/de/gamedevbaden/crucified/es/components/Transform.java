@@ -6,7 +6,8 @@ import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
 /**
- * This component has information about the position, rotation and scale of the entity
+ * This component has information about the position, rotation and scale of the entity in world space.
+ * For parent-child relationships have a look at the {@link ChildOf} component.
  *
  * Created by Domenic on 16.04.2017.
  */

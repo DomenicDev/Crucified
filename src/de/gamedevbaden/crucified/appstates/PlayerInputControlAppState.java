@@ -7,11 +7,12 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import de.gamedevbaden.crucified.enums.InputMapping;
+import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.es.components.PlayerControlled;
 import de.gamedevbaden.crucified.utils.InputChangeListener;
 import de.gamedevbaden.crucified.utils.PlayerInputCollector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,7 +24,7 @@ public class PlayerInputControlAppState extends AbstractAppState {
 
     private EntitySet playerControlledEntities;
     private HashMap<EntityId, PlayerInputCollector> inputCollectorHashMap;
-    private HashMap<EntityId, InputChangeListener> inputChangeListenerHashMap;
+    private HashMap<EntityId, ArrayList<InputChangeListener>> inputChangeListenerHashMap;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -38,11 +39,19 @@ public class PlayerInputControlAppState extends AbstractAppState {
 
 
     public void addInputChangeListener(EntityId entityId, InputChangeListener listener) {
-        inputChangeListenerHashMap.put(entityId, listener);
+        if (!inputChangeListenerHashMap.containsKey(entityId)) {
+            inputChangeListenerHashMap.put(entityId, new ArrayList<>());
+        }
+        inputChangeListenerHashMap.get(entityId).add(listener);
     }
 
-    public void removeInputListener(EntityId entityId) {
-        inputChangeListenerHashMap.remove(entityId);
+    public void removeInputListener(EntityId entityId, InputChangeListener listener) {
+        if (inputChangeListenerHashMap.containsKey(entityId)) {
+            ArrayList<InputChangeListener> list = inputChangeListenerHashMap.get(entityId);
+            if (list.contains(listener)) {
+                list.remove(listener);
+            }
+        }
     }
 
     public void applyInputChange(EntityId entityId, String mappingName, boolean isPressed) {
@@ -51,27 +60,28 @@ public class PlayerInputControlAppState extends AbstractAppState {
             inputCollectorHashMap.put(entityId, collector);
         }
 
-        InputMapping input = InputMapping.valueOf(mappingName);
+        InputCommand input = InputCommand.valueOf(mappingName);
         input.setPressed(isPressed);
 
         PlayerInputCollector collector = inputCollectorHashMap.get(entityId);
-        if (input == InputMapping.Forward) {
+        if (input == InputCommand.Forward) {
             collector.setForward(input.isPressed());
-        } else if (input == InputMapping.Backward) {
+        } else if (input == InputCommand.Backward) {
             collector.setBackward(input.isPressed());
-        } else if (input == InputMapping.Left) {
+        } else if (input == InputCommand.Left) {
             collector.setLeft(input.isPressed());
-        } else if (input == InputMapping.Right) {
+        } else if (input == InputCommand.Right) {
             collector.setRight(input.isPressed());
-        } else if (input == InputMapping.Shift) {
+        } else if (input == InputCommand.Shift) {
             collector.setRunning(input.isPressed());
         }
 
 
         // call listener
-        InputChangeListener listener = inputChangeListenerHashMap.get(entityId);
-        if (listener != null) {
-            listener.onInputChange(entityId, input, collector);
+        for (InputChangeListener listener : inputChangeListenerHashMap.get(entityId)) {
+            if (listener != null) {
+                listener.onInputChange(entityId, input, collector);
+            }
         }
     }
 

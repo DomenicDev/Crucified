@@ -53,7 +53,10 @@ public class DefaultGameSessionImplementation extends AbstractAppState {
 
         @Override
         public boolean pickUpItem(EntityId itemToPickup) {
-            return false;
+            for (GameEventListener listener : listeners) {
+                listener.onItemPickup(playerId, itemToPickup);
+            }
+            return true;
         }
 
         @Override
@@ -68,6 +71,13 @@ public class DefaultGameSessionImplementation extends AbstractAppState {
         public void applyViewDirection(Vector3f viewDirection) {
             for (GameEventListener listener : listeners) {
                 listener.onViewDirectionChange(getPlayer(), viewDirection);
+            }
+        }
+
+        @Override
+        public void interactWithEntity(EntityId interactedEntity) {
+            for (GameEventListener listener : listeners) {
+                listener.onInteraction(playerId, interactedEntity);
             }
         }
 

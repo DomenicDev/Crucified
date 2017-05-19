@@ -7,18 +7,19 @@ import com.jme3.input.KeyInput;
  * <p>
  * Created by Domenic on 01.05.2017.
  */
-public enum InputMapping {
+public enum InputCommand {
 
     Forward(KeyInput.KEY_W),
     Backward(KeyInput.KEY_S),
     Left(KeyInput.KEY_A),
     Right(KeyInput.KEY_D),
-    Shift(KeyInput.KEY_LSHIFT);
+    Shift(KeyInput.KEY_LSHIFT),
+    Interaction(KeyInput.KEY_F);
 
     private int keyCode;
     private boolean pressed;
 
-    InputMapping(int keyCode) {
+    InputCommand(int keyCode) {
         this.keyCode = keyCode;
     }
 

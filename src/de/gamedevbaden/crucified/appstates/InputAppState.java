@@ -6,7 +6,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.InputManager;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import de.gamedevbaden.crucified.enums.InputMapping;
+import de.gamedevbaden.crucified.enums.InputCommand;
 
 /**
  * This AppState initializes the Key inputs.
@@ -22,7 +22,7 @@ public class InputAppState extends AbstractAppState implements ActionListener {
         this.inputManager = app.getInputManager();
 
         // init mappings
-        for (InputMapping mapping : InputMapping.values()) {
+        for (InputCommand mapping : InputCommand.values()) {
             inputManager.addMapping(mapping.name(), new KeyTrigger(mapping.getKeyCode()));
             inputManager.addListener(this, mapping.name());
         }
@@ -31,13 +31,13 @@ public class InputAppState extends AbstractAppState implements ActionListener {
 
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
-        InputMapping mapping = InputMapping.valueOf(name);
+        InputCommand mapping = InputCommand.valueOf(name);
         mapping.setPressed(isPressed);
     }
 
     @Override
     public void cleanup() {
-        for (InputMapping mapping : InputMapping.values()) {
+        for (InputCommand mapping : InputCommand.values()) {
             this.inputManager.deleteMapping(mapping.name());
             mapping.setPressed(false);
         }

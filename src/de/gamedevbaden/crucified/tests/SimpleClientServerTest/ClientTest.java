@@ -37,12 +37,15 @@ public class ClientTest extends SimpleApplication {
         stateManager.attach(new ModelLoaderAppState());
         stateManager.attach(new ModelViewAppState());
         stateManager.attach(new MovementInterpolator());
+        stateManager.attach(new PlayerInteractionState());
         stateManager.attach(new EntityDataState(entityData));
+
         stateManager.attach(new GameSessionAppState(gameSession));
         stateManager.attach(new GameEventAppState());
         stateManager.attach(new CameraAppState());
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), new Vector3f(0, 1.7f, 0.2f)));
         stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
+        stateManager.attach(new SoundAppState());
 
     }
 
