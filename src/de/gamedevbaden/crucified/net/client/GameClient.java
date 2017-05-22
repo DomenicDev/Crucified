@@ -12,7 +12,6 @@ import com.jme3.network.service.rpc.RpcClientService;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.client.EntityDataClientService;
 import de.gamedevbaden.crucified.game.GameSession;
-import de.gamedevbaden.crucified.net.NetworkUtils;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -42,7 +41,6 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
         startedSignal = new CountDownLatch(1);
         try {
             this.client = Network.connectToServer(address, port);
-            NetworkUtils.initSerializers();
             this.client.addClientStateListener(this);
 
             this.rmiClientService = new RmiClientService();
