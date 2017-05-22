@@ -9,17 +9,19 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
-import com.simsilica.es.server.EntityDataHostedService;
-import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.ChildOf;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.PhysicsRigidBody;
 import de.gamedevbaden.crucified.es.components.Transform;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
-import de.gamedevbaden.crucified.game.DefaultGameSessionImplementation;
 import de.gamedevbaden.crucified.game.GameEventHandler;
+import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.net.server.GameServer;
+import de.gamedevbaden.crucified.utils.GameInitializer;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 /**
  * Created by Domenic on 26.04.2017.
@@ -38,31 +40,27 @@ public class ServerTest extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         setPauseOnLostFocus(false);
+        GameOptions.ENABLE_PHYSICS_DEBUG = true; // for now
 
         EntityDataState entityDataState = new EntityDataState();
         stateManager.attach(entityDataState);
 
         entityData = entityDataState.getEntityData();
 
-        stateManager.attach(new ModelLoaderAppState());
-        stateManager.attach(new PlayerInputControlAppState());
-        stateManager.attach(new PhysicAppState());
-        stateManager.attach(new PhysicsPlayerMovementAppState());
-        stateManager.attach(new PlayerControlledCharacterMovementState());
-        stateManager.attach(new TriggerAppState());
-        stateManager.attach(new AttachmentAppState());
-        stateManager.attach(new InteractionAppState());
-        stateManager.attach(new ItemStoreAppState());
+        GameSessionManager gameSessionManager = new GameSessionManager();
+        stateManager.attach(gameSessionManager);
 
-        DefaultGameSessionImplementation dgsi = new DefaultGameSessionImplementation();
-        stateManager.attach(dgsi);
+        stateManager.attach(new GameServer(5555));
+        stateManager.attach(new GameEventHandler(gameSessionManager));
 
-        GameServer server = new GameServer(5555);
-        stateManager.attach(server);
 
-        stateManager.attach(new GameEventHandler(dgsi));
+        GameInitializer.initEssentialAppStates(stateManager);
+        GameInitializer.initGameLogicAppStates(stateManager);
 
         stateManager.attach(new SceneEntityLoader());
+
+
+        // --
 
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("C", new KeyTrigger(KeyInput.KEY_C));
@@ -71,7 +69,6 @@ public class ServerTest extends SimpleApplication {
                 return;
             }
             if (name.equals("C")) {
-                EntityData entityData = server.getServer().getServices().getService(EntityDataHostedService.class).getEntityData();
                 cube = entityData.createEntity();
                 entityData.setComponents(cube,
                         new Transform(new Vector3f((float) (Math.random() * 5f), 3, 0), new Quaternion(), new Vector3f(1, 1, 1)),

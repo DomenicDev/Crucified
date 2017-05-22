@@ -10,11 +10,16 @@ import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
+import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
+import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
+import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
+import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.*;
-import de.gamedevbaden.crucified.game.DefaultGameSessionImplementation;
 import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
+import de.gamedevbaden.crucified.game.GameSessionManager;
 
 /**
  * <code>TestMain</code> contains the main-method.
@@ -47,7 +52,7 @@ public class TestMain extends SimpleApplication {
         stateManager.attach(new PlayerControlledCharacterMovementState());
 
 
-        DefaultGameSessionImplementation dgsi = new DefaultGameSessionImplementation();
+        GameSessionManager dgsi = new GameSessionManager();
         stateManager.attach(dgsi);
         stateManager.attach(new GameEventHandler(dgsi));
 
@@ -76,7 +81,7 @@ public class TestMain extends SimpleApplication {
 
             super.initialize(stateManager, app);
 
-            GameSession gameSession = stateManager.getState(DefaultGameSessionImplementation.class).addPlayer(player);
+            GameSession gameSession = stateManager.getState(GameSessionManager.class).createSession(player);
 
             stateManager.attach(new GameSessionAppState(gameSession));
             stateManager.attach(new GameEventAppState());

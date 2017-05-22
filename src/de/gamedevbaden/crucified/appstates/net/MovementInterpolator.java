@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.net;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -10,6 +10,8 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.OnMovement;
 import de.gamedevbaden.crucified.es.components.Transform;

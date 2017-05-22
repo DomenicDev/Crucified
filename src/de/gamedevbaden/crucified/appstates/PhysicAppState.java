@@ -17,10 +17,12 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 import java.util.HashMap;
 
@@ -54,7 +56,7 @@ public class PhysicAppState extends AbstractAppState {
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
         this.bulletAppState = new BulletAppState();
-        this.bulletAppState.setDebugEnabled(true);
+        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
         this.stateManager.attach(bulletAppState);
 
         this.characterControls = new HashMap<>();
@@ -65,6 +67,19 @@ public class PhysicAppState extends AbstractAppState {
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
 
+        // if there are already entities in the sets
+        // create the physical controls for them...
+        if (!characters.isEmpty()) {
+            for (Entity entity : characters) {
+                addCharacterControl(entity);
+            }
+        }
+
+        if (!rigidBodies.isEmpty()) {
+            for (Entity entity : rigidBodies) {
+                addRigidBodyControl(entity);
+            }
+        }
 
         super.initialize(stateManager, app);
     }
@@ -125,6 +140,7 @@ public class PhysicAppState extends AbstractAppState {
                 applyNewChanges(entity, location, rotation, scale);
             }
         }
+
 
         // apply new transforms for characters
         for (Entity entity : characters) {
@@ -217,7 +233,7 @@ public class PhysicAppState extends AbstractAppState {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
         Transform transform = entity.get(Transform.class);
         int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
-        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelType().getModelPath(), transform.getScale());
+        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getPath(), transform.getScale());
         RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         addPhysicsControl(rigidBodyControl);
         rigidBodyControl.setPhysicsLocation(transform.getTranslation());

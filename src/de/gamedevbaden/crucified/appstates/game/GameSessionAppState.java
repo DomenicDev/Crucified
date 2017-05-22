@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.game;
 
 import com.jme3.app.state.AbstractAppState;
 import de.gamedevbaden.crucified.game.GameSession;

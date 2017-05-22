@@ -10,10 +10,17 @@ public interface GameEventListener {
 
     void onItemPickup(EntityId actor, EntityId itemToPickup);
 
+    void onItemDrop(EntityId playerId, EntityId itemToDrop);
+
+    void onItemEquipped(EntityId player, EntityId itemToEquip);
+
+    void onItemUnequipped(EntityId player, EntityId itemToRemove, EntityId containerId);
+
     void onInputChange(EntityId entityId, String mappingName, boolean isPressed);
 
     void onViewDirectionChange(EntityId entityId, Vector3f newViewDirection);
 
     void onInteraction(EntityId playerId, EntityId interactedEntity);
+
 
 }

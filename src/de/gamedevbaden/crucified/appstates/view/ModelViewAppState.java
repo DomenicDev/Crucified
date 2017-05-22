@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.view;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -14,9 +14,11 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.Transform;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -34,6 +36,8 @@ public class ModelViewAppState extends AbstractAppState {
     // used to interpolate between positions for dynamic objects
     private EntitySet visibleEntities;
 
+    private ArrayList<EntityId> excludedFromUpdate;
+
     private Node rootNode;
     private ModelLoaderAppState modelLoaderAppState;
 
@@ -47,25 +51,23 @@ public class ModelViewAppState extends AbstractAppState {
 
         this.spatials = new HashMap<>();
         this.lastTransforms = new HashMap<>();
+        this.excludedFromUpdate = new ArrayList<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.visibleEntities = entityData.getEntities(Transform.class, Model.class);
 
+        if (!visibleEntities.isEmpty()) {
+            for (Entity entity : visibleEntities) {
+                addSpatial(entity);
+            }
+        }
 
         AmbientLight ambientLight = new AmbientLight(ColorRGBA.White);
         rootNode.addLight(ambientLight);
         super.initialize(stateManager, app);
     }
 
-    /**
-     * Get the associated spatial for the given entity
-     *
-     * @param entityId the entity id you want the associated spatial from
-     * @return the spatial for that entity or null if there is no spatial
-     */
-    public Spatial getSpatial(EntityId entityId) {
-        return spatials.get(entityId);
-    }
+
 
     @Override
     public void update(float tpf) {
@@ -87,6 +89,38 @@ public class ModelViewAppState extends AbstractAppState {
 
     }
 
+    /**
+     * Get the associated spatial for the given entity
+     *
+     * @param entityId the entity id you want the associated spatial from
+     * @return the spatial for that entity or null if there is no spatial
+     */
+    public Spatial getSpatial(EntityId entityId) {
+        return spatials.get(entityId);
+    }
+
+    /**
+     * Can activate / deactivate (apply or not apply) updates for the given entity.
+     * If excluded is set to true, the spatial of the supplied entity is not going to be updated
+     * by the incoming Transform updates. Use this if you want to set the spatial's transform
+     * by another system.
+     *
+     * @param entityId
+     * @param excluded
+     */
+    public void setExcludedFromUpdate(EntityId entityId, boolean excluded) {
+        if (!excludedFromUpdate.contains(entityId) && excluded) {
+            excludedFromUpdate.add(entityId);
+        } else if (excludedFromUpdate.contains(entityId) && !excluded) {
+            excludedFromUpdate.remove(entityId);
+
+            // we might need to set the "real" spatial transform again
+            // it could be that it has been modified by another system
+            // and if the Transform component hasn't changed then
+            // we need to apply it again
+            updateSpatial(visibleEntities.getEntity(entityId));
+        }
+    }
 
     private void addSpatial(Entity entity) {
         if (spatials.containsKey(entity.getId())) {
@@ -113,6 +147,9 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private void updateSpatial(Entity entity) {
+        if (excludedFromUpdate.contains(entity.getId())) {
+            return;
+        }
         Spatial spatial = spatials.get(entity.getId());
         storeOldTransform(entity, spatial); // store the last transform (could be needed for interpolation
         if (spatial != null) {
@@ -154,8 +191,11 @@ public class ModelViewAppState extends AbstractAppState {
     }
 
     private Spatial getSpatial(Entity entity) {
-        System.out.println(entity.get(Transform.class).getTranslation() + " " + entity.get(Model.class).getModelType());
-        return modelLoaderAppState.loadModel(entity.get(Model.class).getModelType().getModelPath());
+        return modelLoaderAppState.loadModel(entity.get(Model.class).getPath());
+    }
+
+    public void attachSpatial(Spatial spatial) {
+        rootNode.attachChild(spatial);
     }
 
     @Override

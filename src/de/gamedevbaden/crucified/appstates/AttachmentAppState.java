@@ -21,6 +21,7 @@ public class AttachmentAppState extends AbstractAppState {
     private EntityData entityData;
 
     private HashMap<EntityId, ArrayList<EntityId>> parentChildMap;
+    private HashMap<EntityId, EntityId> childParentMap;
     private ArrayList<WatchedEntity> parents; // to look for changes
 
     @Override
@@ -29,6 +30,7 @@ public class AttachmentAppState extends AbstractAppState {
         this.attachedEntities = entityData.getEntities(ChildOf.class, Transform.class);
 
         this.parentChildMap = new HashMap<>();
+        this.childParentMap = new HashMap<>();
         this.parents = new ArrayList<>();
 
         super.initialize(stateManager, app);
@@ -50,17 +52,22 @@ public class AttachmentAppState extends AbstractAppState {
                     parents.add(watchedEntity);
                 }
                 parentChildMap.get(childOf.getParentId()).add(entity.getId());
+                childParentMap.put(entity.getId(), childOf.getParentId());
             }
 
             for (Entity entity : attachedEntities.getRemovedEntities()) {
-                ChildOf childOf = entity.get(ChildOf.class);
-                ArrayList<EntityId> children = parentChildMap.get(childOf.getParentId());
-                children.remove(entity.getId());
+//                ChildOf childOf = entity.get(ChildOf.class);
+//                ArrayList<EntityId> children = parentChildMap.get(childOf.getParentId());
+//                children.remove(entity.getId());
+                EntityId childId = entity.getId();
+                EntityId parentId = childParentMap.remove(childId);
+                ArrayList<EntityId> children = parentChildMap.get(parentId);
+                children.remove(childId);
 
                 if (children.isEmpty()) {
                     WatchedEntity parentEntity = null;
                     for (WatchedEntity parent : parents) {
-                        if (parent.getId() == childOf.getParentId()) {
+                        if (parent.getId().equals(parentId)) {
                             parent.release();
                             parentEntity = parent;
                             break;
@@ -76,6 +83,8 @@ public class AttachmentAppState extends AbstractAppState {
         for (WatchedEntity parent : parents) {
             if (parent.applyChanges()) {
 
+                if (!parent.isComplete()) continue; // if the parent has been removed we don't need to change anything.
+
                 for (EntityId child : parentChildMap.get(parent.getId())) {
                     Entity childEntity = attachedEntities.getEntity(child);
                     Transform parentTransform = parent.get(Transform.class);
@@ -87,11 +96,11 @@ public class AttachmentAppState extends AbstractAppState {
         }
     }
 
-    private Transform combineWithParent(Transform parentTransform, ChildOf childChildOf) {
-        Vector3f translation = childChildOf.getOffsetTranslation().clone();
+    private Transform combineWithParent(Transform parentTransform, ChildOf childOf) {
+        Vector3f translation = childOf.getOffsetTranslation().clone();
         Quaternion rotation = new Quaternion();
 
-        parentTransform.getRotation().mult(childChildOf.getOffsetRotation(), rotation);
+        parentTransform.getRotation().mult(childOf.getOffsetRotation(), rotation);
         translation.multLocal(parentTransform.getScale());
         parentTransform.getRotation().multLocal(translation).addLocal(parentTransform.getTranslation());
 

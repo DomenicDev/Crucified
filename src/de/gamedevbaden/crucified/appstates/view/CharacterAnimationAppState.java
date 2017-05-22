@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.view;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -9,6 +9,7 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
+import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.CharacterAnimControl;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.CharacterEquipmentState;

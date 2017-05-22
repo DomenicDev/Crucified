@@ -2,7 +2,6 @@ package de.gamedevbaden.crucified.es.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
-import de.gamedevbaden.crucified.enums.ModelType;
 
 /**
  * Tells the ES what model the entity has.
@@ -11,7 +10,9 @@ import de.gamedevbaden.crucified.enums.ModelType;
 @Serializable
 public class Model implements EntityComponent {
 
-    private ModelType modelType;
+    //  private ModelType modelType;
+
+    private String path;
 
     /**
      * Do not use!
@@ -20,12 +21,20 @@ public class Model implements EntityComponent {
         // just for serialization
     }
 
-
-    public Model(ModelType modelType) {
-        this.modelType = modelType;
+    public Model(String path) {
+        this.path = path;
     }
 
-    public ModelType getModelType() {
-        return modelType;
+    public String getPath() {
+        return path;
     }
+
+    //
+//    public Model(ModelType modelType) {
+//        this.modelType = modelType;
+//    }
+//
+//    public ModelType getModelType() {
+//        return modelType;
+//    }
 }

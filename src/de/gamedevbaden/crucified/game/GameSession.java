@@ -13,6 +13,24 @@ public interface GameSession {
 
     boolean pickUpItem(EntityId itemToPickup);
 
+    /**
+     * Equips the given entity to the player.
+     *
+     * @param itemToEquip
+     */
+    void equipItem(EntityId itemToEquip);
+
+    /**
+     * Removes this equipped entity from the player.
+     * If the item shall be stored somewhere you also can set the container id
+     *
+     * @param itemToRemove which item to remove
+     * @param containerId  the container the item shall be stored in or null
+     */
+    void unequipItem(EntityId itemToRemove, EntityId containerId);
+
+    void dropItem(EntityId itemToDrop);
+
     void applyInput(String mappingName, boolean isPressed);
 
     void applyViewDirection(Vector3f viewDirection);

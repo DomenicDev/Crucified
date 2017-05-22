@@ -34,6 +34,10 @@ public class PlayerInputControlAppState extends AbstractAppState {
         this.inputCollectorHashMap = new HashMap<>();
         this.inputChangeListenerHashMap = new HashMap<>();
 
+        for (Entity entity : playerControlledEntities) {
+            addInputCollector(entity);
+        }
+
         super.initialize(stateManager, app);
     }
 
@@ -91,9 +95,7 @@ public class PlayerInputControlAppState extends AbstractAppState {
         if (playerControlledEntities.applyChanges()) {
 
             for (Entity entity : playerControlledEntities.getAddedEntities()) {
-                if (!inputCollectorHashMap.containsKey(entity.getId())) {
-                    inputCollectorHashMap.put(entity.getId(), new PlayerInputCollector());
-                }
+                addInputCollector(entity);
             }
 
             for (Entity entity : playerControlledEntities.getRemovedEntities()) {
@@ -103,6 +105,14 @@ public class PlayerInputControlAppState extends AbstractAppState {
         }
 
     }
+
+    private void addInputCollector(Entity entity) {
+        if (!inputCollectorHashMap.containsKey(entity.getId())) {
+            inputCollectorHashMap.put(entity.getId(), new PlayerInputCollector());
+        }
+    }
+
+
 
     public PlayerInputCollector getPlayerInput(EntityId entityId) {
         return inputCollectorHashMap.get(entityId);

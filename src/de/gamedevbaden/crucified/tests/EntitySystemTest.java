@@ -4,6 +4,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
+import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 
 /**
  * Created by Domenic on 11.04.2017.

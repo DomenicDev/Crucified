@@ -3,8 +3,6 @@ package de.gamedevbaden.crucified.net.server;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.network.*;
 import com.jme3.network.service.rmi.RmiHostedService;
 import com.jme3.network.service.rmi.RmiRegistry;
@@ -13,10 +11,9 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.es.components.*;
-import de.gamedevbaden.crucified.game.DefaultGameSessionImplementation;
+import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameSession;
+import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.net.NetworkUtils;
 
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     private int port;
     private Server server;
     private ObservableEntityData entityData;
-    private DefaultGameSessionImplementation gameSessionManager;
+    private GameSessionManager gameSessionManager;
     private HashMap<HostedConnection, GameSession> connections = new HashMap<>();
     private RmiHostedService rmiService;
 
@@ -46,7 +43,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
-        this.gameSessionManager = stateManager.getState(DefaultGameSessionImplementation.class);
+        this.gameSessionManager = stateManager.getState(GameSessionManager.class);
 
         try {
 
@@ -99,15 +96,9 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
 
         //ToDo: Later, we don't want to directly create a player entity, only when game starts
 
-        EntityId player = entityData.createEntity();
-        entityData.setComponents(player,
-                new Model(ModelType.Player),
-                new Transform(new Vector3f(0, 2, 0), new Quaternion(), new Vector3f(1, 1, 1)),
-                new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
-                new PlayerControlled(),
-                new CharacterMovementState());
+        EntityId player = EntityFactory.createPlayer(entityData);
 
-        GameSession session = gameSessionManager.addPlayer(player);
+        GameSession session = gameSessionManager.createSession(player);
 
         RmiRegistry rmi = rmiService.getRmiRegistry(conn);
         rmi.share(session, GameSession.class);

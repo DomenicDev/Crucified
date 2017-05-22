@@ -6,8 +6,7 @@ import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import de.gamedevbaden.crucified.es.components.Pickable;
-import de.gamedevbaden.crucified.es.components.StoredIn;
+import de.gamedevbaden.crucified.es.components.*;
 
 /**
  * Created by Domenic on 19.05.2017.
@@ -15,35 +14,48 @@ import de.gamedevbaden.crucified.es.components.StoredIn;
 public class ItemStoreAppState extends AbstractAppState {
 
     private EntitySet pickables;
+    private EntitySet containers;
+    private EntitySet storedEntities;
     private EntityData entityData;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.pickables = entityData.getEntities(Pickable.class);
+        this.containers = entityData.getEntities(Container.class);
+        this.storedEntities = entityData.getEntities(StoredIn.class);
         super.initialize(stateManager, app);
     }
 
     @Override
     public void update(float tpf) {
         pickables.applyChanges();
+        containers.applyChanges();
+        storedEntities.applyChanges();
     }
 
-    public void pickUpItem(EntityId actor, EntityId itemToPickup) {
+    public void storeItem(EntityId container, EntityId itemToPickup) {
+        if (container != null && itemToPickup != null && containers.containsId(container) && pickables.containsId(itemToPickup)) {
+            this.entityData.setComponents(itemToPickup, new StoredIn(container), new ChildOf(container));
+        }
+    }
 
-        if (actor != null && itemToPickup != null && pickables.containsId(itemToPickup)) {
+    public void dropItem(EntityId container, EntityId itemToDrop) {
+        if (storedEntities.containsId(itemToDrop)) {
 
-            this.entityData.setComponent(itemToPickup, new StoredIn(actor));
-            this.entityData.removeComponent(itemToPickup, Pickable.class);
+            // remove StoredIn component
+            entityData.removeComponent(itemToDrop, StoredIn.class);
 
-            System.out.println("item picked up");
+            // remove the ChildOf component because we added it when item was picked up
+            entityData.removeComponent(itemToDrop, ChildOf.class);
+
+            // test: drop at containers position
+            if (entityData.getComponent(container, Transform.class) != null) {
+                Transform t = entityData.getComponent(container, Transform.class);
+                entityData.setComponent(itemToDrop, new Transform(t.getTranslation(), t.getRotation(), t.getScale()));
+            }
 
         }
-
-    }
-
-    public void dropItem(EntityId itemToDrop) {
-
     }
 
 }

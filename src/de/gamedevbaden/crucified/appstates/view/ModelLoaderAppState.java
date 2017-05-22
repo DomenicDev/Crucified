@@ -1,10 +1,11 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.view;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
+import de.gamedevbaden.crucified.appstates.PhysicAppState;
 
 /**
  * The <code>ModelLoaderAppState</code> is just there to load models.

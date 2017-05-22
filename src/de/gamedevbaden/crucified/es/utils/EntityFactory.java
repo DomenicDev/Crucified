@@ -4,10 +4,9 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.enums.Sound;
-import de.gamedevbaden.crucified.es.components.Decay;
-import de.gamedevbaden.crucified.es.components.SoundComponent;
-import de.gamedevbaden.crucified.es.components.Transform;
+import de.gamedevbaden.crucified.es.components.*;
 
 /**
  * This class provides static methods to create entities.
@@ -30,6 +29,19 @@ public class EntityFactory {
 
         return soundEffect;
 
+    }
+
+    public static EntityId createPlayer(EntityData entityData) {
+        EntityId player = entityData.createEntity();
+        entityData.setComponents(player,
+                new Model(ModelType.Player),
+                new Transform(new Vector3f(0, 2, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
+                new PlayerControlled(),
+                new CharacterMovementState(),
+                new Container());
+
+        return player;
     }
 
 

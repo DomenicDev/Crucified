@@ -9,7 +9,6 @@ import de.gamedevbaden.crucified.es.components.*;
  */
 public class NetworkUtils {
 
-
     public static void initSerializers() {
         Serializer.registerClass(Transform.class);
         Serializer.registerClass(Model.class);
@@ -21,6 +20,10 @@ public class NetworkUtils {
         Serializer.registerClass(SoundComponent.class);
         Serializer.registerClass(InteractionComponent.class);
         Serializer.registerClass(Pickable.class);
+        Serializer.registerClass(Container.class);
+        Serializer.registerClass(StoredIn.class);
+        Serializer.registerClass(Equipable.class);
+        Serializer.registerClass(EquippedBy.class);
     }
 
 }

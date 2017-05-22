@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.appstates;
+package de.gamedevbaden.crucified.appstates.net;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -16,6 +16,9 @@ import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.*;
 import com.simsilica.es.filter.FieldFilter;
+import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
+import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
@@ -117,7 +120,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
         Transform transform = entity.get(Transform.class);
         int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
-        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getModelType().getModelPath(), transform.getScale());
+        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getPath(), transform.getScale());
         RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
         bulletAppState.getPhysicsSpace().add(rigidBodyControl);
         staticBodyControls.put(entity.getId(), rigidBodyControl);

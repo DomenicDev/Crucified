@@ -33,6 +33,10 @@ public class PlayerControlledCharacterMovementState extends AbstractAppState {
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.playerControlledCharacters = entityData.getEntities(PlayerControlled.class, CharacterMovementState.class);
 
+        for (Entity entity : playerControlledCharacters) {
+            addEntity(entity);
+        }
+
         super.initialize(stateManager, app);
     }
 

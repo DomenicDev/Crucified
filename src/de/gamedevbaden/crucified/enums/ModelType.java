@@ -3,8 +3,16 @@ package de.gamedevbaden.crucified.enums;
 /**
  * Created by Domenic on 25.04.2017.
  */
-public enum ModelType {
+public class ModelType {
 
+    public static final String TestScene = "Models/Plane.j3o";
+    public static final String TestTerrain = "Scenes/Terrains/TestTerrain.j3o";
+    public static final String TestBox = "Models/TestBox.j3o";
+    public static final String Player = "Models/Player/Player.j3o";
+    public static final String TriggerableDoor = "Models/TriggerableDoor.j3o";
+    public static final String Door = "Models/Door.j3o";
+    public static final String TestPickup = "Models/PickableItem.j3o";
+/*
     TestScene("Models/Plane.j3o"),
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),
     TestBox("Models/TestBox.j3o"),
@@ -17,6 +25,9 @@ public enum ModelType {
 
     private String modelPath;
     private ObjectCategory category;
+
+    ModelType() {
+    }
 
     ModelType(String modelPath) {
         this.modelPath = modelPath;
@@ -42,5 +53,5 @@ public enum ModelType {
 
     public String getModelPath() {
         return modelPath;
-    }
+    }*/
 }

@@ -11,16 +11,16 @@ import java.util.HashMap;
  * ToDo: All !!!
  * Created by Domenic on 01.05.2017.
  */
-public class DefaultGameSessionImplementation extends AbstractAppState {
+public class GameSessionManager extends AbstractAppState {
 
     private ArrayList<GameEventListener> listeners = new ArrayList<>();
     private HashMap<EntityId, GameSession> sessionHashMap = new HashMap<>();
 
-    public DefaultGameSessionImplementation() {
+    public GameSessionManager() {
     }
 
 
-    public GameSession addPlayer(EntityId playerId) {
+    public GameSession createSession(EntityId playerId) {
         if (playerId != null) {
             GameSessionImplementation implementation = new GameSessionImplementation(playerId);
             sessionHashMap.put(playerId, implementation);
@@ -57,6 +57,27 @@ public class DefaultGameSessionImplementation extends AbstractAppState {
                 listener.onItemPickup(playerId, itemToPickup);
             }
             return true;
+        }
+
+        @Override
+        public void equipItem(EntityId itemToEquip) {
+            for (GameEventListener listener : listeners) {
+                listener.onItemEquipped(playerId, itemToEquip);
+            }
+        }
+
+        @Override
+        public void unequipItem(EntityId itemToRemove, EntityId containerId) {
+            for (GameEventListener listener : listeners) {
+                listener.onItemUnequipped(playerId, itemToRemove, containerId);
+            }
+        }
+
+        @Override
+        public void dropItem(EntityId itemToDrop) {
+            for (GameEventListener listener : listeners) {
+                listener.onItemDrop(playerId, itemToDrop);
+            }
         }
 
         @Override

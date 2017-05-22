@@ -21,10 +21,11 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private TriggerAppState triggerAppState;
     private InteractionAppState interactionAppState;
     private ItemStoreAppState itemStoreAppState;
+    private EquipmentAppState equipmentAppState;
 
-    private DefaultGameSessionImplementation gameSession;
+    private GameSessionManager gameSession;
 
-    public GameEventHandler(DefaultGameSessionImplementation gameSession) {
+    public GameEventHandler(GameSessionManager gameSession) {
         this.gameSession = gameSession;
         this.gameSession.addGameEventListener(this);
     }
@@ -36,13 +37,33 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
         this.triggerAppState = stateManager.getState(TriggerAppState.class);
         this.interactionAppState = stateManager.getState(InteractionAppState.class);
         this.itemStoreAppState = stateManager.getState(ItemStoreAppState.class);
+        this.equipmentAppState = stateManager.getState(EquipmentAppState.class);
         super.initialize(stateManager, app);
     }
 
 
     @Override
     public void onItemPickup(EntityId actor, EntityId itemToPickup) {
-        itemStoreAppState.pickUpItem(actor, itemToPickup);
+        itemStoreAppState.storeItem(actor, itemToPickup);
+    }
+
+    @Override
+    public void onItemDrop(EntityId playerId, EntityId itemToDrop) {
+        itemStoreAppState.dropItem(playerId, itemToDrop);
+    }
+
+    @Override
+    public void onItemEquipped(EntityId player, EntityId itemToEquip) {
+        equipmentAppState.equipItem(player, itemToEquip);
+    }
+
+    @Override
+    public void onItemUnequipped(EntityId player, EntityId itemToRemove, EntityId containerId) {
+        if (containerId == null) {
+            equipmentAppState.unequipItem(itemToRemove);
+        } else {
+            equipmentAppState.unequipItem(containerId, itemToRemove);
+        }
     }
 
     @Override

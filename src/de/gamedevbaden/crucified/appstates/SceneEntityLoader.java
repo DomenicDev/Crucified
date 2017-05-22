@@ -11,7 +11,6 @@ import com.jme3.scene.Spatial;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InteractionType;
-import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
@@ -24,7 +23,6 @@ import de.gamedevbaden.crucified.userdata.events.SoundEvent;
 import de.gamedevbaden.crucified.userdata.triggers.TriggerTypeData;
 
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -81,10 +79,12 @@ public class SceneEntityLoader extends AbstractAppState {
                 // with that AssetLinkNode we can get the origin of the model ( = model path )
                 if (spatial.getParent() instanceof AssetLinkNode) {
                     ModelKey key = ((AssetLinkNode) spatial.getParent()).getAssetLoaderKeys().get(0);
-                    ModelType modelType = ModelType.getModelType(key.getName());
-                    if (modelType == null)
-                        log.log(Level.SEVERE, "The model type for " + key.getName() + " has not been added yet!");
-                    entityData.setComponent(entityId, new Model(ModelType.getModelType(key.getName())));
+                    String path = key.getName();
+                    //      ModelType modelType = ModelType.getModelType(key.getName());
+                    //    if (modelType == null)
+                    //      log.log(Level.SEVERE, "The model type for " + key.getName() + " has not been added yet!");
+                    //    entityData.setComponent(entityId, new Model(ModelType.getModelType(key.getName())));
+                    entityData.setComponent(entityId, new Model(path));
                 }
 
                 switch (t.getType()) {
@@ -134,7 +134,9 @@ public class SceneEntityLoader extends AbstractAppState {
                     case PickupableItem:
                         entityData.setComponents(entityId,
                                 createTransform(spatial),
-                                new Pickable());
+                                new Pickable(),
+                                new Equipable())
+                        ;
                         break;
                     default:
                         break;
