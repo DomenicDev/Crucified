@@ -55,7 +55,7 @@ public class ModelViewAppState extends AbstractAppState {
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.visibleEntities = entityData.getEntities(Transform.class, Model.class);
-
+        this.visibleEntities.applyChanges();
         if (!visibleEntities.isEmpty()) {
             for (Entity entity : visibleEntities) {
                 addSpatial(entity);
