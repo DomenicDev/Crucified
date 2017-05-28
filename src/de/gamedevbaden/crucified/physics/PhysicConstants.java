@@ -5,8 +5,8 @@ package de.gamedevbaden.crucified.physics;
  */
 public class PhysicConstants {
 
-    public static final float HUMAN_RADIUS = 0.3f;
-    public static final float HUMAN_HEIGHT = 1.7f;
+    public static final float HUMAN_RADIUS = 0.4f;
+    public static final float HUMAN_HEIGHT = 1.8f;
     public static final float HUMAN_WEIGHT = 80f;
 
 }

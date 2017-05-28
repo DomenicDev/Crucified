@@ -4,11 +4,13 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
+import de.gamedevbaden.crucified.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
@@ -28,10 +30,20 @@ public class SingleplayerTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
+        //  GameOptions.ENABLE_PHYSICS_DEBUG = true; // for test
+
         // create entity data state
         EntityDataState entityDataState = new EntityDataState();
         stateManager.attach(entityDataState);
         EntityData entityData = entityDataState.getEntityData();
+
+        // create game commander handler
+        GameCommanderAppState commanderAppState = new GameCommanderAppState();
+        stateManager.attach(commanderAppState);
+
+        GameCommanderCollector collector = new GameCommanderCollector();
+        stateManager.attach(collector);
+        collector.addGameCommander(commanderAppState);
 
         // create session manager to create a session for a single player
         GameSessionManager sessionManager = new GameSessionManager();

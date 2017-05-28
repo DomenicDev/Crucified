@@ -8,6 +8,7 @@ import com.jme3.bounding.BoundingVolume;
 import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InteractionType;
@@ -16,6 +17,7 @@ import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
 import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
+import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
 import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
@@ -37,12 +39,19 @@ public class SceneEntityLoader extends AbstractAppState {
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
 
     private EntityData entityData;
+    private AppStateManager stateManager;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
+        this.stateManager = stateManager;
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         createEntitiesFromScene((Node) app.getAssetManager().loadModel("Scenes/TestScene.j3o"));
+
+        for (GameCommander commander : stateManager.getState(GameCommanderCollector.class).getCommanders()) {
+            commander.loadScene("Scenes/TestScene.j3o");
+        }
+
     }
 
     /**
@@ -58,12 +67,39 @@ public class SceneEntityLoader extends AbstractAppState {
         // this map is filled when calling initEntities()
         HashMap<Spatial, EntityId> spatialEntities = new HashMap<>();
 
+        initTerrain(scene);
+
         // 2. Search for entities in the scene graph and create "real" entity objects
         initEntities(scene, spatialEntities);
 
         // 3. Search for trigger entities
         // because trigger might depend on other entities we initialize the triggers after the "normal" entities
         initTriggers(scene, spatialEntities);
+    }
+
+    /**
+     * Terrain is handled a little differently here.
+     * The level designer wants to edit terrain directly in the scene and doesn't want the terrain stored
+     * in a separate file. This makes composing a scene much easier.
+     *
+     * @param rootNode
+     */
+    private void initTerrain(Node rootNode) {
+        for (Spatial spatial : rootNode.getChildren()) {
+            if (spatial instanceof TerrainQuad) {
+                TerrainQuad terrainQuad = (TerrainQuad) spatial;
+
+                EntityId terrain = entityData.createEntity();
+                entityData.setComponents(terrain,
+                        createTransform(spatial),
+                        new PhysicsTerrain(terrainQuad.getHeightMap()));
+
+                break; // we only create one terrain entity
+
+                // Note: We don't add a Model component here, because then the hole level would be loaded
+                // on client side since the terrain is directly added to the scene.
+            }
+        }
     }
 
     private void initEntities(Node rootNode, HashMap<Spatial, EntityId> entities) {

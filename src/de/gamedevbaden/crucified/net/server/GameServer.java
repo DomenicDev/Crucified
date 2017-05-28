@@ -11,10 +11,12 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.net.NetworkUtils;
+import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     private Server server;
     private ObservableEntityData entityData;
     private GameSessionManager gameSessionManager;
+    private GameCommanderCollector commanderCollector;
     private HashMap<HostedConnection, GameSession> connections = new HashMap<>();
     private RmiHostedService rmiService;
 
@@ -44,11 +47,15 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
+        this.commanderCollector = stateManager.getState(GameCommanderCollector.class);
 
         try {
 
             this.server = Network.createServer(port);
-            NetworkUtils.initSerializers();
+
+            NetworkUtils.initEntityDataSerializers();
+            NetworkUtils.initMessageSerializers();
+
             this.server.addConnectionListener(this);
 
             this.rmiService = new RmiHostedService();
@@ -102,6 +109,14 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
 
         RmiRegistry rmi = rmiService.getRmiRegistry(conn);
         rmi.share(session, GameSession.class);
+
+//        GameCommander gameCommander = rmi.getRemoteObject(GameCommander.class);
+//        this.commanderCollector.addGameCommander(gameCommander);
+//        gameCommander.loadScene("Scenes/TestScene.j3o");
+
+        // let client directly load game world
+        server.broadcast(Filters.equalTo(conn), new LoadLevelMessage("Scenes/TestScene.j3o"));
+
 
         connections.put(conn, session);
     }

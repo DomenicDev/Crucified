@@ -57,6 +57,7 @@ public class GameInitializer {
         stateManager.attach(new InteractionAppState());
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
+        stateManager.attach(new DecayAppState());
     }
 
 }

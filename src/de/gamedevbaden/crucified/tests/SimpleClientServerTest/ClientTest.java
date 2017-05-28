@@ -7,6 +7,7 @@ import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
+import de.gamedevbaden.crucified.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
 import de.gamedevbaden.crucified.utils.GameInitializer;
@@ -25,10 +26,13 @@ public class ClientTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
+        GameCommanderAppState gameCommander = new GameCommanderAppState(assetManager, rootNode);
+        stateManager.attach(gameCommander);
+
         // init game client
         GameClient client = new GameClient();
         stateManager.attach(client);
-        client.connect("localhost", 5555);
+        client.connect("localhost", 5555, gameCommander);
 
         EntityData entityData = client.getEntityData();
         GameSession gameSession = client.getGameSession();
