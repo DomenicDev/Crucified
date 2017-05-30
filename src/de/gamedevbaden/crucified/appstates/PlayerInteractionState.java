@@ -22,6 +22,7 @@ import de.gamedevbaden.crucified.es.components.Equipable;
 import de.gamedevbaden.crucified.es.components.InteractionComponent;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.Pickable;
+import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.ArrayList;
 
@@ -133,8 +134,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
             if (results.size() > 0) {
                 CollisionResult closest = results.getClosestCollision();
-                if (closest.getGeometry().getParent().getUserData("entityId") instanceof Long) {
-                    long id = closest.getGeometry().getParent().getUserData("entityId");
+                if (closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID) instanceof Long) {
+                    long id = closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID);
                     EntityId entityId = new EntityId(id);
 
                     if (interactableEntities.containsId(entityId)) {
@@ -150,10 +151,6 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                             for (PlayerInteractionListener listener : listeners) {
                                 equippedItem = entityId;
                                 listener.onItemEquipped(entityId);
-                                System.out.println("equip");
-
-                                // test
-
                             }
                         }
                     }

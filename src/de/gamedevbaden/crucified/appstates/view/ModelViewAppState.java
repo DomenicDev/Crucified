@@ -1,11 +1,8 @@
 package de.gamedevbaden.crucified.appstates.view;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.light.AmbientLight;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -17,6 +14,8 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.Transform;
+import de.gamedevbaden.crucified.game.GameCommanderAppState;
+import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,9 @@ public class ModelViewAppState extends AbstractAppState {
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        this.rootNode = ((SimpleApplication) app).getRootNode();
+        //    this.rootNode = ((SimpleApplication) app).getRootNode();
+        this.rootNode = (Node) stateManager.getState(GameCommanderAppState.class).getCurrentScene();
+
         this.modelLoaderAppState = stateManager.getState(ModelLoaderAppState.class);
 
         this.spatials = new HashMap<>();
@@ -61,9 +62,6 @@ public class ModelViewAppState extends AbstractAppState {
                 addSpatial(entity);
             }
         }
-
-        AmbientLight ambientLight = new AmbientLight(ColorRGBA.White);
-        rootNode.addLight(ambientLight);
         super.initialize(stateManager, app);
     }
 
@@ -137,7 +135,7 @@ public class ModelViewAppState extends AbstractAppState {
         spatial.setLocalScale(transform.getScale());
 
         // tag the spatial with its entity id
-        spatial.setUserData("entityId", entity.getId().getId());
+        spatial.setUserData(GameConstants.USER_DATA_ENTITY_ID, entity.getId().getId());
 
         // store the initial transform as old transform
         storeOldTransform(entity, spatial);

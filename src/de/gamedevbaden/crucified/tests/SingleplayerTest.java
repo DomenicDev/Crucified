@@ -41,6 +41,9 @@ public class SingleplayerTest extends SimpleApplication {
         GameCommanderAppState commanderAppState = new GameCommanderAppState();
         stateManager.attach(commanderAppState);
 
+        // load test scene
+        stateManager.attach(new SceneEntityLoader());
+
         GameCommanderCollector collector = new GameCommanderCollector();
         stateManager.attach(collector);
         collector.addGameCommander(commanderAppState);
@@ -69,8 +72,7 @@ public class SingleplayerTest extends SimpleApplication {
         // create first person cam view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), new Vector3f(0, 1.7f, 0.2f))); // 0,1.7,0
 
-        // load test scene
-        stateManager.attach(new SceneEntityLoader());
+
     }
 
 }
