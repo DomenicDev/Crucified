@@ -472,10 +472,15 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
     private void addTerrain(Entity entity) {
         PhysicsTerrain terrain = entity.get(PhysicsTerrain.class);
         Transform transform = entity.get(Transform.class);
-        CollisionShape terrainShape = new HeightfieldCollisionShape(terrain.getHeightMap(), transform.getScale());
-        RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
-        terrainControl.setPhysicsLocation(transform.getTranslation());
-        bulletAppState.getPhysicsSpace().add(terrainControl);
+        Spatial terrainModel = ((Node) modelLoader.loadModel(terrain.getScenePath())).getChild(terrain.getTerrainName());
+        if (terrainModel instanceof TerrainQuad) {
+            float[] heightMap = ((TerrainQuad) terrainModel).getHeightMap();
+            CollisionShape terrainShape = new HeightfieldCollisionShape(heightMap, transform.getScale());
+            RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
+            terrainControl.setPhysicsLocation(transform.getTranslation());
+            bulletAppState.getPhysicsSpace().add(terrainControl);
+        }
+
     }
 
     @Override

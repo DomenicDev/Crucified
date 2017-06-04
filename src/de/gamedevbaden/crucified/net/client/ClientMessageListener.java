@@ -21,7 +21,7 @@ public class ClientMessageListener implements MessageListener<Client> {
     public void messageReceived(Client source, Message m) {
         if (m instanceof LoadLevelMessage) {
             LoadLevelMessage lm = (LoadLevelMessage) m;
-            gameCommander.loadScene(lm.getLevelPath());
+            gameCommander.loadScene(lm.getScene());
         }
     }
 }

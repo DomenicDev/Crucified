@@ -9,16 +9,22 @@ import com.simsilica.es.EntityComponent;
 @Serializable
 public class PhysicsTerrain implements EntityComponent {
 
-    private float[] heightMap;
+    private String scenePath;
+    private String terrainName;
 
     public PhysicsTerrain() {
     }
 
-    public PhysicsTerrain(float[] heightMap) {
-        this.heightMap = heightMap;
+    public PhysicsTerrain(String scenePath, String terrainName) {
+        this.scenePath = scenePath;
+        this.terrainName = terrainName;
     }
 
-    public float[] getHeightMap() {
-        return heightMap;
+    public String getScenePath() {
+        return scenePath;
+    }
+
+    public String getTerrainName() {
+        return terrainName;
     }
 }

@@ -7,6 +7,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.userdata.EntityType;
 
 /**
@@ -17,6 +18,8 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private AssetManager assetManager;
     private Node rootNode;
 
+    private SimpleApplication app;
+
     private Spatial currentScene;
 
 
@@ -25,31 +28,31 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
     /**
      * For debug reason
-     *
-     * @param assetManager
-     * @param rootNode
      */
-    public GameCommanderAppState(AssetManager assetManager, Node rootNode) {
-        this.assetManager = assetManager;
-        this.rootNode = rootNode;
+    public GameCommanderAppState(SimpleApplication app) {
+        this.app = app;
+        this.assetManager = app.getAssetManager();
+        this.rootNode = app.getRootNode();
     }
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.assetManager = app.getAssetManager();
         this.rootNode = ((SimpleApplication) app).getRootNode();
+
+
         super.initialize(stateManager, app);
     }
 
     @Override
-    public void loadScene(String path) {
+    public void loadScene(Scene scene) {
 
-        Spatial scene = assetManager.loadModel(path);
-        this.rootNode.attachChild(scene);
+        Spatial world = assetManager.loadModel(scene.getScenePath());
+        this.rootNode.attachChild(world);
         // we want all objects (nodes, geometry) with an EntityType user data
         // to be removed because they will
         // be added when receiving the entities for that scene
-        scene.depthFirstTraversal(spatial -> {
+        world.depthFirstTraversal(spatial -> {
             for (String userDataKey : spatial.getUserDataKeys()) {
                 if (spatial.getUserData(userDataKey) instanceof EntityType) {
                     spatial.removeFromParent();
@@ -57,7 +60,15 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             }
         });
 
-        this.currentScene = scene;
+        // ToDo: Activate LOD for terrain (set cam)
+
+        // init filter if available
+//        if (scene.getFilterPath() != null) {
+//            FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
+//            app.getViewPort().addProcessor(fpp);
+//        }
+
+        this.currentScene = world;
 
         // attach scene
 

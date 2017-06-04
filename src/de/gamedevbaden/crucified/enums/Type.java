@@ -62,4 +62,9 @@ public enum Type {
      */
     PickupableItem,
 
+    /**
+     * All objects like trees, palms etc.
+     */
+    Tree,
+
 }

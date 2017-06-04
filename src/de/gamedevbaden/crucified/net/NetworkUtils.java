@@ -2,6 +2,8 @@ package de.gamedevbaden.crucified.net;
 
 
 import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.serializers.EnumSerializer;
+import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 
@@ -10,6 +12,9 @@ import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
  */
 public class NetworkUtils {
 
+    /**
+     * Only called by the server
+     */
     public static void initEntityDataSerializers() {
         Serializer.registerClass(Transform.class);
         Serializer.registerClass(Model.class);
@@ -28,7 +33,11 @@ public class NetworkUtils {
         Serializer.registerClass(PhysicsTerrain.class);
     }
 
+    /**
+     * Used on both, server and client
+     */
     public static void initMessageSerializers() {
+        Serializer.registerClass(Scene.class, new EnumSerializer());
         Serializer.registerClass(LoadLevelMessage.class);
     }
 

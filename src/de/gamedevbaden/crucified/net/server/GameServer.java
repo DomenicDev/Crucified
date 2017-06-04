@@ -12,6 +12,7 @@ import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
+import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
@@ -115,7 +116,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
 //        gameCommander.loadScene("Scenes/TestScene.j3o");
 
         // let client directly load game world
-        server.broadcast(Filters.equalTo(conn), new LoadLevelMessage("Scenes/TestScene.j3o"));
+        server.broadcast(Filters.equalTo(conn), new LoadLevelMessage(Scene.BeachScene));
 
 
         connections.put(conn, session);

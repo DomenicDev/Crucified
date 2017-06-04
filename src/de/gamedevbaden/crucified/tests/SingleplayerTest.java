@@ -15,6 +15,7 @@ import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.utils.GameInitializer;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 /**
  * Created by Domenic on 21.05.2017.
@@ -30,7 +31,7 @@ public class SingleplayerTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
-        //  GameOptions.ENABLE_PHYSICS_DEBUG = true; // for test
+        GameOptions.ENABLE_PHYSICS_DEBUG = false; // for test
 
         // create entity data state
         EntityDataState entityDataState = new EntityDataState();
@@ -71,7 +72,6 @@ public class SingleplayerTest extends SimpleApplication {
 
         // create first person cam view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), new Vector3f(0, 1.7f, 0.2f))); // 0,1.7,0
-
 
     }
 

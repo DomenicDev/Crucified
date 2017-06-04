@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.net.messages;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
+import de.gamedevbaden.crucified.enums.Scene;
 
 /**
  * Created by Domenic on 27.05.2017.
@@ -9,16 +10,16 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class LoadLevelMessage extends AbstractMessage {
 
-    private String levelPath;
+    private Scene scene;
 
     public LoadLevelMessage() {
     }
 
-    public LoadLevelMessage(String levelPath) {
-        this.levelPath = levelPath;
+    public LoadLevelMessage(Scene scene) {
+        this.scene = scene;
     }
 
-    public String getLevelPath() {
-        return levelPath;
+    public Scene getScene() {
+        return scene;
     }
 }

@@ -26,7 +26,7 @@ public class HudAppState extends AbstractAppState {
         int height = app.getCamera().getHeight();
 
         this.hudText = new BitmapText(guiFont, false);
-        hudText.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        hudText.setSize(guiFont.getCharSet().getRenderedSize() + 10);      // font size
         hudText.setColor(ColorRGBA.White);                             // font color
         hudText.setText("+");                                           // the text
         hudText.setLocalTranslation(width / 2 + hudText.getLineWidth(), height / 2 + hudText.getLineHeight(), 0); // position

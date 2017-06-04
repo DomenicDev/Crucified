@@ -26,7 +26,7 @@ public class ClientTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
-        GameCommanderAppState gameCommander = new GameCommanderAppState(assetManager, rootNode);
+        GameCommanderAppState gameCommander = new GameCommanderAppState(this);
         stateManager.attach(gameCommander);
 
         // init game client
