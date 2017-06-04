@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.gamedevbaden.crucified.enums.Scene;
@@ -63,10 +64,11 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // ToDo: Activate LOD for terrain (set cam)
 
         // init filter if available
-//        if (scene.getFilterPath() != null) {
-//            FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
-//            app.getViewPort().addProcessor(fpp);
-//        }
+        if (scene.getFilterPath() != null) {
+            FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
+            System.out.println(app);
+            app.getViewPort().addProcessor(fpp);
+        }
 
         this.currentScene = world;
 

@@ -7,7 +7,7 @@ package de.gamedevbaden.crucified.enums;
 public enum Scene {
 
     TestScene("Scenes/TestScene.j3o", null),
-    BeachScene("Scenes/IslandVersion1.j3o", "Scenes/IslandFilter.j3f");
+    BeachScene("Scenes/BeachScene.j3o", "Scenes/BeachSceneFilter.j3f");
 
     private String scenePath;
     private String filterPath;

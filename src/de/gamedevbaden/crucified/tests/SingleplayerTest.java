@@ -39,7 +39,7 @@ public class SingleplayerTest extends SimpleApplication {
         EntityData entityData = entityDataState.getEntityData();
 
         // create game commander handler
-        GameCommanderAppState commanderAppState = new GameCommanderAppState();
+        GameCommanderAppState commanderAppState = new GameCommanderAppState(this);
         stateManager.attach(commanderAppState);
 
         // load test scene
