@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Grass/3td_BeachGrass_01.png
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}
