@@ -8,7 +8,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
-import com.simsilica.es.Entity;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 
 /**
@@ -16,19 +15,11 @@ import de.gamedevbaden.crucified.es.components.CharacterMovementState;
  */
 public class NewCharacterAnimControl extends AbstractControl implements AnimEventListener {
 
-    private Entity playerEntity;
-
     private AnimControl animControl;
     private AnimChannel lowerBody, upperBody, rightUpperBody, leftUpperBody;
 
-
-    public Entity getPlayerEntity() {
-        return playerEntity;
-    }
-
-    public void setPlayerEntity(Entity playerEntity) {
-        this.playerEntity = playerEntity;
-    }
+    private int state; // movement state
+    private String equippedModel;
 
     @Override
     public void setSpatial(Spatial spatial) {
@@ -63,6 +54,13 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
         }
     }
 
+    public void setMovementState(int state) {
+        this.state = state;
+    }
+
+    public void setEquippedModel(String equippedModel) {
+        this.equippedModel = equippedModel;
+    }
 
     private void setAnimation(CharacterAnimation anim, AnimChannel... channels) {
         if (anim == null || anim.getAnimName() == null || channels == null || isAnimationForChannels(anim.getAnimName(), channels)) {
@@ -75,6 +73,7 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             }
         }
     }
+
 
     /**
      * Go through the given channels and look if they execute the same animation
@@ -97,15 +96,6 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
 
     @Override
     protected void controlUpdate(float tpf) {
-        if (this.playerEntity == null) {
-            return;
-        }
-
-        CharacterMovementState movementState = this.playerEntity.get(CharacterMovementState.class);
-        //      CharacterEquipmentState equipmentState = this.playerEntity.get(CharacterEquipmentState.class);
-
-        int state = movementState.getMovementState();
-
         if (state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
             setAnimation(CharacterAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) {
@@ -124,6 +114,13 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             setAnimation(CharacterAnimation.Idle, lowerBody, upperBody);
         }
 
+        if (equippedModel != null) {
+            // play equip anim
+        } else {
+            // apply animation for other channels
+            setAnimation(CharacterAnimation.getByAnimName(upperBody.getAnimationName()), rightUpperBody, leftUpperBody);
+        }
+
     }
 
     @Override
@@ -133,11 +130,6 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
 
     @Override
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-
-        CharacterMovementState movementState = playerEntity.get(CharacterMovementState.class);
-
-        int state = movementState.getMovementState();
-
         if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(CharacterAnimation.Run.getAnimName())) {
             channel.setAnim(CharacterAnimation.Run.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(CharacterAnimation.Walk.getAnimName())) {
@@ -152,7 +144,7 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             } else if (animName.equals(CharacterAnimation.Walk.getAnimName())) {
                 channel.setAnim(CharacterAnimation.Walk.getAnimName());
             }
-        } else if (state == CharacterMovementState.MOVING_RIGHT && animName.equals(CharacterAnimation.SideRight.getAnimName())) {
+        } else if (state == CharacterMovementState.MOVING_RIGHT) {
             if (animName.equals(CharacterAnimation.SideRight.getAnimName())) {
                 channel.setAnim(CharacterAnimation.SideRight.getAnimName());
             } else if (animName.equals(CharacterAnimation.Walk.getAnimName())) {
@@ -183,6 +175,15 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
         CharacterAnimation(String animName, float blendTime) {
             this.animName = animName;
             this.blendTime = blendTime;
+        }
+
+        public static CharacterAnimation getByAnimName(String animName) {
+            for (CharacterAnimation animation : values()) {
+                if (animation.getAnimName().equals(animName)) {
+                    return animation;
+                }
+            }
+            return null;
         }
 
         /**

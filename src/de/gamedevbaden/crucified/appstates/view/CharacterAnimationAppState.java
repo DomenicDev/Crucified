@@ -69,9 +69,9 @@ public class CharacterAnimationAppState extends AbstractAppState {
         Spatial playerModel = modelAppState.getSpatial(entity.getId());
         if (playerModel != null) {
             NewCharacterAnimControl animControl = new NewCharacterAnimControl();
-            animControl.setPlayerEntity(entity);
             playerModel.addControl(animControl);
             animControls.put(entity.getId(), animControl);
+            updateAnimControl(entity);
         }
 
     }
@@ -79,7 +79,9 @@ public class CharacterAnimationAppState extends AbstractAppState {
     private void updateAnimControl(Entity entity) {
         NewCharacterAnimControl animControl = animControls.get(entity.getId());
         if (animControl != null) {
-            animControl.setPlayerEntity(entity);
+            CharacterMovementState movementState = entity.get(CharacterMovementState.class);
+            animControl.setMovementState(movementState.getMovementState());
+            // ToDo; Apply equipped model
         }
     }
 
