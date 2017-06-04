@@ -11,6 +11,7 @@ import com.jme3.network.service.rmi.RmiClientService;
 import com.jme3.network.service.rpc.RpcClientService;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.client.EntityDataClientService;
+import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
 
 import java.io.IOException;
@@ -37,10 +38,13 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
         super.initialize(stateManager, app);
     }
 
-    public boolean connect(String address, int port) {
+    public boolean connect(String address, int port, GameCommander gameCommander) {
         startedSignal = new CountDownLatch(1);
         try {
+            //     NetworkUtils.initMessageSerializers();
+
             this.client = Network.connectToServer(address, port);
+
             this.client.addClientStateListener(this);
 
             this.rmiClientService = new RmiClientService();
@@ -51,8 +55,12 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
             this.address = address;
             this.port = port;
 
+            this.client.addMessageListener(new ClientMessageListener(gameCommander));
+
             this.client.start();
+            //        this.rmiClientService.share(gameCommander, GameCommander.class);
             startedSignal.await();
+
             this.gameSession = rmiClientService.getRemoteObject(GameSession.class);
             this.entityData = this.client.getServices().getService(EntityDataClientService.class).getEntityData();
             return true;
@@ -86,8 +94,9 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
 
     @Override
     public void clientConnected(Client c) {
+        System.out.println("coonect");
         startedSignal.countDown();
-
+        System.out.println("end connect");
     }
 
     @Override

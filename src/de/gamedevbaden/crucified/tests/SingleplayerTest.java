@@ -1,18 +1,21 @@
 package de.gamedevbaden.crucified.tests;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
+import de.gamedevbaden.crucified.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
+import de.gamedevbaden.crucified.utils.GameConstants;
 import de.gamedevbaden.crucified.utils.GameInitializer;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 /**
  * Created by Domenic on 21.05.2017.
@@ -28,10 +31,23 @@ public class SingleplayerTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
+        GameOptions.ENABLE_PHYSICS_DEBUG = false; // for test
+
         // create entity data state
         EntityDataState entityDataState = new EntityDataState();
         stateManager.attach(entityDataState);
         EntityData entityData = entityDataState.getEntityData();
+
+        // create game commander handler
+        GameCommanderAppState commanderAppState = new GameCommanderAppState(this);
+        stateManager.attach(commanderAppState);
+
+        // load test scene
+        stateManager.attach(new SceneEntityLoader());
+
+        GameCommanderCollector collector = new GameCommanderCollector();
+        stateManager.attach(collector);
+        collector.addGameCommander(commanderAppState);
 
         // create session manager to create a session for a single player
         GameSessionManager sessionManager = new GameSessionManager();
@@ -55,10 +71,8 @@ public class SingleplayerTest extends SimpleApplication {
 
 
         // create first person cam view
-        stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), new Vector3f(0, 1.7f, 0.2f))); // 0,1.7,0
+        stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
 
-        // load test scene
-        stateManager.attach(new SceneEntityLoader());
     }
 
 }

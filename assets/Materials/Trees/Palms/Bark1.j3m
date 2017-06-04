@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Trees/Palm/palm_tree_bark_512A.dds
+        NormalMap : Repeat Textures/Trees/Palm/palm_tree_bark_512A_NRM.dds
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}

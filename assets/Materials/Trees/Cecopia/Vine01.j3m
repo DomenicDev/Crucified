@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/Cecopia/GreenVine02.dds
+        NormalMap : Textures/Trees/Cecopia/GreenVine02_NRM.dds
+        SpecularMap : Textures/Trees/Cecopia/GreenVine02_SPEC.dds
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 128.0
+        AlphaDiscardThreshold : 0.7
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

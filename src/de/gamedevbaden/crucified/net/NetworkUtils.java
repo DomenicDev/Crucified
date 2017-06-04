@@ -2,14 +2,20 @@ package de.gamedevbaden.crucified.net;
 
 
 import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.serializers.EnumSerializer;
+import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
+import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 
 /**
  * Created by Domenic on 17.04.2017.
  */
 public class NetworkUtils {
 
-    public static void initSerializers() {
+    /**
+     * Only called by the server
+     */
+    public static void initEntityDataSerializers() {
         Serializer.registerClass(Transform.class);
         Serializer.registerClass(Model.class);
         Serializer.registerClass(OnMovement.class);
@@ -24,6 +30,15 @@ public class NetworkUtils {
         Serializer.registerClass(StoredIn.class);
         Serializer.registerClass(Equipable.class);
         Serializer.registerClass(EquippedBy.class);
+        Serializer.registerClass(PhysicsTerrain.class);
+    }
+
+    /**
+     * Used on both, server and client
+     */
+    public static void initMessageSerializers() {
+        Serializer.registerClass(Scene.class, new EnumSerializer());
+        Serializer.registerClass(LoadLevelMessage.class);
     }
 
 }

@@ -3,19 +3,23 @@ package de.gamedevbaden.crucified.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InteractionType;
+import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
 import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
+import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
 import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
@@ -34,15 +38,27 @@ import java.util.logging.Logger;
  */
 public class SceneEntityLoader extends AbstractAppState {
 
+    private static final String TEST_SCENE = "Scenes/TestScene.j3o";
+    private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
-
     private EntityData entityData;
+    private AppStateManager stateManager;
+    private AssetManager assetManager;
+    private Scene sceneToLoad = Scene.BeachScene;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
+        this.stateManager = stateManager;
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        createEntitiesFromScene((Node) app.getAssetManager().loadModel("Scenes/TestScene.j3o"));
+        this.assetManager = app.getAssetManager();
+
+        createEntitiesFromScene(sceneToLoad);
+
+        for (GameCommander commander : stateManager.getState(GameCommanderCollector.class).getCommanders()) {
+            commander.loadScene(sceneToLoad);
+        }
+
     }
 
     /**
@@ -51,19 +67,48 @@ public class SceneEntityLoader extends AbstractAppState {
      *
      * @param scene the scene which shall be searched for entities
      */
-    public void createEntitiesFromScene(Node scene) {
+    public void createEntitiesFromScene(Scene scene) {
         // The initialization is done in several steps:
+
+        Node gameWorld = (Node) assetManager.loadModel(sceneToLoad.getScenePath());
 
         // 1. Create a HashMap to store the reference of a spatial (with entity data)
         // this map is filled when calling initEntities()
         HashMap<Spatial, EntityId> spatialEntities = new HashMap<>();
 
+        initTerrain(scene, gameWorld);
+
         // 2. Search for entities in the scene graph and create "real" entity objects
-        initEntities(scene, spatialEntities);
+        initEntities(gameWorld, spatialEntities);
 
         // 3. Search for trigger entities
         // because trigger might depend on other entities we initialize the triggers after the "normal" entities
-        initTriggers(scene, spatialEntities);
+        initTriggers(gameWorld, spatialEntities);
+    }
+
+    /**
+     * Terrain is handled a little differently here.
+     * The level designer wants to edit terrain directly in the scene and doesn't want the terrain stored
+     * in a separate file. This makes composing a scene much easier.
+     *
+     * @param rootNode
+     */
+    private void initTerrain(Scene scene, Node rootNode) {
+        for (Spatial spatial : rootNode.getChildren()) {
+            if (spatial instanceof TerrainQuad) {
+                TerrainQuad terrainQuad = (TerrainQuad) spatial;
+
+                EntityId terrain = entityData.createEntity();
+                entityData.setComponents(terrain,
+                        createTransform(spatial),
+                        new PhysicsTerrain(scene.getScenePath(), spatial.getName()));
+
+                break; // we only create one terrain entity
+
+                // Note: We don't add a Model component here, because then the hole level would be loaded
+                // on client side since the terrain is directly added to the scene.
+            }
+        }
     }
 
     private void initEntities(Node rootNode, HashMap<Spatial, EntityId> entities) {
@@ -87,34 +132,33 @@ public class SceneEntityLoader extends AbstractAppState {
                     entityData.setComponent(entityId, new Model(path));
                 }
 
+                // we also add the transform component to the entity
+                entityData.setComponent(entityId, createTransform(spatial));
+
                 switch (t.getType()) {
 
-                    case DefaultModel:
-                        entityData.setComponents(entityId,
-                                createTransform(spatial));
-                        break;
+//                    case DefaultModel:
+//                        entityData.setComponents(entityId,
+//                                createTransform(spatial));
+//                        break;
 
                     case StaticPhysicObjectMeshShape:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
                         break;
 
                     case DynamicPhysicObjectMeshShape:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new PhysicsRigidBody(10, false, CollisionShapeType.MESH_COLLISION_SHAPE));
                         break;
 
                     case StaticPhysicsObjectBoxShape:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE));
                         break;
 
                     case DynamicPhysicsObjectBoxShape:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new PhysicsRigidBody(10, false, CollisionShapeType.BOX_COLLISION_SHAPE));
                         break;
 
@@ -126,17 +170,20 @@ public class SceneEntityLoader extends AbstractAppState {
 
                     case Door:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new PhysicsRigidBody(0, true, CollisionShapeType.BOX_COLLISION_SHAPE),
                                 new InteractionComponent(InteractionType.PlayTestSound));
 
                         break;
                     case PickupableItem:
                         entityData.setComponents(entityId,
-                                createTransform(spatial),
                                 new Pickable(),
                                 new Equipable())
                         ;
+                        break;
+
+                    case Tree:
+                        entityData.setComponents(entityId,
+                                new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
                         break;
                     default:
                         break;

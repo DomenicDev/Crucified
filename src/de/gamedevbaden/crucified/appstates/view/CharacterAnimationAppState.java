@@ -11,8 +11,8 @@ import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.CharacterAnimControl;
+import de.gamedevbaden.crucified.controls.NewCharacterAnimControl;
 import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.es.components.CharacterEquipmentState;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.Model;
 
@@ -25,16 +25,23 @@ import java.util.HashMap;
 public class CharacterAnimationAppState extends AbstractAppState {
 
     private EntitySet characters;
-    private HashMap<EntityId, CharacterAnimControl> animControls;
+    private HashMap<EntityId, NewCharacterAnimControl> animControls;
     private ModelViewAppState modelAppState;
 
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "modelType", ModelType.Player), Model.class, CharacterMovementState.class, CharacterEquipmentState.class);
+        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Player), Model.class, CharacterMovementState.class);
         this.animControls = new HashMap<>();
         this.modelAppState = stateManager.getState(ModelViewAppState.class);
+
+        if (!characters.isEmpty()) {
+            for (Entity entity : characters) {
+                addCharacterAnimControl(entity);
+            }
+        }
+
         super.initialize(stateManager, app);
     }
 
@@ -61,23 +68,25 @@ public class CharacterAnimationAppState extends AbstractAppState {
     private void addCharacterAnimControl(Entity entity) {
         Spatial playerModel = modelAppState.getSpatial(entity.getId());
         if (playerModel != null) {
-            CharacterAnimControl animControl = new CharacterAnimControl();
-            animControl.setPlayerEntity(entity);
+            NewCharacterAnimControl animControl = new NewCharacterAnimControl();
             playerModel.addControl(animControl);
             animControls.put(entity.getId(), animControl);
+            updateAnimControl(entity);
         }
 
     }
 
     private void updateAnimControl(Entity entity) {
-        CharacterAnimControl animControl = animControls.get(entity.getId());
+        NewCharacterAnimControl animControl = animControls.get(entity.getId());
         if (animControl != null) {
-            animControl.setPlayerEntity(entity);
+            CharacterMovementState movementState = entity.get(CharacterMovementState.class);
+            animControl.setMovementState(movementState.getMovementState());
+            // ToDo; Apply equipped model
         }
     }
 
     private void removeAnimControl(Entity entity) {
-        CharacterAnimControl animControl = animControls.get(entity.getId());
+        NewCharacterAnimControl animControl = animControls.get(entity.getId());
         if (animControl != null) {
             Spatial model = animControl.getSpatial();
             if (model != null) {

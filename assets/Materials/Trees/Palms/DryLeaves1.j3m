@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/Palm/DriPalm01.dds
+        NormalMap : Textures/Trees/Palm/DriPalm01_NRM.dds
+        SpecularMap : Textures/Trees/Palm/DriPalm01_SPEC.dds
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 200.0
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      FaceCull Back
+      Blend Alpha
+    }
+}

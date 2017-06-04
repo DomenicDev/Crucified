@@ -5,6 +5,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
@@ -37,6 +38,7 @@ public class PhysicAppState extends AbstractAppState {
 
     private EntitySet characters;
     private EntitySet rigidBodies;
+    private EntitySet terrains;
     private EntityData entityData;
 
     private HashMap<EntityId, CustomCharacterControl> characterControls;
@@ -55,6 +57,7 @@ public class PhysicAppState extends AbstractAppState {
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
+
         this.bulletAppState = new BulletAppState();
         this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
         this.stateManager.attach(bulletAppState);
@@ -66,6 +69,7 @@ public class PhysicAppState extends AbstractAppState {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
+        this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
 
         // if there are already entities in the sets
         // create the physical controls for them...
@@ -78,6 +82,12 @@ public class PhysicAppState extends AbstractAppState {
         if (!rigidBodies.isEmpty()) {
             for (Entity entity : rigidBodies) {
                 addRigidBodyControl(entity);
+            }
+        }
+
+        if (!terrains.isEmpty()) {
+            for (Entity entity : terrains) {
+                addTerrain(entity);
             }
         }
 
@@ -127,6 +137,18 @@ public class PhysicAppState extends AbstractAppState {
                 removeRigidBodyControl(entity);
             }
 
+        }
+
+        // terrains
+        if (terrains.applyChanges()) {
+
+            for (Entity entity : terrains.getAddedEntities()) {
+                addTerrain(entity);
+            }
+
+            for (Entity entity : terrains.getRemovedEntities()) {
+                removeTerrain(entity);
+            }
         }
 
 
@@ -210,6 +232,24 @@ public class PhysicAppState extends AbstractAppState {
         return rigidBodyControls.get(entityId);
     }
 
+    private void addTerrain(Entity entity) {
+        PhysicsTerrain terrain = entity.get(PhysicsTerrain.class);
+        Transform transform = entity.get(Transform.class);
+        Spatial terrainModel = ((Node) modelLoader.loadModel(terrain.getScenePath())).getChild(terrain.getTerrainName());
+        if (terrainModel instanceof TerrainQuad) {
+            float[] heightMap = ((TerrainQuad) terrainModel).getHeightMap();
+            CollisionShape terrainShape = new HeightfieldCollisionShape(heightMap, transform.getScale());
+            RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
+            terrainControl.setPhysicsLocation(transform.getTranslation());
+            bulletAppState.getPhysicsSpace().add(terrainControl);
+        }
+
+    }
+
+    private void removeTerrain(Entity entity) {
+        removeRigidBodyControl(entity);
+    }
+
     private void addCharacterControl(Entity entity) {
         //    PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
@@ -268,21 +308,19 @@ public class PhysicAppState extends AbstractAppState {
             }
             return null;
         } else if (type == CollisionShapeType.TERRAIN_COLLISION_SHAPE) {
-            Spatial model = modelLoader.loadModel(modelPath);
-            TerrainQuad terrain = null;
-            if (model instanceof TerrainQuad) {
-                terrain = (TerrainQuad) model;
-            } else if (model instanceof Node) { // should always be this case
-                Node node = (Node) model;
-                if (node.getChild(0) instanceof TerrainQuad) {
-                    terrain = (TerrainQuad) node.getChild(0);
+            // Terrain is handled a bit differently.
+            // Terrain is not linked into the scene, but added as a part of the scene
+            // That's why we need to search for the TerrainQuad
+            Node model = (Node) modelLoader.loadModel(modelPath);
+            model.setLocalScale(scale);
+
+            for (Spatial s : model.getChildren()) {
+                if (s instanceof TerrainQuad) {
+                    // we create the shape out of the first quad we find
+                    return CollisionShapeFactory.createMeshShape(s);
                 }
             }
-            if (terrain != null) {
-                model.setLocalScale(scale);
-                // the method will recognize that this is a terrain
-                return CollisionShapeFactory.createMeshShape(model);
-            }
+
         }
         return null;
 
@@ -296,6 +334,8 @@ public class PhysicAppState extends AbstractAppState {
         for (Entity entity : rigidBodies) {
             removeRigidBodyControl(entity);
         }
+        this.characterControls.clear();
+        this.rigidBodyControls.clear();
         this.characterControls = null;
         this.rigidBodyControls = null;
 

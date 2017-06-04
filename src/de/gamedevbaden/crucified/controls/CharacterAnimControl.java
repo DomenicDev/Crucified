@@ -10,7 +10,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.simsilica.es.Entity;
 import de.gamedevbaden.crucified.enums.ObjectCategory;
-import de.gamedevbaden.crucified.es.components.CharacterEquipmentState;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 
 /**
@@ -76,86 +75,87 @@ public class CharacterAnimControl extends AbstractControl implements AnimEventLi
         }
 
         CharacterMovementState movementState = this.playerEntity.get(CharacterMovementState.class);
-        CharacterEquipmentState equipmentState = this.playerEntity.get(CharacterEquipmentState.class);
+        //      CharacterEquipmentState equipmentState = this.playerEntity.get(CharacterEquipmentState.class);
 
+        int state = movementState.getMovementState();
 
-        if (movementState.getMovementState() == CharacterMovementState.MOVING_FORWARD) {
+        if (state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
             setAnimation(Animation.Walk, AnimationChannel.LowerBody, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_BACK) {
+        } else if (state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) {
             setAnimation(Animation.WalkBack, AnimationChannel.LowerBody, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_LEFT) {
+        } else if (state == CharacterMovementState.MOVING_LEFT) {
             setAnimation(Animation.SideLeft, AnimationChannel.LowerBody);
             setAnimation(Animation.Walk, AnimationChannel.UpperBody); // for side anim we want the walk anim for upper channel
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_RIGHT) {
+        } else if (state == CharacterMovementState.MOVING_RIGHT) {
             setAnimation(Animation.SideRight, AnimationChannel.LowerBody);
             setAnimation(Animation.Walk, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.RUNNING_FORWARD) {
+        } else if (state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
             setAnimation(Animation.Run, AnimationChannel.LowerBody, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.RUNNING_BACK) {
+        } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
             setAnimation(Animation.Runback, AnimationChannel.LowerBody, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.IDLE) {
+        } else if (state == CharacterMovementState.IDLE) {
             setAnimation(Animation.Idle, AnimationChannel.LowerBody, AnimationChannel.UpperBody);
         }
 
-        ObjectCategory equippedItem = equipmentState.getEquippedObject();
-        Animation equipAnimation = getEquipAnimation(equippedItem);
-        if (equipAnimation != null) {
-            // we assume that only the right arm has equipped animations
-            setAnimation(equipAnimation, AnimationChannel.RightUpperBody);
-            setAnimation(AnimationChannel.UpperBody.getLastPlayedAnim(), AnimationChannel.LeftUpperBody);
-        } else {
-            // no equipped item so set the same animation for the arms the upper body has
-            setAnimation(AnimationChannel.UpperBody.getLastPlayedAnim(), AnimationChannel.RightUpperBody, AnimationChannel.LeftUpperBody);
-        }
+//        ObjectCategory equippedItem = equipmentState.getEquippedObject();
+//        Animation equipAnimation = getEquipAnimation(equippedItem);
+//        if (equipAnimation != null) {
+//            // we assume that only the right arm has equipped animations
+//            setAnimation(equipAnimation, CharacterChannel.RightUpperBody);
+//            setAnimation(CharacterChannel.UpperBody.getLastPlayedAnim(), CharacterChannel.LeftUpperBody);
+//        } else {
+//            // no equipped item so set the same animation for the arms the upper body has
+//            setAnimation(CharacterChannel.UpperBody.getLastPlayedAnim(), CharacterChannel.RightUpperBody, CharacterChannel.LeftUpperBody);
+//        }
 
 //        if (InputCommand.Forward.isPressed()) {
-//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Run.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
-//                setAnimation(Animation.Run, AnimationChannel.UpperBody, LoopMode.DontLoop);
-//                setAnimation(Animation.Run, AnimationChannel.LowerBody, LoopMode.DontLoop);
-//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
-//                setAnimation(Animation.Walk, AnimationChannel.UpperBody, LoopMode.DontLoop);
-//                setAnimation(Animation.Walk, AnimationChannel.LowerBody, LoopMode.DontLoop);
+//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Run.getAnimName(), CharacterChannel.LowerBody, CharacterChannel.UpperBody)) {
+//                setAnimation(Animation.Run, CharacterChannel.UpperBody, LoopMode.DontLoop);
+//                setAnimation(Animation.Run, CharacterChannel.LowerBody, LoopMode.DontLoop);
+//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Walk.getAnimName(), CharacterChannel.LowerBody, CharacterChannel.UpperBody)) {
+//                setAnimation(Animation.Walk, CharacterChannel.UpperBody, LoopMode.DontLoop);
+//                setAnimation(Animation.Walk, CharacterChannel.LowerBody, LoopMode.DontLoop);
 //            }
 //        } else if (InputCommand.Backward.isPressed()) {
-//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Runback.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
-//                setAnimation(Animation.Runback, AnimationChannel.UpperBody, LoopMode.DontLoop);
-//                setAnimation(Animation.Runback, AnimationChannel.LowerBody, LoopMode.DontLoop);
-//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.WalkBack.getAnimName(), AnimationChannel.UpperBody, AnimationChannel.LowerBody)) {
-//                setAnimation(Animation.WalkBack, AnimationChannel.UpperBody, LoopMode.DontLoop);
-//                setAnimation(Animation.WalkBack, AnimationChannel.LowerBody, LoopMode.DontLoop);
+//            if (InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.Runback.getAnimName(), CharacterChannel.LowerBody, CharacterChannel.UpperBody)) {
+//                setAnimation(Animation.Runback, CharacterChannel.UpperBody, LoopMode.DontLoop);
+//                setAnimation(Animation.Runback, CharacterChannel.LowerBody, LoopMode.DontLoop);
+//            } else if (!InputCommand.Shift.isPressed() && !isAnimationForChannels(Animation.WalkBack.getAnimName(), CharacterChannel.UpperBody, CharacterChannel.LowerBody)) {
+//                setAnimation(Animation.WalkBack, CharacterChannel.UpperBody, LoopMode.DontLoop);
+//                setAnimation(Animation.WalkBack, CharacterChannel.LowerBody, LoopMode.DontLoop);
 //            }
 //        } else if (InputCommand.Left.isPressed()) {
-//            if (!isAnimationForChannels(Animation.SideLeft.getAnimName(), AnimationChannel.LowerBody)) {
-//                setAnimation(Animation.SideLeft, AnimationChannel.LowerBody, LoopMode.DontLoop);
+//            if (!isAnimationForChannels(Animation.SideLeft.getAnimName(), CharacterChannel.LowerBody)) {
+//                setAnimation(Animation.SideLeft, CharacterChannel.LowerBody, LoopMode.DontLoop);
 //            }
-//            if (!isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.UpperBody)) {
-//                setAnimation(Animation.Walk, AnimationChannel.UpperBody, LoopMode.DontLoop);
+//            if (!isAnimationForChannels(Animation.Walk.getAnimName(), CharacterChannel.UpperBody)) {
+//                setAnimation(Animation.Walk, CharacterChannel.UpperBody, LoopMode.DontLoop);
 //            }
 //        } else if (InputCommand.Right.isPressed()) {
-//            if (!isAnimationForChannels(Animation.SideRight.getAnimName(), AnimationChannel.LowerBody)) {
-//                setAnimation(Animation.SideRight, AnimationChannel.LowerBody, LoopMode.DontLoop);
+//            if (!isAnimationForChannels(Animation.SideRight.getAnimName(), CharacterChannel.LowerBody)) {
+//                setAnimation(Animation.SideRight, CharacterChannel.LowerBody, LoopMode.DontLoop);
 //            }
-//            if (!isAnimationForChannels(Animation.Walk.getAnimName(), AnimationChannel.UpperBody)) {
-//                setAnimation(Animation.Walk, AnimationChannel.UpperBody, LoopMode.DontLoop);
+//            if (!isAnimationForChannels(Animation.Walk.getAnimName(), CharacterChannel.UpperBody)) {
+//                setAnimation(Animation.Walk, CharacterChannel.UpperBody, LoopMode.DontLoop);
 //            }
-//        } else if (!isAnimationForChannels(Animation.Idle.getAnimName(), AnimationChannel.LowerBody, AnimationChannel.UpperBody)) {
-//            setAnimation(Animation.Idle, AnimationChannel.UpperBody, LoopMode.DontLoop);
-//            setAnimation(Animation.Idle, AnimationChannel.LowerBody, LoopMode.DontLoop);
+//        } else if (!isAnimationForChannels(Animation.Idle.getAnimName(), CharacterChannel.LowerBody, CharacterChannel.UpperBody)) {
+//            setAnimation(Animation.Idle, CharacterChannel.UpperBody, LoopMode.DontLoop);
+//            setAnimation(Animation.Idle, CharacterChannel.LowerBody, LoopMode.DontLoop);
 //        }
 //
 //
 //        EquipmentComponent rightHand = equipState.getEquipedItem(EquipmentLocation.RightHand);
 //        EquipmentComponent leftHand = equipState.getEquipedItem(EquipmentLocation.LeftHand);
 //
-//        if (rightHand != null && !isAnimationForChannels(rightHand.getEquipAnimation().getAnimName(), AnimationChannel.RightUpperBody)) {
-//            setAnimation(rightHand.getEquipAnimation(), AnimationChannel.RightUpperBody, LoopMode.DontLoop);
-//        } else if (rightHand == null && !isAnimationForChannels(AnimationChannel.UpperBody.getLastPlayedAnim().getAnimName(), AnimationChannel.RightUpperBody)) {
-//            setAnimation(AnimationChannel.UpperBody.getLastPlayedAnim(), LoopMode.DontLoop, AnimationChannel.RightUpperBody);
+//        if (rightHand != null && !isAnimationForChannels(rightHand.getEquipAnimation().getAnimName(), CharacterChannel.RightUpperBody)) {
+//            setAnimation(rightHand.getEquipAnimation(), CharacterChannel.RightUpperBody, LoopMode.DontLoop);
+//        } else if (rightHand == null && !isAnimationForChannels(CharacterChannel.UpperBody.getLastPlayedAnim().getAnimName(), CharacterChannel.RightUpperBody)) {
+//            setAnimation(CharacterChannel.UpperBody.getLastPlayedAnim(), LoopMode.DontLoop, CharacterChannel.RightUpperBody);
 //        }
-//        if (leftHand != null && !isAnimationForChannels(leftHand.getEquipAnimation().getAnimName(), AnimationChannel.LeftUpperBody)) {
-//            setAnimation(leftHand.getEquipAnimation(), AnimationChannel.LeftUpperBody, LoopMode.DontLoop);
-//        } else if (leftHand == null && !isAnimationForChannels(AnimationChannel.UpperBody.getLastPlayedAnim().getAnimName(), AnimationChannel.LeftUpperBody)) {
-//            setAnimation(AnimationChannel.UpperBody.getLastPlayedAnim(), LoopMode.DontLoop, AnimationChannel.LeftUpperBody);
+//        if (leftHand != null && !isAnimationForChannels(leftHand.getEquipAnimation().getAnimName(), CharacterChannel.LeftUpperBody)) {
+//            setAnimation(leftHand.getEquipAnimation(), CharacterChannel.LeftUpperBody, LoopMode.DontLoop);
+//        } else if (leftHand == null && !isAnimationForChannels(CharacterChannel.UpperBody.getLastPlayedAnim().getAnimName(), CharacterChannel.LeftUpperBody)) {
+//            setAnimation(CharacterChannel.UpperBody.getLastPlayedAnim(), LoopMode.DontLoop, CharacterChannel.LeftUpperBody);
 //        }
 //
 //    }
@@ -184,7 +184,7 @@ public class CharacterAnimControl extends AbstractControl implements AnimEventLi
      * @param channels  which channels are affected by the animation
      */
     public void setAnimation(Animation animation, AnimationChannel... channels) {
-        if (animation == null || channels == null && !isAnimationForChannels(animation.getAnimName(), channels)) {
+        if (animation == null || channels == null || isAnimationForChannels(animation.getAnimName(), channels)) {
             return;
         }
         for (AnimationChannel channel : channels) {
@@ -201,18 +201,23 @@ public class CharacterAnimControl extends AbstractControl implements AnimEventLi
 
         CharacterMovementState movementState = playerEntity.get(CharacterMovementState.class);
 
-        if (movementState.getMovementState() == CharacterMovementState.RUNNING_FORWARD && animName.equals(Animation.Run.getAnimName())) {
+        int state = movementState.getMovementState();
+
+        if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(Animation.Run.getAnimName())) {
             channel.setAnim(Animation.Run.getAnimName());
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_FORWARD && animName.equals(Animation.Walk.getAnimName())) {
+        } else if ((state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(Animation.Walk.getAnimName())) {
             channel.setAnim(Animation.Walk.getAnimName());
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_BACK && animName.equals(Animation.WalkBack.getAnimName())) {
+        } else if ((state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) && animName.equals(Animation.WalkBack.getAnimName())) {
             channel.setAnim(Animation.WalkBack.getAnimName());
-        } else if (movementState.getMovementState() == CharacterMovementState.RUNNING_BACK && animName.equals(Animation.Runback.getAnimName())) {
+        } else if ((state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) && animName.equals(Animation.Runback.getAnimName())) {
             channel.setAnim(Animation.Runback.getAnimName());
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_LEFT && animName.equals(Animation.SideLeft.getAnimName())) {
-            channel.setAnim(Animation.SideLeft.getAnimName());
-            setAnimation(Animation.Walk, AnimationChannel.UpperBody);
-        } else if (movementState.getMovementState() == CharacterMovementState.MOVING_RIGHT && animName.equals(Animation.SideRight.getAnimName())) {
+        } else if (state == CharacterMovementState.MOVING_LEFT) {
+            if (animName.equals(Animation.SideLeft.getAnimName())) {
+                channel.setAnim(Animation.SideLeft.getAnimName());
+            } else if (animName.equals(Animation.Walk.getAnimName())) {
+                channel.setAnim(Animation.Walk.getAnimName());
+            }
+        } else if (state == CharacterMovementState.MOVING_RIGHT && animName.equals(Animation.SideRight.getAnimName())) {
             channel.setAnim(Animation.SideRight.getAnimName());
             setAnimation(Animation.Walk, AnimationChannel.UpperBody);
         }
@@ -222,6 +227,15 @@ public class CharacterAnimControl extends AbstractControl implements AnimEventLi
 
     @Override
     public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
+
+    }
+
+    private void forceAnim(Animation animation, AnimationChannel... channels) {
+        for (AnimationChannel channel : channels) {
+            channel.getAnimChannel().setAnim(animation.getAnimName(), animation.getBlendTime());
+            channel.getAnimChannel().setLoopMode(LoopMode.DontLoop);
+            channel.setLastPlayedAnim(animation);
+        }
 
     }
 

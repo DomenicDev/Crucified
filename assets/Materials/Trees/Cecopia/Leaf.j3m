@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/Cecopia/largeFiscus.dds
+        NormalMap : Textures/Trees/Cecopia/largeFiscus_NRM.dds
+        SpecularMap : Textures/Trees/Cecopia/largeFiscus_SPEC.dds
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 128.1
+        AlphaDiscardThreshold : 0.3
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

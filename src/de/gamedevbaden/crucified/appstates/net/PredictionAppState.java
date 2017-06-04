@@ -5,6 +5,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.InputManager;
@@ -47,6 +48,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
     private EntitySet staticRigidBodies;
     private EntitySet physicCharacters; // could be players or monsters
+    private EntitySet terrains; // terrain is handles differently and not part of a model
 
     private HashMap<EntityId, RigidBodyControl> staticBodyControls;
     private HashMap<EntityId, CustomCharacterControl> characterControlHashMap;
@@ -91,6 +93,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.staticRigidBodies = entityData.getEntities(new FieldFilter<>(PhysicsRigidBody.class, "mass", 0f), Model.class, PhysicsRigidBody.class, Transform.class);
         this.physicCharacters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
+        this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
         this.player = entityData.watchEntity(playerId, Transform.class);
 
         this.playerCharacterControl = createCharacterControl();
@@ -150,24 +153,21 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             }
             return null;
         } else if (type == CollisionShapeType.TERRAIN_COLLISION_SHAPE) {
-            Spatial model = modelLoader.loadModel(modelPath);
-            TerrainQuad terrain = null;
-            if (model instanceof TerrainQuad) {
-                terrain = (TerrainQuad) model;
-            } else if (model instanceof Node) { // should always be this case
-                Node node = (Node) model;
-                if (node.getChild(0) instanceof TerrainQuad) {
-                    terrain = (TerrainQuad) node.getChild(0);
+            // Terrain is handled a bit differently.
+            // Terrain is not linked into the scene, but added as a part of the scene
+            // That's why we need to search for the TerrainQuad
+            Node model = (Node) modelLoader.loadModel(modelPath);
+            model.setLocalScale(scale);
+
+            for (Spatial s : model.getChildren()) {
+                if (s instanceof TerrainQuad) {
+                    // we create the shape out of the first quad we find
+                    return CollisionShapeFactory.createMeshShape(s);
                 }
             }
-            if (terrain != null) {
-                model.setLocalScale(scale);
-                // the method will recognize that this is a terrain
-                return CollisionShapeFactory.createMeshShape(model);
-            }
+
         }
         return null;
-
     }
 
 
@@ -216,6 +216,15 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             }
 
         }
+
+        if (terrains.applyChanges()) {
+
+            for (Entity entity : terrains.getAddedEntities()) {
+                addTerrain(entity);
+            }
+
+        }
+
 
         //********** PREDICTION FOR OWN PLAYER ****************//
 
@@ -458,6 +467,20 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
     private void removeCharacterControl(Entity entity) {
         CustomCharacterControl control = characterControlHashMap.remove(entity.getId());
         this.bulletAppState.getPhysicsSpace().remove(control);
+    }
+
+    private void addTerrain(Entity entity) {
+        PhysicsTerrain terrain = entity.get(PhysicsTerrain.class);
+        Transform transform = entity.get(Transform.class);
+        Spatial terrainModel = ((Node) modelLoader.loadModel(terrain.getScenePath())).getChild(terrain.getTerrainName());
+        if (terrainModel instanceof TerrainQuad) {
+            float[] heightMap = ((TerrainQuad) terrainModel).getHeightMap();
+            CollisionShape terrainShape = new HeightfieldCollisionShape(heightMap, transform.getScale());
+            RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
+            terrainControl.setPhysicsLocation(transform.getTranslation());
+            bulletAppState.getPhysicsSpace().add(terrainControl);
+        }
+
     }
 
     @Override
