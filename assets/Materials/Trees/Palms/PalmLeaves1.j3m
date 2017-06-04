@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Flip Repeat Textures/Trees/Palm/Palm05.dds
+        NormalMap : Flip Repeat Textures/Trees/Palm/Palm05_NRM.dds
+        SpecularMap : Flip Repeat Textures/Trees/Palm/Palm05_SPEC.dds
+        AlphaDiscardThreshold : 0.2
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 128.0
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

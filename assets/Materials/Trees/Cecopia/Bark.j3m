@@ -1,0 +1,14 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Flip Repeat Textures/Trees/Cecopia/JungleBark02.dds
+        NormalMap : Flip Repeat Textures/Trees/Cecopia/JungleBark02_NRM.dds
+        SpecularMap : Flip Repeat Textures/Trees/Cecopia/JungleBark02_SPEC.dds
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}
