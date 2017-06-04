@@ -1,5 +1,7 @@
 package de.gamedevbaden.crucified.utils;
 
+import com.jme3.math.Vector3f;
+
 /**
  * Created by Domenic on 12.05.2017.
  */
@@ -13,5 +15,7 @@ public class GameConstants {
     //------------ USER DATA NAMES ---------------------//
 
     public static final String USER_DATA_ENTITY_ID = "entityId";
+
+    public static final Vector3f FIRST_PERSON_CAM_OFFSET = new Vector3f(0.2f, 1.8f, -1.0f);
 
 }

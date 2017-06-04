@@ -1,7 +1,6 @@
 package de.gamedevbaden.crucified.tests;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
@@ -14,6 +13,7 @@ import de.gamedevbaden.crucified.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.game.GameSessionManager;
+import de.gamedevbaden.crucified.utils.GameConstants;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
@@ -71,7 +71,7 @@ public class SingleplayerTest extends SimpleApplication {
 
 
         // create first person cam view
-        stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), new Vector3f(0, 1.7f, 0.2f))); // 0,1.7,0
+        stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
 
     }
 

@@ -7,10 +7,7 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
-import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
-import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
-import de.gamedevbaden.crucified.appstates.view.VisualEquipmentAppState;
-import de.gamedevbaden.crucified.appstates.view.VisualStoringAppState;
+import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
 
 /**
@@ -38,6 +35,7 @@ public class GameInitializer {
         stateManager.attach(new VisualEquipmentAppState());
         stateManager.attach(new SoundAppState());
         stateManager.attach(new CameraAppState());
+        stateManager.attach(new CharacterAnimationAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());
