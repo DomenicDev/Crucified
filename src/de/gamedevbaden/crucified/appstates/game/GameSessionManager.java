@@ -1,14 +1,17 @@
-package de.gamedevbaden.crucified.game;
+package de.gamedevbaden.crucified.appstates.game;
 
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.game.GameEventListener;
+import de.gamedevbaden.crucified.game.GameSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * ToDo: All !!!
+ * Holds and creates GameSessions and informs all added listeners about in game events.
+ *
  * Created by Domenic on 01.05.2017.
  */
 public class GameSessionManager extends AbstractAppState {
@@ -19,7 +22,12 @@ public class GameSessionManager extends AbstractAppState {
     public GameSessionManager() {
     }
 
-
+    /**
+     * Creates a GameSession for and with the specified player entity.
+     *
+     * @param playerId the entity id of the player
+     * @return a GameSession object.
+     */
     public GameSession createSession(EntityId playerId) {
         if (playerId != null) {
             GameSessionImplementation implementation = new GameSessionImplementation(playerId);
@@ -29,14 +37,31 @@ public class GameSessionManager extends AbstractAppState {
         return null;
     }
 
+    /**
+     * Returns the GameSession object for the specified entity id or null if the session doesn't exist for that id
+     * @param entityId the (player) entity id you want the GameSession from
+     * @return the GameSession object or null if it doesn't exist.
+     */
     public GameSession getGameSession(EntityId entityId) {
         return sessionHashMap.get(entityId);
     }
 
+    /**
+     * Adds the specified listener. This listener will be informed about in game events
+     * @param listener the listener to add
+     */
     public void addGameEventListener(GameEventListener listener) {
         this.listeners.add(listener);
     }
 
+    @Override
+    public void cleanup() {
+        this.sessionHashMap.clear();
+        this.sessionHashMap = null;
+        this.listeners.clear();
+        this.listeners = null;
+        super.cleanup();
+    }
 
     private class GameSessionImplementation implements GameSession {
 
@@ -103,5 +128,4 @@ public class GameSessionManager extends AbstractAppState {
         }
 
     }
-
 }

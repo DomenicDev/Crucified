@@ -11,15 +11,15 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
+import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
+import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
 import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.*;
-import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
-import de.gamedevbaden.crucified.game.GameSessionManager;
 
 /**
  * <code>TestMain</code> contains the main-method.

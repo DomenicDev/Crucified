@@ -13,6 +13,8 @@ import de.gamedevbaden.crucified.es.components.InteractionComponent;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 
 /**
+ * This app state defines what shall happen if players interact with various types of game objects.
+ *
  * Created by Domenic on 14.05.2017.
  */
 public class InteractionAppState extends AbstractAppState {

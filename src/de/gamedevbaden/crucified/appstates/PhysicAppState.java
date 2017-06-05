@@ -32,6 +32,11 @@ import java.util.HashMap;
  * Currently there is RigidBody and CharacterControl support (most things are handled with those two)
  * This state will set new {@link Transform} components when physics position and rotation changes.
  *
+ * Note that Terrain is handled a little different: Even though terrain shapes are added by a RigidBodyControl
+ * it uses its "own" component: PhysicsTerrain. The reason terrain has a separate component is that
+ * we want be able to modify the terrain while scene composing and thus we don't want the terrain to be stored
+ * in an own j3o file.
+ *
  * Created by Domenic on 13.04.2017.
  */
 public class PhysicAppState extends AbstractAppState {

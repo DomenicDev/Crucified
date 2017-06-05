@@ -13,9 +13,9 @@ import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
+import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameSession;
-import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.net.NetworkUtils;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 

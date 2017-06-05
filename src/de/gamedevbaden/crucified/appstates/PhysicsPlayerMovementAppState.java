@@ -77,23 +77,24 @@ public class PhysicsPlayerMovementAppState extends AbstractAppState {
 
         Vector3f walkDirection = new Vector3f();
 
-        float runningMultSpeed = 2;
+        float runningMultSpeed = 3f;
+        float walkingMultSpeed = 1.5f;
 
         switch (movementState.getMovementState()) {
             case CharacterMovementState.IDLE:
                 return walkDirection; // (0,0,0)
             case CharacterMovementState.MOVING_FORWARD:
-                return walkDirection.addLocal(viewDirection);
+                return walkDirection.addLocal(viewDirection).multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_FORWARD_LEFT:
-                return walkDirection.addLocal(viewDirection).addLocal(leftDirection);
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection).normalizeLocal().multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_FORWARD_RIGHT:
-                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal());
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal()).normalizeLocal().multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_BACK:
-                return walkDirection.addLocal(viewDirection.negateLocal());
+                return walkDirection.addLocal(viewDirection.negateLocal()).multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_BACK_LEFT:
-                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection);
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection).normalizeLocal().multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_BACK_RIGHT:
-                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal());
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_LEFT:
                 return walkDirection.addLocal(leftDirection);
             case CharacterMovementState.MOVING_RIGHT:

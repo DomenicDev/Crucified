@@ -28,6 +28,11 @@ import java.util.ArrayList;
 
 
 /**
+ * This state lets the player interact with entities in the game world.
+ * When the player wants to interact we do a ray cast and check if it collides with something.
+ * We then check whether the hit geometry has an EntityId (type: long) added as user data
+ * and if it does we inform all added listeners about this event.
+ *
  * Created by Domenic on 18.05.2017.
  */
 public class PlayerInteractionState extends AbstractAppState implements ActionListener {

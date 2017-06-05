@@ -1,18 +1,21 @@
 package de.gamedevbaden.crucified.tests;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
+import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
+import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
+import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
-import de.gamedevbaden.crucified.game.GameCommanderAppState;
-import de.gamedevbaden.crucified.game.GameEventHandler;
 import de.gamedevbaden.crucified.game.GameSession;
-import de.gamedevbaden.crucified.game.GameSessionManager;
 import de.gamedevbaden.crucified.utils.GameConstants;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
@@ -73,6 +76,13 @@ public class SingleplayerTest extends SimpleApplication {
         // create first person cam view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
 
+        inputManager.addMapping("h", new KeyTrigger(KeyInput.KEY_H));
+        inputManager.addListener(new ActionListener() {
+            @Override
+            public void onAction(String name, boolean isPressed, float tpf) {
+                System.out.println(cam.getLocation().add(cam.getDirection().mult(1000)));
+            }
+        }, "h");
     }
 
 }

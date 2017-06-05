@@ -10,7 +10,6 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.controls.CharacterAnimControl;
 import de.gamedevbaden.crucified.controls.NewCharacterAnimControl;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
@@ -90,7 +89,7 @@ public class CharacterAnimationAppState extends AbstractAppState {
         if (animControl != null) {
             Spatial model = animControl.getSpatial();
             if (model != null) {
-                model.removeControl(CharacterAnimControl.class);
+                model.removeControl(NewCharacterAnimControl.class);
             }
         }
     }

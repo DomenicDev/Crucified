@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.game;
+package de.gamedevbaden.crucified.appstates.game;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -6,10 +6,11 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.game.GameEventListener;
 
 /**
  * The {@link GameEventListener} listens for game related events and informs the relevant app states about
- * the event so they can handle those events. This class is sort of the interface between the game events
+ * the event so they can handle those events. This class is kind of the interface between the game events
  * and the game logic systems.
  *
  * Created by Domenic on 03.05.2017.
@@ -22,7 +23,6 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private InteractionAppState interactionAppState;
     private ItemStoreAppState itemStoreAppState;
     private EquipmentAppState equipmentAppState;
-
     private GameSessionManager gameSession;
 
     public GameEventHandler(GameSessionManager gameSession) {

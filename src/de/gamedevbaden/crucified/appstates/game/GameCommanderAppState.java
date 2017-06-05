@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.game;
+package de.gamedevbaden.crucified.appstates.game;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -9,6 +9,7 @@ import com.jme3.post.FilterPostProcessor;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import de.gamedevbaden.crucified.enums.Scene;
+import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
 
 /**

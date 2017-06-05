@@ -12,9 +12,9 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.Transform;
-import de.gamedevbaden.crucified.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.ArrayList;

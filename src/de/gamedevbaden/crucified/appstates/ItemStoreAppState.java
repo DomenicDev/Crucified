@@ -9,6 +9,9 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.es.components.*;
 
 /**
+ * This state handles all kind of inventories.
+ * It provides methods to store and remove items from container entities.
+ *
  * Created by Domenic on 19.05.2017.
  */
 public class ItemStoreAppState extends AbstractAppState {

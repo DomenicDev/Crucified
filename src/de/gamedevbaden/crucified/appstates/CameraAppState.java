@@ -29,10 +29,10 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
             "MouseRightZoom"
         };
     private final Quaternion camRotation = new Quaternion();
-    ;
     private final int zommSpeed = 25;
     private final int maxFieldOfView = 45;
     private final int minFieldOfView = 30;
+    private float[] angles = new float[3];
     private Application app;
     private Camera cam;
     private float rotationSpeed = 1f;
@@ -57,7 +57,8 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
         this.inputManager = app.getInputManager();
         this.cam = app.getCamera();
         registerWithInput();
-        resetCamera();
+        //    resetCamera();
+        cam.setFrustumPerspective(45f, (float) app.getContext().getSettings().getWidth() / app.getContext().getSettings().getHeight(), 0.05f, 200);
     }
 
     @Override
@@ -74,13 +75,10 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
      * Important when the game restarts
      */
     public void resetCamera() {
-        cam.setFrustumPerspective(45f, (float) app.getContext().getSettings().getWidth() / app.getContext().getSettings().getHeight(), 0.05f, 200);
-
         Vector3f left = new Vector3f(-1, 0, 0);
         Vector3f up = new Vector3f(0, 1, 0);
         Vector3f direction = new Vector3f(-1, 0, 0);
         cam.setAxes(left, up, direction);
-   //     cam.setFrustumPerspective(45f, (float) settings.getWidth() / settings.getHeight(), 0.01f, 500);
     }
 
     private void registerWithInput() {        
@@ -110,8 +108,6 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
         
         camRotation.fromAxes(left, up, dir);
         camRotation.normalizeLocal();
-
-        float[] angles = new float[3];
         camRotation.toAngles(angles);
 
         if (angles[0] > getMaxDown() * FastMath.DEG_TO_RAD && angles[0] < getMaxUp() * FastMath.DEG_TO_RAD) {
