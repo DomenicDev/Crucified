@@ -32,7 +32,7 @@ public class ClientTest extends SimpleApplication {
         // init game client
         GameClient client = new GameClient();
         stateManager.attach(client);
-        client.connect("localhost", 5555, gameCommander);
+        client.connect("localhost", 5555, this, gameCommander);
 
         EntityData entityData = client.getEntityData();
         GameSession gameSession = client.getGameSession();

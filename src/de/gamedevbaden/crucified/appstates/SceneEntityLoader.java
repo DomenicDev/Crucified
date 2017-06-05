@@ -40,11 +40,11 @@ public class SceneEntityLoader extends AbstractAppState {
 
     private static final String TEST_SCENE = "Scenes/TestScene.j3o";
     private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
+    public static Scene sceneToLoad = Scene.BeachScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
     private AssetManager assetManager;
-    private Scene sceneToLoad = Scene.BeachScene;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {

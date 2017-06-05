@@ -38,7 +38,7 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
         super.initialize(stateManager, app);
     }
 
-    public boolean connect(String address, int port, GameCommander gameCommander) {
+    public boolean connect(String address, int port, Application app, GameCommander gameCommander) {
         startedSignal = new CountDownLatch(1);
         try {
             //     NetworkUtils.initMessageSerializers();
@@ -55,7 +55,7 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
             this.address = address;
             this.port = port;
 
-            this.client.addMessageListener(new ClientMessageListener(gameCommander));
+            this.client.addMessageListener(new ClientMessageListener(app, gameCommander));
 
             this.client.start();
             //        this.rmiClientService.share(gameCommander, GameCommander.class);

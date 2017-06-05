@@ -55,7 +55,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     public void update(float tpf) {
         // check for camera change
 
-        if ((camUpdateTime += tpf) >= 0.02f || !lastCamDirection.equals(cam.getDirection())) { // we send 50 updates per second
+        if ((camUpdateTime += tpf) >= 0.1f || !lastCamDirection.equals(cam.getDirection())) { // we send 50 updates per second
 
             lastCamDirection.set(cam.getDirection());
             // when the camera has rotated we call the update method
