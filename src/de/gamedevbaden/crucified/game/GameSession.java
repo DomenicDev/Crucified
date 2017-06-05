@@ -1,6 +1,7 @@
 package de.gamedevbaden.crucified.game;
 
 import com.jme3.math.Vector3f;
+import com.jme3.network.service.rmi.Asynchronous;
 import com.simsilica.es.EntityId;
 
 
@@ -33,6 +34,7 @@ public interface GameSession {
 
     void applyInput(String mappingName, boolean isPressed);
 
+    @Asynchronous(reliable = false)
     void applyViewDirection(Vector3f viewDirection);
 
     /**
