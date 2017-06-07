@@ -9,6 +9,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
@@ -58,6 +59,11 @@ public class SingleplayerTest extends SimpleApplication {
 
         // create GameSession for our player
         GameSession gameSession = sessionManager.createSession(EntityFactory.createPlayer(entityData));
+
+        // create GameCommanderHolder
+        GameCommanderHolder commanderHolder = new GameCommanderHolder();
+        stateManager.attach(commanderHolder);
+        commanderHolder.add(gameSession.getPlayer(), commanderAppState); // that's the only one we need to add
 
         // create our game session app states
         stateManager.attach(new PlayerInteractionState());

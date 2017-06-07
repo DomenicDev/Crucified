@@ -20,10 +20,12 @@ import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
 import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.userdata.EntityType;
+import de.gamedevbaden.crucified.userdata.ReadablePaperScriptUserData;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
 import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
 import de.gamedevbaden.crucified.userdata.events.SoundEvent;
 import de.gamedevbaden.crucified.userdata.triggers.TriggerTypeData;
+import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -178,6 +180,17 @@ public class SceneEntityLoader extends AbstractAppState {
                     case Tree:
                         entityData.setComponents(entityId,
                                 new PhysicsRigidBody(0, false, CollisionShapeType.MESH_COLLISION_SHAPE));
+                        break;
+
+                    case ReadablePaper:
+                        // get script
+                        ReadablePaperScriptUserData script = spatial.getUserData(GameConstants.USER_DATA_READABLE_SCRIPT);
+                        if (script != null) {
+                            entityData.setComponents(entityId,
+                                    new InteractionComponent(InteractionType.ReadText),
+                                    new ReadableScript(script.getScript())
+                            );
+                        }
                         break;
                     default:
                         break;

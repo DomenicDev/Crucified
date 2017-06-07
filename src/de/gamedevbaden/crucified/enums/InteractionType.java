@@ -6,6 +6,7 @@ package de.gamedevbaden.crucified.enums;
 public enum InteractionType {
 
     OpenDoor,
-    PlayTestSound;
+    PlayTestSound,
+    ReadText;
 
 }
