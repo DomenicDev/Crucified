@@ -11,13 +11,13 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.NetworkUtils;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
+import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  * Created by Domenic on 16.04.2017.
  */
-public class GameServer extends AbstractAppState implements ConnectionListener {
+public class GameServer extends AbstractAppState implements ConnectionListener, MessageListener<HostedConnection> {
 
     private float timer;
     private float updateTime = 1f / 10f; // 10 updates per second
@@ -36,8 +36,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     private Server server;
     private ObservableEntityData entityData;
     private GameSessionManager gameSessionManager;
-    private GameCommanderCollector commanderCollector;
-    private HashMap<HostedConnection, GameSession> connections = new HashMap<>();
+    private HashMap<HostedConnection, GameSession> gameSessionHashMap = new HashMap<>();
     private RmiHostedService rmiService;
 
     public GameServer(int port) {
@@ -48,7 +47,6 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
-        this.commanderCollector = stateManager.getState(GameCommanderCollector.class);
 
         try {
 
@@ -58,6 +56,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
             NetworkUtils.initMessageSerializers();
 
             this.server.addConnectionListener(this);
+            this.server.addMessageListener(this);
 
             this.rmiService = new RmiHostedService();
 
@@ -116,15 +115,25 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
 //        gameCommander.loadScene("Scenes/TestScene.j3o");
 
         // let client directly load game world
-        server.broadcast(Filters.equalTo(conn), new LoadLevelMessage(SceneEntityLoader.sceneToLoad));
+        //   server.broadcast(Filters.equalTo(conn), new LoadLevelMessage(SceneEntityLoader.sceneToLoad));
 
 
-        connections.put(conn, session);
+        gameSessionHashMap.put(conn, session);
     }
 
     @Override
     public void connectionRemoved(Server server, HostedConnection conn) {
-        entityData.removeEntity(connections.get(conn).getPlayer());
+        entityData.removeEntity(gameSessionHashMap.get(conn).getPlayer());
+    }
+
+    @Override
+    public void messageReceived(HostedConnection source, Message m) {
+        if (m instanceof ReadyForGameStartMessage) {
+            ReadyForGameStartMessage rm = (ReadyForGameStartMessage) m;
+            if (rm.isReady()) {
+                source.send(new LoadLevelMessage(SceneEntityLoader.sceneToLoad));
+            }
+        }
     }
 
     @Override
@@ -135,4 +144,6 @@ public class GameServer extends AbstractAppState implements ConnectionListener {
         }
         super.cleanup();
     }
+
+
 }

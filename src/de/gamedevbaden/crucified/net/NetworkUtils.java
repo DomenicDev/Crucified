@@ -6,6 +6,7 @@ import com.jme3.network.serializing.serializers.EnumSerializer;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
+import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 /**
  * Created by Domenic on 17.04.2017.
@@ -39,6 +40,7 @@ public class NetworkUtils {
     public static void initMessageSerializers() {
         Serializer.registerClass(Scene.class, new EnumSerializer());
         Serializer.registerClass(LoadLevelMessage.class);
+        Serializer.registerClass(ReadyForGameStartMessage.class);
     }
 
 }

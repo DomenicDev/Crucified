@@ -5,9 +5,15 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.Light;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.terrain.geomipmap.TerrainLodControl;
+import com.jme3.terrain.geomipmap.TerrainQuad;
+import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
@@ -17,13 +23,12 @@ import de.gamedevbaden.crucified.userdata.EntityType;
  */
 public class GameCommanderAppState extends AbstractAppState implements GameCommander {
 
+    private final Node mainWorldNode = new Node("MainSceneNode");
     private AssetManager assetManager;
     private Node rootNode;
-
+    private Camera cam;
     private SimpleApplication app;
-
-    private Spatial currentScene;
-
+    private ShadowRendererAppState shadowRendererAppState;
 
     public GameCommanderAppState() {
     }
@@ -33,6 +38,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
      */
     public GameCommanderAppState(SimpleApplication app) {
         this.app = app;
+        this.cam = app.getCamera();
         this.assetManager = app.getAssetManager();
         this.rootNode = app.getRootNode();
     }
@@ -40,8 +46,11 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.assetManager = app.getAssetManager();
+        this.cam = app.getCamera();
         this.rootNode = ((SimpleApplication) app).getRootNode();
+        this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
 
+        this.rootNode.attachChild(mainWorldNode);
 
         super.initialize(stateManager, app);
     }
@@ -49,8 +58,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     @Override
     public void loadScene(Scene scene) {
 
-        Spatial world = assetManager.loadModel(scene.getScenePath());
-        this.rootNode.attachChild(world);
+        System.out.println("Load Scene: " + scene);
+
+        Node world = (Node) assetManager.loadModel(scene.getScenePath());
+        this.mainWorldNode.attachChild(world);
         // we want all objects (nodes, geometry) with an EntityType user data
         // to be removed because they will
         // be added when receiving the entities for that scene
@@ -62,22 +73,51 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             }
         });
 
-        // ToDo: Activate LOD for terrain (set cam)
+        // activate LOD for terrain
+        for (Spatial spatial : world.getChildren()) {
+            if (spatial instanceof TerrainQuad) {
+                TerrainQuad terrainQuad = (TerrainQuad) spatial;
+                TerrainLodControl lodControl = terrainQuad.getControl(TerrainLodControl.class);
+                lodControl.setCamera(cam);
+                lodControl.setEnabled(true);
+                break;
+            }
+        }
 
-        // init filter if available
+        // we need to transfer the lights from the loaded scene
+        // to out main scene node otherwise later added
+        // spatial might not be affected by that light
+        if (world.getLocalLightList().size() > 0) {
+            // first we clone the light list from the loaded scene
+            Light[] lights = new Light[world.getLocalLightList().size()];
+            for (int i = 0; i < world.getLocalLightList().size(); i++) {
+                lights[i] = world.getLocalLightList().get(i).clone();
+            }
+            // we remove the lights from the loaded scene otherwise we would have 2 lights each
+            world.getLocalLightList().clear();
+            // lastly we add our cloned lights to the mainWorldNode
+            for (Light light : lights) {
+                mainWorldNode.addLight(light);
+            }
+        }
+
+        // create shadows
+        for (Light light : mainWorldNode.getLocalLightList()) {
+            if (light instanceof DirectionalLight) {
+                shadowRendererAppState.addShadowRenderer((DirectionalLight) light);
+            }
+        }
+
+
+        // init filter if available --> need to be the last thing to add!
         if (scene.getFilterPath() != null) {
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
-            System.out.println(app);
             app.getViewPort().addProcessor(fpp);
         }
 
-        this.currentScene = world;
-
-        // attach scene
-
     }
 
-    public Spatial getCurrentScene() {
-        return currentScene;
+    public Node getMainWorldNode() {
+        return mainWorldNode;
     }
 }

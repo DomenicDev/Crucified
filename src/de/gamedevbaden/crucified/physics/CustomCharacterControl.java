@@ -15,6 +15,7 @@ public class CustomCharacterControl extends BetterCharacterControl {
 
     public CustomCharacterControl(float radius, float height, float mass) {
         super(radius, height, mass);
+        getPhysicsRigidBody().setRestitution(0); // test
     }
 
     public PhysicsRigidBody getPhysicsRigidBody() {

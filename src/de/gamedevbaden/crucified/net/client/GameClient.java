@@ -3,10 +3,7 @@ package de.gamedevbaden.crucified.net.client;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.network.Client;
-import com.jme3.network.ClientStateListener;
-import com.jme3.network.MessageConnection;
-import com.jme3.network.Network;
+import com.jme3.network.*;
 import com.jme3.network.service.rmi.RmiClientService;
 import com.jme3.network.service.rpc.RpcClientService;
 import com.simsilica.es.EntityData;
@@ -92,17 +89,23 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
         return gameSession;
     }
 
+    public void sendMessage(Message message) {
+        if (client != null && client.isConnected() && message != null) {
+            client.send(message);
+            System.out.println(message);
+        }
+    }
+
     @Override
     public void clientConnected(Client c) {
-        System.out.println("coonect");
         startedSignal.countDown();
-        System.out.println("end connect");
     }
 
     @Override
     public void clientDisconnected(Client c, DisconnectInfo info) {
 
     }
+
 
     @Override
     public void cleanup() {

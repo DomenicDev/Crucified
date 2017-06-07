@@ -19,7 +19,6 @@ import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
 import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
-import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
 import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
@@ -54,11 +53,6 @@ public class SceneEntityLoader extends AbstractAppState {
         this.assetManager = app.getAssetManager();
 
         createEntitiesFromScene(sceneToLoad);
-
-        for (GameCommander commander : stateManager.getState(GameCommanderCollector.class).getCommanders()) {
-            commander.loadScene(sceneToLoad);
-        }
-
     }
 
     /**

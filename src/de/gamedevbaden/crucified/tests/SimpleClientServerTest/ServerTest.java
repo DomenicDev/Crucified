@@ -7,10 +7,10 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.system.JmeContext;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
@@ -31,8 +31,7 @@ public class ServerTest extends SimpleApplication {
     private EntityData entityData;
 
     public static void main(String[] args) {
-
-        new ServerTest().start();
+        new ServerTest().start(JmeContext.Type.Headless);
     }
 
     @Override
@@ -44,9 +43,6 @@ public class ServerTest extends SimpleApplication {
         stateManager.attach(entityDataState);
 
         entityData = entityDataState.getEntityData();
-
-        GameCommanderCollector collector = new GameCommanderCollector();
-        stateManager.attach(collector);
 
         GameSessionManager gameSessionManager = new GameSessionManager();
         stateManager.attach(gameSessionManager);
@@ -91,6 +87,7 @@ public class ServerTest extends SimpleApplication {
         }, "Space", "C");
 
 
+        System.out.println("Server initialized!");
     }
 
     @Override

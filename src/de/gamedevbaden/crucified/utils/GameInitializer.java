@@ -7,6 +7,8 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
+import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
+import de.gamedevbaden.crucified.appstates.sound.SoundAppState;
 import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -36,6 +38,8 @@ public class GameInitializer {
         stateManager.attach(new SoundAppState());
         stateManager.attach(new CameraAppState());
         stateManager.attach(new CharacterAnimationAppState());
+        stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
+        stateManager.attach(new FootstepSoundAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());

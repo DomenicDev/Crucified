@@ -9,6 +9,7 @@ import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
+import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 import de.gamedevbaden.crucified.utils.GameConstants;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 
@@ -54,6 +55,9 @@ public class ClientTest extends SimpleApplication {
 
         // create first person camera view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET));
+
+        client.sendMessage(new ReadyForGameStartMessage(true));
+
     }
 
 

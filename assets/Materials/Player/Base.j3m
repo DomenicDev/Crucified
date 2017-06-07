@@ -1,10 +1,12 @@
 Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Player/old_lightskinned_male_diffuse2.png
-        Diffuse : 1.0 0.2 0.2 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
         UseMaterialColors : false
+        HardwareShadows : false
+        Ambient : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
      }
     AdditionalRenderState {
-      FaceCull Back
     }
 }

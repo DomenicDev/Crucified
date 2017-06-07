@@ -7,9 +7,10 @@ import com.jme3.network.MessageListener;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 
-import java.util.concurrent.Callable;
-
 /**
+ * Receives messages from the server and calls the relevant app states
+ * about what the server sent.
+ *
  * Created by Domenic on 27.05.2017.
  */
 public class ClientMessageListener implements MessageListener<Client> {
@@ -25,7 +26,7 @@ public class ClientMessageListener implements MessageListener<Client> {
     @Override
     public void messageReceived(Client source, Message m) {
         if (m instanceof LoadLevelMessage) {
-            this.app.enqueue((Callable) () -> {
+            this.app.enqueue(() -> {
                 LoadLevelMessage lm = (LoadLevelMessage) m;
                 gameCommander.loadScene(lm.getScene());
                 return null;

@@ -46,7 +46,7 @@ public class ModelViewAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         //    this.rootNode = ((SimpleApplication) app).getRootNode();
-        this.rootNode = (Node) stateManager.getState(GameCommanderAppState.class).getCurrentScene();
+        this.rootNode = stateManager.getState(GameCommanderAppState.class).getMainWorldNode();
 
         this.modelLoaderAppState = stateManager.getState(ModelLoaderAppState.class);
 

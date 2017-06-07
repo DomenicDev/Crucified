@@ -1,12 +1,14 @@
 package de.gamedevbaden.crucified.tests;
 
+import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.appstates.GameCommanderCollector;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
@@ -48,10 +50,6 @@ public class SingleplayerTest extends SimpleApplication {
         // load test scene
         stateManager.attach(new SceneEntityLoader());
 
-        GameCommanderCollector collector = new GameCommanderCollector();
-        stateManager.attach(collector);
-        collector.addGameCommander(commanderAppState);
-
         // create session manager to create a session for a single player
         GameSessionManager sessionManager = new GameSessionManager();
         stateManager.attach(sessionManager);
@@ -73,6 +71,9 @@ public class SingleplayerTest extends SimpleApplication {
         GameInitializer.initGameSessionRelatedAppStates(stateManager, gameSession);
 
 
+        stateManager.attach(new Loader()); // load scene
+
+
         // create first person cam view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
 
@@ -83,6 +84,15 @@ public class SingleplayerTest extends SimpleApplication {
                 System.out.println(cam.getLocation().add(cam.getDirection().mult(1000)));
             }
         }, "h");
+    }
+
+    private class Loader extends AbstractAppState {
+
+        @Override
+        public void initialize(AppStateManager stateManager, Application app) {
+            stateManager.getState(GameCommanderAppState.class).loadScene(SceneEntityLoader.sceneToLoad);
+            super.initialize(stateManager, app);
+        }
     }
 
 }
