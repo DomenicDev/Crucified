@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <entry key="testText">Das ist ein Beispieltext. Hier kommt noch mehr und noch mehr Text hin
+        Und hier kann man
+        viel mit machen weils cool ist.
+    </entry>
+
+
+</properties>

@@ -79,6 +79,6 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     @Override
     public void onInteraction(EntityId playerId, EntityId interactedEntity) {
         //   triggerAppState.onInteraction(playerId, interactedEntity);
-        interactionAppState.interactWith(interactedEntity);
+        interactionAppState.interactWith(playerId, interactedEntity);
     }
 }
