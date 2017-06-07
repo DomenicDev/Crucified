@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Props/Crate01/3td_Rope_01.jpg
+        NormalMap : Textures/Props/Crate01/3td_Rope_01_NRM.png
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}

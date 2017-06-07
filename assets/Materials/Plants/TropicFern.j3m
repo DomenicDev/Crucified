@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/TropicFern/fern_image2.dds
+        NormalMap : Textures/Plants/TropicFern/fern_image2_NRM.dds
+        SpecularMap : Textures/Plants/TropicFern/fern_image2_SPEC.dds
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        AlphaDiscardThreshold : 0.1
+        Shininess : 64.0
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

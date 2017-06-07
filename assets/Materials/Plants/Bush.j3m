@@ -1,0 +1,17 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/Bush/largeFiscus2.dds
+        NormalMap : Textures/Plants/Bush/largeFiscus2_NRM.dds
+        SpecularMap : Textures/Plants/Bush/largeFiscus2_SPEC.dds
+        AlphaDiscardThreshold : 0.1
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 64.0
+     }
+    AdditionalRenderState {
+      Blend Alpha
+      FaceCull Off
+    }
+}

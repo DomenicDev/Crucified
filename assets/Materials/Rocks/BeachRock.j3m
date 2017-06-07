@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Rocks/BeachRock/3td_Granite_02_1024.jpg
+        NormalMap : Textures/Rocks/BeachRock/3td_Granite_02_1024_NRM.png
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}

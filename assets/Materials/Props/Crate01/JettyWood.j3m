@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Props/Crate01/3td_JettyWood02.jpg
+        NormalMap : Repeat Textures/Props/Crate01/3td_JettyWood02_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Trees/Banana/banana_bark.dds
+        NormalMap : Repeat Textures/Trees/Banana/banana_bark_NRM.dds
+     }
+    AdditionalRenderState {
+    }
+}

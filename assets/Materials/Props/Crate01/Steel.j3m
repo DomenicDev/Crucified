@@ -1,0 +1,14 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Props/Crate01/3td_SteelStrap01.jpg
+        NormalMap : Textures/Props/Crate01/3td_SteelStrap01_NRM.png
+        SpecularMap : Textures/Props/Crate01/3td_SteelStrap01_SPEC.png
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        UseMaterialColors : true
+        Shininess : 200.0
+     }
+    AdditionalRenderState {
+    }
+}

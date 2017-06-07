@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Houses/JungleHut02/3td_ThatchRoof_01.png
+        NormalMap : Textures/Houses/JungleHut02/3td_ThatchRoof_01_NRM.png
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      Blend Alpha
+    }
+}

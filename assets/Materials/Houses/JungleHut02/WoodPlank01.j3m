@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Flip Repeat Textures/Houses/JungleHut02/3TD_WoodPlank_T_01.png
+        NormalMap : Flip Repeat Textures/Houses/JungleHut02/3TD_WoodPlank_T_01_NRM.png
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      Blend Alpha
+    }
+}
