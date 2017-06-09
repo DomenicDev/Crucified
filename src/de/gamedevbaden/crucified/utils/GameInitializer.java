@@ -40,6 +40,7 @@ public class GameInitializer {
         stateManager.attach(new CharacterAnimationAppState());
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new FootstepSoundAppState());
+        stateManager.attach(new VisualFlashLightAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());
@@ -60,9 +61,9 @@ public class GameInitializer {
         stateManager.attach(new PlayerControlledCharacterMovementState());
         stateManager.attach(new TriggerAppState());
         stateManager.attach(new AttachmentAppState());
-        stateManager.attach(new InteractionAppState());
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
+        stateManager.attach(new InteractionAppState());
         stateManager.attach(new DecayAppState());
     }
 

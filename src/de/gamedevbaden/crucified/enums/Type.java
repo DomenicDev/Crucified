@@ -74,4 +74,9 @@ public enum Type {
      */
     ReadablePaper,
 
+    /**
+     * A Flash light which can be enabled or disabled.
+     */
+    FlashLight,
+
 }
