@@ -32,6 +32,7 @@ public class NetworkUtils {
         Serializer.registerClass(Equipable.class);
         Serializer.registerClass(EquippedBy.class);
         Serializer.registerClass(PhysicsTerrain.class);
+        Serializer.registerClass(FlashLight.class);
     }
 
     /**

@@ -39,7 +39,8 @@ public class EntityFactory {
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new PlayerControlled(),
                 new CharacterMovementState(),
-                new Container());
+                new Container(),
+                new FlashLight(true));
 
         return player;
     }

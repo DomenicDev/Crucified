@@ -4,7 +4,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.network.service.rmi.Asynchronous;
 import com.simsilica.es.EntityId;
 
-
 /**
  * Created by Domenic on 01.05.2017.
  */
@@ -44,5 +43,7 @@ public interface GameSession {
      * @param interactedEntity the trigger entity id
      */
     void interactWithEntity(EntityId interactedEntity);
+
+    void toggleFlashLight(EntityId flashLightId);
 
 }
