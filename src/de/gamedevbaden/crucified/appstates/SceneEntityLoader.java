@@ -192,6 +192,14 @@ public class SceneEntityLoader extends AbstractAppState {
                             );
                         }
                         break;
+
+                    case FlashLight:
+                        entityData.setComponents(entityId,
+                                new Pickable(),
+                                new Equipable(),
+                                new FlashLight(true));
+                        break;
+
                     default:
                         break;
 

@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.light.Light;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -109,5 +110,21 @@ public class VisualFlashLightAppState extends AbstractAppState {
             light.setPosition(position);
             light.setDirection(direction);
         }
+    }
+
+    @Override
+    public void cleanup() {
+        for (Light light : lights.values()) {
+            rootNode.removeLight(light);
+        }
+
+        this.lights.clear();
+        this.lights = null;
+
+        this.flashLights.release();
+        this.flashLights.clear();
+        this.flashLights = null;
+
+        super.cleanup();
     }
 }

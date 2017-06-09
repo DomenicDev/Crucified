@@ -39,4 +39,12 @@ public class ItemFunctionalityAppState extends AbstractAppState {
             entityData.setComponent(flashLight, new FlashLight(enabled));
         }
     }
+
+    @Override
+    public void cleanup() {
+        this.flashLights.release();
+        this.flashLights.clear();
+        this.flashLights = null;
+        super.cleanup();
+    }
 }
