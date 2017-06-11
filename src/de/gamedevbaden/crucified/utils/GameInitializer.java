@@ -41,6 +41,7 @@ public class GameInitializer {
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new FootstepSoundAppState());
         stateManager.attach(new VisualFlashLightAppState());
+        stateManager.attach(new HeadMovingAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());

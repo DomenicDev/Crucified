@@ -11,6 +11,7 @@ import com.jme3.system.JmeContext;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
@@ -50,6 +51,7 @@ public class ServerTest extends SimpleApplication {
         stateManager.attach(new GameServer(5555));
         stateManager.attach(new GameEventHandler(gameSessionManager));
 
+        stateManager.attach(new GameCommanderHolder());
 
         GameInitializer.initEssentialAppStates(stateManager);
         GameInitializer.initGameLogicAppStates(stateManager);

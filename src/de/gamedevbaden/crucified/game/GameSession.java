@@ -38,7 +38,7 @@ public interface GameSession {
 
     /**
      * Is called when the player triggers an InteractionTrigger, e.g.
-     * opening a door, picking up an item
+     * opening a door
      *
      * @param interactedEntity the trigger entity id
      */

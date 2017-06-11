@@ -9,6 +9,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -64,12 +65,6 @@ public class VisualFlashLightAppState extends AbstractAppState {
             }
 
         }
-
-        // update visual spot lights
-        for (Entity entityId : flashLights) {
-            updateLight(entityId.getId());
-        }
-
     }
 
     private void addFlashLight(Entity entity) {
@@ -109,6 +104,18 @@ public class VisualFlashLightAppState extends AbstractAppState {
             // OPTIMIZE
             light.setPosition(position);
             light.setDirection(direction);
+        }
+    }
+
+    @Override
+    public void render(RenderManager rm) {
+        // update visual spot lights
+        // we call this in render() because we want to
+        // make sure all updates have been executed
+        // e.g. the players position could have been updated
+        // in the meantime.
+        for (Entity entityId : flashLights) {
+            updateLight(entityId.getId());
         }
     }
 
