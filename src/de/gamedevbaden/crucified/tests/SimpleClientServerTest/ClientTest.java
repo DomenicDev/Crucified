@@ -53,6 +53,9 @@ public class ClientTest extends SimpleApplication {
         GameInitializer.initClientStatesWithGameSessionDependency(stateManager, gameSession);
         GameInitializer.initGameSessionRelatedAppStates(stateManager, gameSession);
 
+        //   stateManager.attach(new VisualFlashLightAppState());
+        //   stateManager.attach(new HeadMovingAppState());
+
         // create first person camera view
         stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET));
 

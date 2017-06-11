@@ -112,6 +112,7 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             setAnimation(CharacterAnimation.Runback, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
             setAnimation(CharacterAnimation.Idle, lowerBody, upperBody);
+
         }
 
         if (equippedModel != null) {
@@ -119,6 +120,7 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
         } else {
             // apply animation for other channels
             setAnimation(CharacterAnimation.getByAnimName(upperBody.getAnimationName()), rightUpperBody, leftUpperBody);
+
         }
 
     }
@@ -167,7 +169,8 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
         Runback("runback", 300),
         SideLeft("side", 300),
         SideRight("sideback", 300),
-        HoldTorch("HoldTorch", 100f);
+        HoldTorch("HoldTorch", 100f),
+        T_Pose("T-Pose", 50);
 
         private String animName;
         private float blendTime;

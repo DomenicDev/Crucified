@@ -4,6 +4,7 @@ import com.jme3.animation.SkeletonControl;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -78,14 +79,26 @@ public class VisualEquipmentAppState extends AbstractAppState {
 
         if (playerModel != null && itemModel != null) {
 
-            // later we could check where exactly to attach that item
-            // now we want to attach it to the hand bone
-            Node attachmentNode = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("RightHand");
-            attachmentNode.attachChild(itemModel);
-            itemModel.setLocalTranslation(0, 0, 0);
-            itemModel.setCullHint(Spatial.CullHint.Inherit);
+            Model modelType = equipables.getEntity(itemToEquip).get(Model.class);
+
+            if (modelType.getPath().equals(ModelType.Flashlight)) {
+
+                // attach to head
+                Node attachmentNode = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("Head");
+                attachmentNode.attachChild(itemModel);
+                itemModel.setLocalTranslation(0, 0, 0);
+                itemModel.setLocalRotation(Quaternion.IDENTITY);
+                itemModel.setCullHint(Spatial.CullHint.Inherit);
 
 
+            } else {
+                // later we could check where exactly to attach that item
+                // now we want to attach it to the hand bone
+                Node attachmentNode = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("RightHand");
+                attachmentNode.attachChild(itemModel);
+                itemModel.setLocalTranslation(0, 0, 0);
+                itemModel.setCullHint(Spatial.CullHint.Inherit);
+            }
         }
     }
 
