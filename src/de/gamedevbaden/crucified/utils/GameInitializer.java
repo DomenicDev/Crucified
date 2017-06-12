@@ -31,6 +31,7 @@ public class GameInitializer {
         stateManager.attach(new InputAppState());
     }
 
+
     public static void initViewAppStates(AppStateManager stateManager) {
         stateManager.attach(new ModelViewAppState());
         stateManager.attach(new VisualStoringAppState());

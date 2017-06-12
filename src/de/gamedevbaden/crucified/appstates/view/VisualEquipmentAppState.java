@@ -85,7 +85,12 @@ public class VisualEquipmentAppState extends AbstractAppState {
 
                 // attach to head
                 Node attachmentNode = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("Head");
-                attachmentNode.attachChild(itemModel);
+                Node itemNode = new Node("ItemNode");
+                attachmentNode.attachChild(itemNode);
+                itemNode.setLocalTranslation(0, 0, 0);
+
+                //   attachmentNode.attachChild(itemModel);
+                itemNode.attachChild(itemModel);
                 itemModel.setLocalTranslation(0, 0, 0);
                 itemModel.setLocalRotation(Quaternion.IDENTITY);
                 itemModel.setCullHint(Spatial.CullHint.Inherit);

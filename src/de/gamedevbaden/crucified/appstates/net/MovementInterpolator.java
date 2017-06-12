@@ -37,6 +37,13 @@ public class MovementInterpolator extends AbstractAppState {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         movingEntities = entityData.getEntities(OnMovement.class, Transform.class, Model.class);
 
+        for (Entity entity : movingEntities) {
+            Transform oldTransform = modelViewAppState.getOldTransform(entity.getId());
+            Transform newTransform = entity.get(Transform.class);
+
+            transforms.put(entity.getId(), new TransformComparator(oldTransform.getTranslation(), oldTransform.getRotation(), newTransform.getTranslation(), newTransform.getRotation()));
+        }
+
         super.initialize(stateManager, app);
     }
 
@@ -84,8 +91,9 @@ public class MovementInterpolator extends AbstractAppState {
             Quaternion oldRotation = tc.getOldRotation();
             Quaternion newRotation = tc.getNewRotation();
 
-            Vector3f interpolatedTranslation = new Vector3f(oldTranslation).interpolateLocal(newTranslation, tpf / 0.1f);
+            Vector3f interpolatedTranslation = oldTranslation.interpolateLocal(newTranslation, tpf / 0.1f);
             Quaternion interpolatedRotation = oldRotation.slerp(oldRotation, newRotation, tpf / 0.1f);
+            interpolatedRotation.normalizeLocal(); // we need to normalize it otherwise this would cause weird artifacts
 
             // apply interpolation to model
             model.setLocalTranslation(interpolatedTranslation);
@@ -94,10 +102,10 @@ public class MovementInterpolator extends AbstractAppState {
             // save interpolated values as "old" values, so they can be used in next frame
             tc.setOldTranslation(interpolatedTranslation);
             tc.setOldRotation(interpolatedRotation);
-
         }
 
     }
+
 
     @Override
     public void cleanup() {
@@ -117,17 +125,17 @@ public class MovementInterpolator extends AbstractAppState {
      */
     private class TransformComparator {
 
-        private Vector3f oldTranslation;
-        private Quaternion oldRotation;
+        private Vector3f oldTranslation = new Vector3f();
+        private Quaternion oldRotation = new Quaternion();
 
-        private Vector3f newTranslation;
-        private Quaternion newRotation;
+        private Vector3f newTranslation = new Vector3f();
+        private Quaternion newRotation = new Quaternion();
 
         TransformComparator(Vector3f oldTranslation, Quaternion oldRotation, Vector3f newTranslation, Quaternion newRotation) {
-            this.oldTranslation = oldTranslation;
-            this.oldRotation = oldRotation;
-            this.newTranslation = newTranslation;
-            this.newRotation = newRotation;
+            setOldTranslation(oldTranslation);
+            setOldRotation(oldRotation);
+            setNewTranslation(newTranslation);
+            setNewRotation(newRotation);
         }
 
         Vector3f getOldTranslation() {
@@ -135,7 +143,7 @@ public class MovementInterpolator extends AbstractAppState {
         }
 
         void setOldTranslation(Vector3f oldTranslation) {
-            this.oldTranslation = oldTranslation;
+            this.oldTranslation.set(oldTranslation);
         }
 
         Quaternion getOldRotation() {
@@ -143,7 +151,7 @@ public class MovementInterpolator extends AbstractAppState {
         }
 
         void setOldRotation(Quaternion oldRotation) {
-            this.oldRotation = oldRotation;
+            this.oldRotation.set(oldRotation);
         }
 
         Vector3f getNewTranslation() {
@@ -151,7 +159,7 @@ public class MovementInterpolator extends AbstractAppState {
         }
 
         void setNewTranslation(Vector3f newTranslation) {
-            this.newTranslation = newTranslation;
+            this.newTranslation.set(newTranslation);
         }
 
         Quaternion getNewRotation() {
@@ -159,7 +167,7 @@ public class MovementInterpolator extends AbstractAppState {
         }
 
         void setNewRotation(Quaternion newRotation) {
-            this.newRotation = newRotation;
+            this.newRotation.set(newRotation);
         }
     }
 }

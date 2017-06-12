@@ -25,7 +25,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     private InputManager inputManager;
     private Camera cam;
 
-    private Vector3f lastCamDirection;
+    private Vector3f lastCamDirection = new Vector3f();
     private float camUpdateTime;
 
     @Override
@@ -33,7 +33,6 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
         this.gameSession = stateManager.getState(GameSessionAppState.class).getGameSession();
         this.inputManager = app.getInputManager();
         this.cam = app.getCamera();
-        this.lastCamDirection = cam.getDirection(new Vector3f());
 
         // init listener for input events
         for (InputCommand input : InputCommand.values()) {
