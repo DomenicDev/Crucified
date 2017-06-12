@@ -81,13 +81,13 @@ public class VisualEquipmentAppState extends AbstractAppState {
 
             Model modelType = equipables.getEntity(itemToEquip).get(Model.class);
 
-            if (modelType.getPath().equals(ModelType.Flashlight)) {
+            if (modelType.getPath().equals(ModelType.Headlamp)) {
 
                 // attach to head
                 Node attachmentNode = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("Head");
                 Node itemNode = new Node("ItemNode");
                 attachmentNode.attachChild(itemNode);
-                itemNode.setLocalTranslation(0, 0, 0);
+                itemNode.setLocalTranslation(-0.011107027f, 0.09165355f, 0.12990493f);
 
                 //   attachmentNode.attachChild(itemModel);
                 itemNode.attachChild(itemModel);

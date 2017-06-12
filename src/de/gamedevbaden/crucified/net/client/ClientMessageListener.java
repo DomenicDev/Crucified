@@ -36,8 +36,11 @@ public class ClientMessageListener implements MessageListener<Client> {
         }
 
         if (m instanceof ReadNoteMessage) {
-            ReadNoteMessage rm = (ReadNoteMessage) m;
-            gameCommander.readNote(rm.getScript());
+            this.app.enqueue(() -> {
+                ReadNoteMessage rm = (ReadNoteMessage) m;
+                gameCommander.readNote(rm.getScript());
+                return null;
+            });
         }
 
     }

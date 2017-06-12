@@ -7,6 +7,8 @@ import de.gamedevbaden.crucified.game.GameCommander;
 import java.util.HashMap;
 
 /**
+ * This state holds a map of {@link GameCommander}s with their playerId as key. This
+ * state is used for easier access.
  * Created by Domenic on 08.06.2017.
  */
 public class GameCommanderHolder extends AbstractAppState {

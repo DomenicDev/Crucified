@@ -23,11 +23,13 @@ import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
 /**
+ * A simple server test application for testing in game features.
+ *
  * Created by Domenic on 26.04.2017.
  */
 public class ServerTest extends SimpleApplication {
 
-    float time;
+    private float time;
     private EntityId cube;
     private EntityData entityData;
 
@@ -40,22 +42,33 @@ public class ServerTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         GameOptions.ENABLE_PHYSICS_DEBUG = true; // for now
 
+        // this state will create an own EntityData which we can use
         EntityDataState entityDataState = new EntityDataState();
         stateManager.attach(entityDataState);
 
+        // get self-created entity data
         entityData = entityDataState.getEntityData();
 
+        // responsible for creating game sessions for connected players
         GameSessionManager gameSessionManager = new GameSessionManager();
         stateManager.attach(gameSessionManager);
 
-        stateManager.attach(new GameServer(5555));
+        // create and setup game server
+        GameServer server = new GameServer(5555);
+        server.setAmountOfUpdatesPerSecond(10);
+        stateManager.attach(server);
+
+        // attach the default GameEventHandler
         stateManager.attach(new GameEventHandler(gameSessionManager));
 
+        // this state just holds the server side commanders
         stateManager.attach(new GameCommanderHolder());
 
+        // inits game logic states
         GameInitializer.initEssentialAppStates(stateManager);
         GameInitializer.initGameLogicAppStates(stateManager);
 
+        // load scene
         stateManager.attach(new SceneEntityLoader());
 
 
