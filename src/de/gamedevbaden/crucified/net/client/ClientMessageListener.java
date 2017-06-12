@@ -6,6 +6,7 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
+import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 
 /**
  * Receives messages from the server and calls the relevant app states
@@ -33,5 +34,11 @@ public class ClientMessageListener implements MessageListener<Client> {
             });
 
         }
+
+        if (m instanceof ReadNoteMessage) {
+            ReadNoteMessage rm = (ReadNoteMessage) m;
+            gameCommander.readNote(rm.getScript());
+        }
+
     }
 }

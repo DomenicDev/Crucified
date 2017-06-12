@@ -59,6 +59,7 @@ public class InteractionAppState extends AbstractAppState {
                     ReadableScript readableScript = entityData.getComponent(interactableEntityId, ReadableScript.class);
                     if (readableScript != null && readableScript.getScript() != null) {
                         GameCommander commander = commanderHolder.get(playerId);
+                        System.out.println(commander);
                         if (commander != null) {
                             commander.readNote(readableScript.getScript());
                         }

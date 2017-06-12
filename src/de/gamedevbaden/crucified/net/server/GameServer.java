@@ -11,12 +11,13 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
+import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.NetworkUtils;
-import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     private Server server;
     private ObservableEntityData entityData;
     private GameSessionManager gameSessionManager;
+    private GameCommanderHolder commanderHolder;
     private HashMap<HostedConnection, GameSession> gameSessionHashMap = new HashMap<>();
     private RmiHostedService rmiService;
 
@@ -47,6 +49,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
+        this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
 
         try {
 
@@ -99,24 +102,21 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     @Override
     public void connectionAdded(Server server, HostedConnection conn) {
 
-        System.out.println("conn added");
-
-        //ToDo: Later, we don't want to directly create a player entity, only when game starts
+        System.out.println("Client #" + conn.getId() + " has connected!");
 
         EntityId player = EntityFactory.createPlayer(entityData);
 
+        // create a game session for this player
         GameSession session = gameSessionManager.createSession(player);
 
+        // share this GameSession object so the client can access it
         RmiRegistry rmi = rmiService.getRmiRegistry(conn);
         rmi.share(session, GameSession.class);
 
-//        GameCommander gameCommander = rmi.getRemoteObject(GameCommander.class);
-//        this.commanderCollector.addGameCommander(gameCommander);
-//        gameCommander.loadScene("Scenes/TestScene.j3o");
-
-        // let client directly load game world
-        //   server.broadcast(Filters.equalTo(conn), new LoadLevelMessage(SceneEntityLoader.sceneToLoad));
-
+        // create a server side game commander which basically sends commands to the client
+        // the client also has one
+        GameCommander commander = new ServerGameCommander(conn);
+        commanderHolder.add(player, commander);
 
         gameSessionHashMap.put(conn, session);
     }
@@ -131,17 +131,21 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         if (m instanceof ReadyForGameStartMessage) {
             ReadyForGameStartMessage rm = (ReadyForGameStartMessage) m;
             if (rm.isReady()) {
-                source.send(new LoadLevelMessage(SceneEntityLoader.sceneToLoad));
+                EntityId playerId = gameSessionHashMap.get(source).getPlayer();
+                commanderHolder.get(playerId).loadScene(SceneEntityLoader.sceneToLoad);
             }
         }
     }
 
     @Override
     public void cleanup() {
-        // TODO cleanup all
         if (server != null) {
             server.close();
         }
+
+        this.gameSessionHashMap.clear();
+        this.gameSessionHashMap = null;
+
         super.cleanup();
     }
 

@@ -3,9 +3,11 @@ package de.gamedevbaden.crucified.net;
 
 import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.EnumSerializer;
+import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
+import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 /**
@@ -42,6 +44,8 @@ public class NetworkUtils {
         Serializer.registerClass(Scene.class, new EnumSerializer());
         Serializer.registerClass(LoadLevelMessage.class);
         Serializer.registerClass(ReadyForGameStartMessage.class);
+        Serializer.registerClass(PaperScript.class, new EnumSerializer());
+        Serializer.registerClass(ReadNoteMessage.class);
     }
 
 }

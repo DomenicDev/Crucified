@@ -21,4 +21,10 @@ public class GameCommanderHolder extends AbstractAppState {
         return map.get(player);
     }
 
+    @Override
+    public void cleanup() {
+        this.map.clear();
+        this.map = null;
+        super.cleanup();
+    }
 }
