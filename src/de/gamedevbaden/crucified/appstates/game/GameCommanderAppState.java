@@ -14,9 +14,17 @@ import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
+import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Properties;
 
 /**
  * Created by Domenic on 27.05.2017.
@@ -29,6 +37,9 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private Camera cam;
     private SimpleApplication app;
     private ShadowRendererAppState shadowRendererAppState;
+
+    // scripts
+    private Properties scripts;
 
     public GameCommanderAppState() {
     }
@@ -51,6 +62,20 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
 
         this.rootNode.attachChild(mainWorldNode);
+
+        // load script file
+        try {
+            FileInputStream stringFileInput = new FileInputStream(new File("assets/Interface/Scripts.xml"));
+            this.scripts = new Properties();
+            this.scripts.loadFromXML(stringFileInput);
+            stringFileInput.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvalidPropertiesFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         super.initialize(stateManager, app);
     }
@@ -115,6 +140,14 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             app.getViewPort().addProcessor(fpp);
         }
 
+    }
+
+    @Override
+    public void readNote(PaperScript script) {
+        if (scripts != null) {
+            String text = scripts.getProperty(script.getKey());
+            System.out.println(text);
+        }
     }
 
     public Node getMainWorldNode() {

@@ -1,5 +1,6 @@
 package de.gamedevbaden.crucified.game;
 
+import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 
 /**
@@ -15,4 +16,6 @@ public interface GameCommander {
      * @param scene the path to the scene
      */
     void loadScene(Scene scene);
+
+    void readNote(PaperScript script);
 }

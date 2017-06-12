@@ -25,7 +25,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     private InputManager inputManager;
     private Camera cam;
 
-    private Vector3f lastCamDirection;
+    private Vector3f lastCamDirection = new Vector3f();
     private float camUpdateTime;
 
     @Override
@@ -33,7 +33,6 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
         this.gameSession = stateManager.getState(GameSessionAppState.class).getGameSession();
         this.inputManager = app.getInputManager();
         this.cam = app.getCamera();
-        this.lastCamDirection = cam.getDirection(new Vector3f());
 
         // init listener for input events
         for (InputCommand input : InputCommand.values()) {
@@ -46,7 +45,6 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
         PlayerInteractionState playerInteractionState = stateManager.getState(PlayerInteractionState.class);
         playerInteractionState.addInteractionListener(this);
 
-
         super.initialize(stateManager, app);
     }
 
@@ -55,7 +53,7 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     public void update(float tpf) {
         // check for camera change
 
-        if ((camUpdateTime += tpf) >= 0.1f || !lastCamDirection.equals(cam.getDirection())) { // we send 50 updates per second
+        if ((camUpdateTime += tpf) >= 0.05f && !lastCamDirection.equals(cam.getDirection())) { // we send 50 updates per second
 
             lastCamDirection.set(cam.getDirection());
             // when the camera has rotated we call the update method
@@ -64,7 +62,6 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
             // this case isn't handled yet...
 
             gameSession.applyViewDirection(cam.getDirection());
-
         }
     }
 

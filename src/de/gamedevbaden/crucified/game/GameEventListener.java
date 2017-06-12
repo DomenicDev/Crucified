@@ -22,5 +22,6 @@ public interface GameEventListener {
 
     void onInteraction(EntityId playerId, EntityId interactedEntity);
 
+    void onFlashLightToggled(EntityId playerId, EntityId flashLightId);
 
 }

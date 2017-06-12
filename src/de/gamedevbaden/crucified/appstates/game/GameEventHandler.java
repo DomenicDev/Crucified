@@ -24,6 +24,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private ItemStoreAppState itemStoreAppState;
     private EquipmentAppState equipmentAppState;
     private GameSessionManager gameSession;
+    private ItemFunctionalityAppState itemFunctionalityAppState;
 
     public GameEventHandler(GameSessionManager gameSession) {
         this.gameSession = gameSession;
@@ -38,6 +39,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
         this.interactionAppState = stateManager.getState(InteractionAppState.class);
         this.itemStoreAppState = stateManager.getState(ItemStoreAppState.class);
         this.equipmentAppState = stateManager.getState(EquipmentAppState.class);
+        this.itemFunctionalityAppState = stateManager.getState(ItemFunctionalityAppState.class);
         super.initialize(stateManager, app);
     }
 
@@ -79,6 +81,11 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     @Override
     public void onInteraction(EntityId playerId, EntityId interactedEntity) {
         //   triggerAppState.onInteraction(playerId, interactedEntity);
-        interactionAppState.interactWith(interactedEntity);
+        interactionAppState.interactWith(playerId, interactedEntity);
+    }
+
+    @Override
+    public void onFlashLightToggled(EntityId playerId, EntityId flashLightId) {
+        itemFunctionalityAppState.toggleFlashLight(flashLightId);
     }
 }

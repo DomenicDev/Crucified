@@ -67,4 +67,16 @@ public enum Type {
      */
     Tree,
 
+    /**
+     * A readable paper.
+     * When you add this in scene composer you should add
+     * the PaperScript as user data to give it content.
+     */
+    ReadablePaper,
+
+    /**
+     * A Flash light which can be enabled or disabled.
+     */
+    FlashLight,
+
 }

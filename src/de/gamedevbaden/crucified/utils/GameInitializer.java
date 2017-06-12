@@ -31,6 +31,7 @@ public class GameInitializer {
         stateManager.attach(new InputAppState());
     }
 
+
     public static void initViewAppStates(AppStateManager stateManager) {
         stateManager.attach(new ModelViewAppState());
         stateManager.attach(new VisualStoringAppState());
@@ -40,6 +41,8 @@ public class GameInitializer {
         stateManager.attach(new CharacterAnimationAppState());
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new FootstepSoundAppState());
+        stateManager.attach(new VisualFlashLightAppState());
+        stateManager.attach(new HeadMovingAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());
@@ -60,9 +63,9 @@ public class GameInitializer {
         stateManager.attach(new PlayerControlledCharacterMovementState());
         stateManager.attach(new TriggerAppState());
         stateManager.attach(new AttachmentAppState());
-        stateManager.attach(new InteractionAppState());
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
+        stateManager.attach(new InteractionAppState());
         stateManager.attach(new DecayAppState());
     }
 

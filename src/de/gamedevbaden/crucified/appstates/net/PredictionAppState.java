@@ -119,6 +119,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         return characterControl;
     }
 
+
     private void addRigidBodyControl(Entity entity) {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
         Transform transform = entity.get(Transform.class);

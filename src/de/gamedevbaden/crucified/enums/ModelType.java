@@ -12,6 +12,7 @@ public class ModelType {
     public static final String TriggerableDoor = "Models/TriggerableDoor.j3o";
     public static final String Door = "Models/Door.j3o";
     public static final String TestPickup = "Models/PickableItem.j3o";
+    public static final String Headlamp = "Models/Headlamp/Headlamp.j3o";
 /*
     TestScene("Models/Plane.j3o"),
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),

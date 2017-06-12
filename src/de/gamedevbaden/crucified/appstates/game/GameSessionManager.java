@@ -127,5 +127,12 @@ public class GameSessionManager extends AbstractAppState {
             }
         }
 
+        @Override
+        public void toggleFlashLight(EntityId flashLightId) {
+            for (GameEventListener listener : listeners) {
+                listener.onFlashLightToggled(playerId, flashLightId);
+            }
+        }
+
     }
 }

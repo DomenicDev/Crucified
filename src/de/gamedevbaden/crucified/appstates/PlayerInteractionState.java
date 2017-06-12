@@ -69,7 +69,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.listeners = new ArrayList<>();
 
         this.ray = new Ray();
-        this.ray.setLimit(2f);
+        this.ray.setLimit(4f);
 
         this.results = new CollisionResults();
 
