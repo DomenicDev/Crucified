@@ -1,0 +1,16 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/BeachPalm/KingsPalm.dds
+        NormalMap : Textures/Trees/BeachPalm/KingsPalm_NRM.dds
+        SpecularMap : Textures/Trees/BeachPalm/KingsPalm_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      Blend Alpha
+      FaceCull Off
+    }
+}

@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Props/Crate02/3td_old_wood_05.jpg
+        NormalMap : Textures/Props/Crate02/3td_old_wood_05_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

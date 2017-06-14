@@ -1,0 +1,11 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/Copal/Vines02.dds
+        NormalMap : Textures/Trees/Copal/Vines02_NRM.dds
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      Blend Alpha
+        FaceCull Off
+    }
+}

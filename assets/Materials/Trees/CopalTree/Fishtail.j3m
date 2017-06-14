@@ -1,0 +1,16 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/Copal/FishtailFrond.png
+        NormalMap : Textures/Trees/Copal/FishtailFrond_NRM.dds
+        SpecularMap : Textures/Trees/Copal/FishtailFrond_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

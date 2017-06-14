@@ -1,0 +1,14 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Trees/Copal/JungleBark02.dds
+        NormalMap : Repeat Textures/Trees/Copal/JungleBark02_NRM.dds
+        SpecularMap : Repeat Textures/Trees/Copal/JungleBark02_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}
