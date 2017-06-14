@@ -18,13 +18,12 @@ public class HeadRotatingControl extends AbstractControl {
 
     private Vector3f oldViewDir = new Vector3f();
     private Vector3f viewDirection = new Vector3f(Vector3f.UNIT_X);
+    private Vector3f localViewDirection = new Vector3f();
 
-    private Quaternion initHeadRotation = new Quaternion();
     private Quaternion headRotation = new Quaternion();
     private Quaternion finalHeadRotation = new Quaternion();
 
     private float[] initAngles = new float[3];
-    private float[] headAngles = new float[3];
 
     private Bone headBone;
 
@@ -50,7 +49,6 @@ public class HeadRotatingControl extends AbstractControl {
             this.headBone.setUserControl(true);
             this.headBone.getLocalRotation().toAngles(initAngles);
             this.headRotation.set(headBone.getLocalRotation());
-            this.initHeadRotation.set(headBone.getLocalRotation());
         } else {
             // cleanup
             if (headBone != null) {
@@ -69,16 +67,12 @@ public class HeadRotatingControl extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-
         // if true --> viewDirection has been updated, so we need to set a new rotation for the head
         if (!oldViewDir.equals(viewDirection)) {
-
-            finalHeadRotation.lookAt(viewDirection, Vector3f.UNIT_Y);
-
-            finalHeadRotation.toAngles(headAngles);
-            headAngles[1] = 0; // we don't want to have any y-rotation
-            headAngles[2] = 0; // wo don't want to have any z-rotation
-            finalHeadRotation.fromAngles(headAngles);
+            // we transform our world view direction into model space
+            getSpatial().worldToLocal(viewDirection.add(getSpatial().getWorldTranslation()), localViewDirection);
+            // we now compute the new final head rotation
+            finalHeadRotation.lookAt(localViewDirection, Vector3f.UNIT_Y);
 
             // we update our oldViewDirection vector to avoid that all this
             // is computed more than necessary
