@@ -55,7 +55,6 @@ public class ServerTest extends SimpleApplication {
 
         // create and setup game server
         GameServer server = new GameServer(5555);
-        server.setAmountOfUpdatesPerSecond(10);
         stateManager.attach(server);
 
         // attach the default GameEventHandler

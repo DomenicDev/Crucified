@@ -31,7 +31,6 @@ import java.util.HashMap;
 public class GameServer extends AbstractAppState implements ConnectionListener, MessageListener<HostedConnection> {
 
     private float timer;
-    private float updateTime = 1f / 10f; // 10 updates per second
 
     private int port;
     private Server server;
@@ -75,27 +74,15 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         super.initialize(stateManager, app);
     }
 
-
-    public void setAmountOfUpdatesPerSecond(int amount) {
-        if (amount > 0) {
-            this.updateTime = 1f / (float) amount;
-        }
-    }
-
     @Override
     public void update(float tpf) {
-        if ((timer += tpf) >= updateTime) {
+        if ((timer += tpf) >= 0.1f) { // 10 updates per second
             getServer().getServices().getService(EntityDataHostedService.class).sendUpdates();
             timer = 0;
         }
     }
 
-
-    public int getPort() {
-        return port;
-    }
-
-    public Server getServer() {
+    private Server getServer() {
         return server;
     }
 

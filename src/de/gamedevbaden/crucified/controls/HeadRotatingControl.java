@@ -16,7 +16,6 @@ import com.jme3.scene.control.AbstractControl;
  */
 public class HeadRotatingControl extends AbstractControl {
 
-    private Vector3f compVector = new Vector3f();
     private Vector3f oldViewDir = new Vector3f();
     private Vector3f viewDirection = new Vector3f(Vector3f.UNIT_X);
 
