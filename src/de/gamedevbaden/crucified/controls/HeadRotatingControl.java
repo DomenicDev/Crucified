@@ -20,10 +20,12 @@ public class HeadRotatingControl extends AbstractControl {
     private Vector3f oldViewDir = new Vector3f();
     private Vector3f viewDirection = new Vector3f(Vector3f.UNIT_X);
 
+    private Quaternion initHeadRotation = new Quaternion();
     private Quaternion headRotation = new Quaternion();
     private Quaternion finalHeadRotation = new Quaternion();
 
     private float[] initAngles = new float[3];
+    private float[] headAngles = new float[3];
 
     private Bone headBone;
 
@@ -49,6 +51,7 @@ public class HeadRotatingControl extends AbstractControl {
             this.headBone.setUserControl(true);
             this.headBone.getLocalRotation().toAngles(initAngles);
             this.headRotation.set(headBone.getLocalRotation());
+            this.initHeadRotation.set(headBone.getLocalRotation());
         } else {
             // cleanup
             if (headBone != null) {
@@ -71,38 +74,12 @@ public class HeadRotatingControl extends AbstractControl {
         // if true --> viewDirection has been updated, so we need to set a new rotation for the head
         if (!oldViewDir.equals(viewDirection)) {
 
-            // note: we not to operate with a vector here instead of a quaternion
-            // we compute the new angle with the new view direction and the compVector
-            // the compVector has the same coordinates as the viewDirection
-            // except that its y-value is set to zero
-            // this  could have of cause been done differently (and better) too probably
-            // the following "illustration" shows how the vectors are used generally
+            finalHeadRotation.lookAt(viewDirection, Vector3f.UNIT_Y);
 
-
-            //       ^ (viewDirection)                  ^ (y)
-            //      /                                   |
-            //     /                                    |_ _ _ _> (x)
-            //    /   <<-- angle                       /
-            //    -----------> (compVector)          / (z)
-
-            compVector.set(viewDirection.getX(), 0, viewDirection.getZ());
-
-            // get angle between compVector and viewDirection vector
-            float angle = viewDirection.angleBetween(compVector);
-
-            // The angle will always be positive
-            // so looking up or down wouldn't make any difference
-            // That's why we need to negate it when the player is looking up
-            // otherwise the head bone rotation will "go" back again
-
-            Vector3f vec = viewDirection.subtract(spatial.getLocalRotation().getRotationColumn(2));
-            if (vec.getY() > 0) {
-                angle *= -1; // if the character is looking up we negate the angle
-            }
-
-            // we now compute the new head bone rotation
-            // therefore we need to include the init x-rotation
-            finalHeadRotation.fromAngles(initAngles[0] + angle, 0, 0);
+            finalHeadRotation.toAngles(headAngles);
+            headAngles[1] = 0; // we don't want to have any y-rotation
+            headAngles[2] = 0; // wo don't want to have any z-rotation
+            finalHeadRotation.fromAngles(headAngles);
 
             // we update our oldViewDirection vector to avoid that all this
             // is computed more than necessary
