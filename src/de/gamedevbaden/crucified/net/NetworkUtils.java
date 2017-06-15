@@ -5,6 +5,7 @@ import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.EnumSerializer;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
+import de.gamedevbaden.crucified.enums.Type;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
@@ -16,7 +17,7 @@ import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 public class NetworkUtils {
 
     /**
-     * Only called by the server
+     * Only called by server
      */
     public static void initEntityDataSerializers() {
         Serializer.registerClass(Transform.class);
@@ -35,10 +36,12 @@ public class NetworkUtils {
         Serializer.registerClass(EquippedBy.class);
         Serializer.registerClass(PhysicsTerrain.class);
         Serializer.registerClass(FlashLight.class);
+        Serializer.registerClass(Type.class, new EnumSerializer());
+        Serializer.registerClass(ObjectType.class);
     }
 
     /**
-     * Used on both, server and client
+     * Called by server and client
      */
     public static void initMessageSerializers() {
         Serializer.registerClass(Scene.class, new EnumSerializer());

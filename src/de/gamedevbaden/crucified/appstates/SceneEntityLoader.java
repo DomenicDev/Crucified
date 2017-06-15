@@ -131,6 +131,9 @@ public class SceneEntityLoader extends AbstractAppState {
                 // we also add the transform component to the entity
                 entityData.setComponent(entityId, createTransform(spatial));
 
+                // add object type as component
+                entityData.setComponent(entityId, new ObjectType(t.getType()));
+
                 switch (t.getType()) {
 
 //                    case DefaultModel:

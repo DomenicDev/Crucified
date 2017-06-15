@@ -42,6 +42,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
     private EntitySet interactableEntities;
 
     private ModelViewAppState modelViewAppState;
+    private PlayerInventoryState inventoryState;
     private InputManager inputManager;
     private Camera cam;
 
@@ -65,6 +66,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
         this.cam = app.getCamera();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
+        this.inventoryState = stateManager.getState(PlayerInventoryState.class);
         this.rootNode = ((SimpleApplication) app).getRootNode();
         this.listeners = new ArrayList<>();
 
@@ -78,6 +80,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
         this.inputManager.addMapping("R", new KeyTrigger(KeyInput.KEY_R));
         this.inputManager.addMapping("G", new KeyTrigger(KeyInput.KEY_G));
+        this.inputManager.addMapping("K", new KeyTrigger(KeyInput.KEY_K));
         this.inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
@@ -96,7 +99,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                             equippedItem = storedItem;
                             storedItem = null;
                         }
-                    } else {
+                    } else if (name.equals("G")) {
                         if (storedItem != null) {
                             for (PlayerInteractionListener l : listeners) {
                                 l.onItemDrop(storedItem);
@@ -104,11 +107,21 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                             storedItem = null;
                             equippedItem = null;
                         }
+                    } else if (name.equals("K")) {
+
+                        // toggle flashlight
+                        EntityId flashLight = inventoryState.getFlashlight();
+                        if (flashLight != null) {
+                            for (PlayerInteractionListener l : listeners) {
+                                l.onFlashLightToggle(flashLight);
+                            }
+                        }
+
                     }
 
                 }
             }
-        }, "R", "G");
+        }, "R", "G", "K");
 
         super.initialize(stateManager, app);
     }
@@ -193,6 +206,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         void onItemUnequipped(EntityId itemToUnequip);
 
         void onItemDrop(EntityId dropItem);
+
+        void onFlashLightToggle(EntityId flashLight);
 
     }
 

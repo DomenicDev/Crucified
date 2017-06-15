@@ -7,13 +7,20 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.listeners.EquipmentListener;
 import de.gamedevbaden.crucified.enums.EquipmentLocation;
 import de.gamedevbaden.crucified.es.components.Container;
 import de.gamedevbaden.crucified.es.components.Equipable;
 import de.gamedevbaden.crucified.es.components.EquippedBy;
 import de.gamedevbaden.crucified.es.components.StoredIn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
+ * This app state handles the logic for items which can be equipped and also provides
+ * methods to equip items and remove them again.
+ *
  * Created by Domenic on 20.05.2017.
  */
 public class EquipmentAppState extends AbstractAppState {
@@ -24,6 +31,8 @@ public class EquipmentAppState extends AbstractAppState {
     private EntityData entityData;
 
     private ItemStoreAppState itemStoreAppState;
+
+    private List<EquipmentListener> listeners = new ArrayList<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -57,13 +66,23 @@ public class EquipmentAppState extends AbstractAppState {
         // if we equip an item which is stored in a container (e.g. the players inventory)
         // we need to remove the StoredIn component
         if (entityData.getComponent(itemToEquip, StoredIn.class) != null) {
-            entityData.removeComponent(itemToEquip, StoredIn.class);
+            //       entityData.removeComponent(itemToEquip, StoredIn.class);
+        }
+
+        // call listeners
+        for (EquipmentListener l : listeners) {
+            l.onItemEquipped(itemToEquip);
         }
     }
 
     public void unequipItem(EntityId itemToUnequip) {
         if (equippedEntities.containsId(itemToUnequip)) {
             entityData.removeComponent(itemToUnequip, EquippedBy.class);
+
+            // call listeners
+            for (EquipmentListener l : listeners) {
+                l.onItemUnequipped(itemToUnequip);
+            }
         }
     }
 
@@ -95,19 +114,28 @@ public class EquipmentAppState extends AbstractAppState {
     }
 
     /**
-     * Use this method to unequip an item and add it to the supplied container.
+     * Use this method to unequip an item and add it to the specified container.
      *
-     * @param containerId
-     * @param itemToUnequip
+     * @param containerId the container this item shall be added to
+     * @param itemToUnequip the item to un-equip
      */
     public void unequipItem(EntityId containerId, EntityId itemToUnequip) {
         if (containers.containsId(containerId) && equippedEntities.containsId(itemToUnequip)) {
 
             entityData.removeComponent(itemToUnequip, EquippedBy.class);
-            //       entityData.setComponent(itemToUnequip, new StoredIn(containerId));
 
+            // call listeners
+            for (EquipmentListener l : listeners) {
+                l.onItemUnequipped(itemToUnequip);
+            }
+
+            // store item in specified container
             itemStoreAppState.storeItem(containerId, itemToUnequip);
         }
+    }
+
+    public void addListener(EquipmentListener listener) {
+        this.listeners.add(listener);
     }
 
     @Override

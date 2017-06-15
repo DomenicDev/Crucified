@@ -97,6 +97,11 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     }
 
     @Override
+    public void onFlashLightToggle(EntityId flashLight) {
+        gameSession.toggleFlashLight(flashLight);
+    }
+
+    @Override
     public void cleanup() {
         this.inputManager.removeListener(this);
         super.cleanup();
