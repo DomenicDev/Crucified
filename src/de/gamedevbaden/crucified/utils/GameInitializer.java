@@ -48,6 +48,10 @@ public class GameInitializer {
         stateManager.attach(new HudAppState());
     }
 
+    public static void initPlayerStates(AppStateManager stateManager) {
+        stateManager.attach(new PlayerInventoryState());
+    }
+
     public static void initGameSessionRelatedAppStates(AppStateManager stateManager, GameSession gameSession) {
         stateManager.attach(new GameSessionAppState(gameSession));
     }
@@ -62,6 +66,7 @@ public class GameInitializer {
         stateManager.attach(new PhysicsPlayerMovementAppState());
         stateManager.attach(new PlayerControlledCharacterMovementState());
         stateManager.attach(new TriggerAppState());
+        stateManager.attach(new ItemFunctionalityAppState());
         stateManager.attach(new AttachmentAppState());
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());

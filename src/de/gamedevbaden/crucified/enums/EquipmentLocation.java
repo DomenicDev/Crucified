@@ -5,6 +5,7 @@ package de.gamedevbaden.crucified.enums;
  */
 public enum EquipmentLocation {
 
-    RightHand;
+    RightHand,
+    Hand;
 
 }

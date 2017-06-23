@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.es.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
+import de.gamedevbaden.crucified.enums.EquipmentLocation;
 
 /**
  * Is used as a marker.
@@ -10,4 +11,17 @@ import com.simsilica.es.EntityComponent;
  */
 @Serializable
 public class Equipable implements EntityComponent {
+
+    private EquipmentLocation equipmentLocation;
+
+    public Equipable() {
+    }
+
+    public Equipable(EquipmentLocation equipmentLocation) {
+        this.equipmentLocation = equipmentLocation;
+    }
+
+    public EquipmentLocation getEquipmentLocation() {
+        return equipmentLocation;
+    }
 }
