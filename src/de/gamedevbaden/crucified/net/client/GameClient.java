@@ -92,7 +92,6 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
     public void sendMessage(Message message) {
         if (client != null && client.isConnected() && message != null) {
             client.send(message);
-            System.out.println(message);
         }
     }
 

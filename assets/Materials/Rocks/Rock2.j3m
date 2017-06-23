@@ -1,8 +1,9 @@
 Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
         DiffuseMap : Repeat Textures/SceneModels/Rocks/MossRock01.dds
-        NormalMap : Repeat Textures/SceneModels/Rocks/MossRock01_SPEC.dds
+        NormalMap : Repeat Textures/SceneModels/Rocks/MossRock01_NRM.dds
      }
     AdditionalRenderState {
+      FaceCull Back
     }
 }
