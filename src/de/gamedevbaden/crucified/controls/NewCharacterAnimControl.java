@@ -106,7 +106,7 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
         } else if (state == CharacterMovementState.MOVING_RIGHT) {
             setAnimation(CharacterAnimation.SideRight, lowerBody);
             setAnimation(CharacterAnimation.Walk, upperBody);
-        } else if (state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
+        } else if (state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.RUNNING_FORWARD_RIGHT) {
             setAnimation(CharacterAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
             setAnimation(CharacterAnimation.Runback, lowerBody, upperBody);
@@ -132,13 +132,13 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
 
     @Override
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-        if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(CharacterAnimation.Run.getAnimName())) {
+        if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.RUNNING_FORWARD_RIGHT) && animName.equals(CharacterAnimation.Run.getAnimName())) {
             channel.setAnim(CharacterAnimation.Run.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(CharacterAnimation.Walk.getAnimName())) {
             channel.setAnim(CharacterAnimation.Walk.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) && animName.equals(CharacterAnimation.WalkBack.getAnimName())) {
             channel.setAnim(CharacterAnimation.WalkBack.getAnimName());
-        } else if ((state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) && animName.equals(CharacterAnimation.Runback.getAnimName())) {
+        } else if ((state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) && animName.equals(CharacterAnimation.Runback.getAnimName())) {
             channel.setAnim(CharacterAnimation.Runback.getAnimName());
         } else if (state == CharacterMovementState.MOVING_LEFT) {
             if (animName.equals(CharacterAnimation.SideLeft.getAnimName())) {
