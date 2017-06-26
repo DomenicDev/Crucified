@@ -65,13 +65,13 @@ public class GameInitializer {
         stateManager.attach(new PhysicAppState());
         stateManager.attach(new PhysicsPlayerMovementAppState());
         stateManager.attach(new PlayerControlledCharacterMovementState());
-        stateManager.attach(new TriggerAppState());
         stateManager.attach(new ItemFunctionalityAppState());
         stateManager.attach(new AttachmentAppState());
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
         stateManager.attach(new InteractionAppState());
         stateManager.attach(new DecayAppState());
+        stateManager.attach(new NewTriggerAppState());
     }
 
 }

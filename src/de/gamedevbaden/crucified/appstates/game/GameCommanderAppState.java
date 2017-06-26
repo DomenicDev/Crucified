@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioNode;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
 import com.jme3.post.FilterPostProcessor;
@@ -139,6 +140,14 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
             app.getViewPort().addProcessor(fpp);
         }
+
+
+        // play predefined audio nodes
+        world.depthFirstTraversal(spatial -> {
+            if (spatial instanceof AudioNode) {
+                ((AudioNode) spatial).play();
+            }
+        });
 
     }
 
