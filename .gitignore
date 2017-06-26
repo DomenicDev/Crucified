@@ -228,6 +228,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-!/src/de/gamedevbaden/crucified/appstates/VisualizationAppState.java
-!/src/de/gamedevbaden/crucified/net/server/GameServer.java
-!/src/de/gamedevbaden/crucified/tests/SingleplayerTest.java
+
