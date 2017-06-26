@@ -24,6 +24,7 @@ public class HeadRotatingControl extends AbstractControl {
     private Quaternion finalHeadRotation = new Quaternion();
 
     private float[] initAngles = new float[3];
+    private float[] angles = new float[3];
 
     private Bone headBone;
 
@@ -74,6 +75,11 @@ public class HeadRotatingControl extends AbstractControl {
             // we now compute the new final head rotation
             finalHeadRotation.lookAt(localViewDirection.normalizeLocal(), Vector3f.UNIT_Y);
 
+            // we need to set the y and z-rotation to zero
+            finalHeadRotation.toAngles(angles);
+            angles[1] = 0;
+            angles[2] = 0;
+            finalHeadRotation.fromAngles(angles);
             // we update our oldViewDirection vector to avoid that all this
             // is computed more than necessary
             oldViewDir.set(viewDirection);
