@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.utils;
 
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
@@ -46,6 +47,11 @@ public class GameInitializer {
 
         // gui app states
         stateManager.attach(new HudAppState());
+    }
+
+    public static void initFirstPersonCameraView(AppStateManager stateManager) {
+        GameSession gameSession = stateManager.getState(GameSessionAppState.class).getGameSession();
+        stateManager.getState(ModelViewAppState.class).addModelListener(gameSession.getPlayer(), spatial -> stateManager.attach(new FirstPersonCameraView((Node) spatial, GameConstants.FIRST_PERSON_CAM_OFFSET)));
     }
 
     public static void initPlayerStates(AppStateManager stateManager) {

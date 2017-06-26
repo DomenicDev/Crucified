@@ -13,12 +13,14 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
+import de.gamedevbaden.crucified.appstates.listeners.ModelListener;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.Transform;
 import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <code>ModelViewAppState</code> represents all entities with a @link{ModelType} component visually in the scene graph.
@@ -39,6 +41,8 @@ public class ModelViewAppState extends AbstractAppState {
 
     private Node rootNode;
     private ModelLoaderAppState modelLoaderAppState;
+
+    private Map<EntityId, ModelListener> listeners = new HashMap<>();
 
     public ModelViewAppState() {
     }
@@ -85,6 +89,10 @@ public class ModelViewAppState extends AbstractAppState {
             }
         }
 
+    }
+
+    public void addModelListener(EntityId entityId, ModelListener listener) {
+        listeners.put(entityId, listener);
     }
 
     /**
@@ -142,6 +150,12 @@ public class ModelViewAppState extends AbstractAppState {
 
         // finally attach to the scene
         rootNode.attachChild(spatial);
+
+        // call listener if necessary
+        ModelListener l = listeners.get(entity.getId());
+        if (l != null) {
+            l.onModelAttached(spatial);
+        }
     }
 
     private void updateSpatial(Entity entity) {
