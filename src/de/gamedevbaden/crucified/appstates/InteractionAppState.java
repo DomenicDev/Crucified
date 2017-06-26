@@ -7,12 +7,15 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.listeners.InteractionListener;
 import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.Sound;
 import de.gamedevbaden.crucified.es.components.InteractionComponent;
 import de.gamedevbaden.crucified.es.components.ReadableScript;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
+
+import java.util.ArrayList;
 
 /**
  * This app state defines what shall happen if players interact with various types of game objects.
@@ -24,6 +27,8 @@ public class InteractionAppState extends AbstractAppState {
     private EntitySet interactables;
     private EntityData entityData;
     private GameCommanderHolder commanderHolder;
+
+    private ArrayList<InteractionListener> listeners = new ArrayList<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -70,6 +75,24 @@ public class InteractionAppState extends AbstractAppState {
                     break;
 
             }
+
+            for (InteractionListener l : listeners) {
+                l.onInteract(interactableEntityId);
+            }
         }
+    }
+
+    public void addListener(InteractionListener listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void cleanup() {
+        this.interactables.release();
+        this.interactables.clear();
+        this.interactables = null;
+
+        listeners.clear();
+        super.cleanup();
     }
 }

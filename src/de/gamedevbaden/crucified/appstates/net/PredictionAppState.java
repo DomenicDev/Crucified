@@ -20,6 +20,7 @@ import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
+import de.gamedevbaden.crucified.controls.HeadRotatingControl;
 import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
@@ -291,6 +292,12 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             // apply transform to players spatial
             playerModel.setLocalTranslation(playerCharacterControl.getPhysicsRigidBody().getPhysicsLocation());
             playerModel.setLocalRotation(playerCharacterControl.getCharacterRotation());
+
+            // set head bone rotation
+            HeadRotatingControl headControl = playerModel.getControl(HeadRotatingControl.class);
+            if (headControl != null) {
+                headControl.setViewDirection(cam.getDirection());
+            }
 
         } else {
             // get player model if it hasn't been initialized yet

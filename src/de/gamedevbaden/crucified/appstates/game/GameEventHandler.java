@@ -19,23 +19,19 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
 
     private PlayerInputControlAppState playerInputControlAppState;
     private PhysicsPlayerMovementAppState physicsPlayerMovementAppState;
-    private TriggerAppState triggerAppState;
     private InteractionAppState interactionAppState;
     private ItemStoreAppState itemStoreAppState;
     private EquipmentAppState equipmentAppState;
-    private GameSessionManager gameSession;
     private ItemFunctionalityAppState itemFunctionalityAppState;
 
     public GameEventHandler(GameSessionManager gameSession) {
-        this.gameSession = gameSession;
-        this.gameSession.addGameEventListener(this);
+        gameSession.addGameEventListener(this);
     }
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.playerInputControlAppState = stateManager.getState(PlayerInputControlAppState.class);
         this.physicsPlayerMovementAppState = stateManager.getState(PhysicsPlayerMovementAppState.class);
-        this.triggerAppState = stateManager.getState(TriggerAppState.class);
         this.interactionAppState = stateManager.getState(InteractionAppState.class);
         this.itemStoreAppState = stateManager.getState(ItemStoreAppState.class);
         this.equipmentAppState = stateManager.getState(EquipmentAppState.class);

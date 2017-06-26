@@ -5,7 +5,6 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
-import com.jme3.bounding.BoundingVolume;
 import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -15,16 +14,15 @@ import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
-import de.gamedevbaden.crucified.es.triggersystem.OpenCloseEvent;
+import de.gamedevbaden.crucified.es.triggersystem.OnEnterTrigger;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
-import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.ReadablePaperScriptUserData;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
-import de.gamedevbaden.crucified.userdata.events.OpenCloseEventUserData;
 import de.gamedevbaden.crucified.userdata.events.SoundEvent;
-import de.gamedevbaden.crucified.userdata.triggers.TriggerTypeData;
+import de.gamedevbaden.crucified.userdata.triggers.OnEnterTriggerUserData;
+import de.gamedevbaden.crucified.userdata.triggers.OnInteractionTriggerUserData;
 import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.HashMap;
@@ -200,7 +198,7 @@ public class SceneEntityLoader extends AbstractAppState {
                         entityData.setComponents(entityId,
                                 new Pickable(),
                                 new Equipable(),
-                                new FlashLight(true));
+                                new FlashLight(false));
                         break;
 
                     default:
@@ -230,44 +228,73 @@ public class SceneEntityLoader extends AbstractAppState {
                 // look for triggers and events
                 spatial.depthFirstTraversal(spatial1 -> {
 
-                    if (spatial1.getUserData("trigger") != null) {
-                        TriggerTypeData triggerData = spatial1.getUserData("trigger");
-                        BoundingVolume volume = spatial1.getWorldBound();
-                        TriggerType triggerType = triggerData.getTriggerType();
+                    for (String key : spatial1.getUserDataKeys()) {
 
-                        EntityId trigger = entityData.createEntity();
-                        entityData.setComponents(trigger,
-                                createTransform(spatial1),
-                                new Trigger(eventGroup, triggerType, volume)
-                        );
+                        if (spatial1.getUserData(key) instanceof OnEnterTriggerUserData) {
 
+                            EntityId trigger = entityData.createEntity();
+                            entityData.setComponents(trigger,
+                                    createTransform(spatial1),
+                                    new Trigger(eventGroup, new OnEnterTrigger(spatial1.getWorldBound()))
+                            );
 
-                    } else if (spatial1.getUserData("event") != null) {
+                        } else if (spatial1.getUserData(key) instanceof OnInteractionTriggerUserData) {
 
-                        Object event = spatial1.getUserData("event");
+                            // ToDo:
 
-                        if (event instanceof SoundEvent) {
-                            SoundEvent soundEvent = (SoundEvent) event;
-
+                            //----------------------------------------------------
+                            // now we look for events
+                        } else if (spatial1.getUserData(key) instanceof SoundEvent) {
                             System.out.println("created sound event");
-
+                            SoundEvent soundEvent = spatial1.getUserData(key);
                             EntityId eventEntity = entityData.createEntity();
                             entityData.setComponents(eventEntity,
                                     new Event(eventGroup, new PlaySoundEventType(soundEvent.getSound(), soundEvent.isPositional())),
                                     createTransform(spatial1));
-
-                        } else if (event instanceof OpenCloseEventUserData) {
-                            OpenCloseEventUserData openCloseEvent = (OpenCloseEventUserData) event;
-                            String spatialName = openCloseEvent.getSpatialName();
-                            Spatial target = ((Node) spatial).getChild(spatialName);
-                            EntityId targetId = spatialEntities.get(target);
-
-                            EntityId eventEntity = entityData.createEntity();
-                            entityData.setComponents(eventEntity,
-                                    new Event(eventGroup, new OpenCloseEvent(targetId)),
-                                    createTransform(spatial));
                         }
+
                     }
+
+//                    if (spatial1.getUserData("trigger") != null) {
+//                        TriggerTypeData triggerData = spatial1.getUserData("trigger");
+//                        BoundingVolume volume = spatial1.getWorldBound();
+//                        TriggerType triggerType = triggerData.getTriggerType();
+//
+//                        EntityId trigger = entityData.createEntity();
+//                        entityData.setComponents(trigger,
+//                                createTransform(spatial1),
+//                                new Trigger(eventGroup, triggerType, volume)
+//                        );
+//
+//
+//
+//                    } else if (spatial1.getUserData("event") != null) {
+//
+//                        Object event = spatial1.getUserData("event");
+//
+//                        if (event instanceof SoundEvent) {
+//                            SoundEvent soundEvent = (SoundEvent) event;
+//
+//                            System.out.println("created sound event");
+//
+//                            EntityId eventEntity = entityData.createEntity();
+//                            entityData.setComponents(eventEntity,
+//                                    new Event(eventGroup, new PlaySoundEventType(soundEvent.getSound(), soundEvent.isPositional())),
+//                                    createTransform(spatial1));
+//
+//                        } else if (event instanceof OpenCloseEventUserData) {
+//                            OpenCloseEventUserData openCloseEvent = (OpenCloseEventUserData) event;
+//                            String spatialName = openCloseEvent.getSpatialName();
+//                            Spatial target = ((Node) spatial).getChild(spatialName);
+//                            EntityId targetId = spatialEntities.get(target);
+//
+//                            EntityId eventEntity = entityData.createEntity();
+//                            entityData.setComponents(eventEntity,
+//                                    new Event(eventGroup, new OpenCloseEvent(targetId)),
+//                                    createTransform(spatial));
+//                        }
+//                    }
+
                 });
             }
         });

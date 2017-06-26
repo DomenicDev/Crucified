@@ -72,7 +72,7 @@ public class HeadRotatingControl extends AbstractControl {
             // we transform our world view direction into model space
             getSpatial().worldToLocal(viewDirection.add(getSpatial().getWorldTranslation()), localViewDirection);
             // we now compute the new final head rotation
-            finalHeadRotation.lookAt(localViewDirection, Vector3f.UNIT_Y);
+            finalHeadRotation.lookAt(localViewDirection.normalizeLocal(), Vector3f.UNIT_Y);
 
             // we update our oldViewDirection vector to avoid that all this
             // is computed more than necessary
