@@ -102,6 +102,11 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     }
 
     @Override
+    public void onItemCraft(EntityId targetItem, EntityId ingredient) {
+        gameSession.putItemToCraft(targetItem, ingredient);
+    }
+
+    @Override
     public void cleanup() {
         this.inputManager.removeListener(this);
         super.cleanup();

@@ -23,6 +23,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private ItemStoreAppState itemStoreAppState;
     private EquipmentAppState equipmentAppState;
     private ItemFunctionalityAppState itemFunctionalityAppState;
+    private CraftingAppState craftingAppState;
 
     public GameEventHandler(GameSessionManager gameSession) {
         gameSession.addGameEventListener(this);
@@ -36,6 +37,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
         this.itemStoreAppState = stateManager.getState(ItemStoreAppState.class);
         this.equipmentAppState = stateManager.getState(EquipmentAppState.class);
         this.itemFunctionalityAppState = stateManager.getState(ItemFunctionalityAppState.class);
+        this.craftingAppState = stateManager.getState(CraftingAppState.class);
         super.initialize(stateManager, app);
     }
 
@@ -83,5 +85,10 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     @Override
     public void onFlashLightToggled(EntityId playerId, EntityId flashLightId) {
         itemFunctionalityAppState.toggleFlashLight(flashLightId);
+    }
+
+    @Override
+    public void onItemPutForCraft(EntityId itemToCraft, EntityId ingredient) {
+        craftingAppState.putItemForCrafting(itemToCraft, ingredient);
     }
 }

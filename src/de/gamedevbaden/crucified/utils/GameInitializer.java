@@ -32,7 +32,6 @@ public class GameInitializer {
         stateManager.attach(new InputAppState());
     }
 
-
     public static void initViewAppStates(AppStateManager stateManager) {
         stateManager.attach(new ModelViewAppState());
         stateManager.attach(new VisualStoringAppState());
@@ -44,6 +43,8 @@ public class GameInitializer {
         stateManager.attach(new FootstepSoundAppState());
         stateManager.attach(new VisualFlashLightAppState());
         stateManager.attach(new HeadMovingAppState());
+        stateManager.attach(new VisualCraftingAppState());
+        stateManager.attach(new FireEffectAppState());
 
         // gui app states
         stateManager.attach(new HudAppState());
@@ -76,6 +77,7 @@ public class GameInitializer {
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
         stateManager.attach(new InteractionAppState());
+        stateManager.attach(new CraftingAppState());
         stateManager.attach(new DecayAppState());
         stateManager.attach(new NewTriggerAppState());
     }

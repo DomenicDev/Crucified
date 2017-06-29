@@ -7,6 +7,7 @@ public enum InteractionType {
 
     OpenDoor,
     PlayTestSound,
-    ReadText;
+    ReadText,
+    TurnOnCampfire,
 
 }

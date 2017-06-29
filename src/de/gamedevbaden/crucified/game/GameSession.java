@@ -46,4 +46,6 @@ public interface GameSession {
 
     void toggleFlashLight(EntityId flashLightId);
 
+    void putItemToCraft(EntityId itemToCraft, EntityId ingredient);
+
 }

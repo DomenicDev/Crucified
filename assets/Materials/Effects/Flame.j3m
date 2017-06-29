@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        GlowColor : 1.0 1.0 1.0 1.0
+        Texture : Textures/Effects/flame2.png
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend AlphaAdditive
+    }
+}

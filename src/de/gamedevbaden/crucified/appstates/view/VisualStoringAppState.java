@@ -54,7 +54,9 @@ public class VisualStoringAppState extends AbstractAppState {
 
     private void setCullHintForSpatial(EntityId entityId, CullHint cullHint) {
         Spatial spatial = modelViewAppState.getSpatial(entityId);
-        spatial.setCullHint(cullHint);
+        if (spatial != null) {
+            spatial.setCullHint(cullHint);
+        }
     }
 
     @Override

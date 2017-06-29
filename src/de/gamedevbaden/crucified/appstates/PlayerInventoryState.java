@@ -58,4 +58,21 @@ public class PlayerInventoryState extends AbstractAppState {
         }
         return null;
     }
+
+    /**
+     * This method just search the next entity of the specified type which is in the player inventory.
+     * If the player has no entity of this type stored null is returned.
+     *
+     * @param type the object type you are looking for
+     * @return the next entity of the given type or null if it does not exist.
+     */
+    public EntityId getNextOfType(Type type) {
+        for (Entity entity : storedItems) {
+            ObjectType objectType = entity.get(ObjectType.class);
+            if (type.equals(objectType.getObjectType())) {
+                return entity.getId();
+            }
+        }
+        return null;
+    }
 }

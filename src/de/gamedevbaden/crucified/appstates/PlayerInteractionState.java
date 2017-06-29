@@ -18,13 +18,12 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.enums.InputCommand;
-import de.gamedevbaden.crucified.es.components.Equipable;
-import de.gamedevbaden.crucified.es.components.InteractionComponent;
-import de.gamedevbaden.crucified.es.components.Model;
-import de.gamedevbaden.crucified.es.components.Pickable;
+import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -32,13 +31,14 @@ import java.util.ArrayList;
  * When the player wants to interact we do a ray cast and check if it collides with something.
  * We then check whether the hit geometry has an EntityId (type: long) added as user data
  * and if it does we inform all added listeners about this event.
- *
+ * <p>
  * Created by Domenic on 18.05.2017.
  */
 public class PlayerInteractionState extends AbstractAppState implements ActionListener {
 
     private EntitySet pickables;
     private EntitySet equipables;
+    private EntitySet entitiesToCraft;
     private EntitySet interactableEntities;
 
     private ModelViewAppState modelViewAppState;
@@ -63,6 +63,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.interactableEntities = entityData.getEntities(InteractionComponent.class, Model.class);
         this.pickables = entityData.getEntities(Pickable.class);
         this.equipables = entityData.getEntities(Equipable.class);
+        this.entitiesToCraft = entityData.getEntities(NeedToBeCrafted.class);
 
         this.cam = app.getCamera();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
@@ -137,6 +138,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         interactableEntities.applyChanges();
         pickables.applyChanges();
         equipables.applyChanges();
+        entitiesToCraft.applyChanges();
     }
 
     @Override
@@ -156,7 +158,19 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                     long id = closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID);
                     EntityId entityId = new EntityId(id);
 
-                    if (interactableEntities.containsId(entityId)) {
+                    if (entitiesToCraft.containsId(entityId)) {
+                        NeedToBeCrafted craftComponent = entitiesToCraft.getEntity(entityId).get(NeedToBeCrafted.class);
+                        Map<Type, Integer> neededItems = craftComponent.getNeededItems();
+                        for (Type type : neededItems.keySet()) {
+                            EntityId ingredient = inventoryState.getNextOfType(type);
+                            if (ingredient != null) {
+                                for (PlayerInteractionListener l : listeners) {
+                                    l.onItemCraft(entityId, ingredient);
+                                }
+                                break;
+                            }
+                        }
+                    } else if (interactableEntities.containsId(entityId)) {
                         for (PlayerInteractionListener listener : listeners) {
                             listener.onInteractionWith(entityId);
                         }
@@ -208,6 +222,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         void onItemDrop(EntityId dropItem);
 
         void onFlashLightToggle(EntityId flashLight);
+
+        void onItemCraft(EntityId targetItem, EntityId ingredient);
 
     }
 

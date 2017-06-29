@@ -7,7 +7,9 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
+import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
@@ -16,10 +18,17 @@ import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
+import de.gamedevbaden.crucified.enums.InteractionType;
+import de.gamedevbaden.crucified.enums.ModelType;
+import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
+import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
+
+import java.util.HashMap;
 
 /**
  * Created by Domenic on 21.05.2017.
@@ -80,7 +89,17 @@ public class SingleplayerTest extends SimpleApplication {
         stateManager.attach(new Loader()); // load scene
 
 
-        // create first person cam view
+        EntityId campFire = entityData.createEntity();
+        HashMap<Type, Integer> items = new HashMap<>();
+        items.put(Type.WoodenStick, 2);
+        entityData.setComponents(campFire,
+                new Model(ModelType.Campfire),
+                new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE),
+                new InteractionComponent(InteractionType.TurnOnCampfire, true),
+                new NeedToBeCrafted(Type.Campfire, items),
+                new Transform(new Vector3f(0, 0.2f, 0)),
+                new ObjectType(Type.Campfire),
+                new FireState(false));
 
 
         inputManager.addMapping("h", new KeyTrigger(KeyInput.KEY_H));
@@ -98,19 +117,11 @@ public class SingleplayerTest extends SimpleApplication {
         public void initialize(AppStateManager stateManager, Application app) {
             stateManager.getState(GameCommanderAppState.class).loadScene(SceneEntityLoader.sceneToLoad);
 
+
 //            GameSession session = stateManager.getState(GameSessionAppState.class).getGameSession();
 //            Node player = (Node) stateManager.getState(ModelViewAppState.class).getSpatial(session.getPlayer());
 //
 //            stateManager.attach(new FirstPersonCameraView(player, GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
-
-            super.initialize(stateManager, app);
-        }
-    }
-
-    private class Loader2 extends AbstractAppState {
-
-        @Override
-        public void initialize(AppStateManager stateManager, Application app) {
 
             super.initialize(stateManager, app);
         }

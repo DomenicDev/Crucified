@@ -24,4 +24,6 @@ public interface GameEventListener {
 
     void onFlashLightToggled(EntityId playerId, EntityId flashLightId);
 
+    void onItemPutForCraft(EntityId itemToCraft, EntityId ingredient);
+
 }

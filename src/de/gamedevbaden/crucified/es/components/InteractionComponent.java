@@ -12,15 +12,26 @@ import de.gamedevbaden.crucified.enums.InteractionType;
 public class InteractionComponent implements EntityComponent {
 
     private InteractionType type;
+    private boolean onlyOnce;
 
     public InteractionComponent() {
     }
 
     public InteractionComponent(InteractionType type) {
         this.type = type;
+        this.onlyOnce = false;
+    }
+
+    public InteractionComponent(InteractionType type, boolean onlyOnce) {
+        this.type = type;
+        this.onlyOnce = onlyOnce;
     }
 
     public InteractionType getType() {
         return type;
+    }
+
+    public boolean isOnlyOnce() {
+        return onlyOnce;
     }
 }

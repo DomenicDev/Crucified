@@ -79,4 +79,15 @@ public enum Type {
      */
     FlashLight,
 
+    /**
+     * A wooden stick, needed to make a campfire
+     */
+    WoodenStick,
+
+    /**
+     * A campfire
+     */
+    Campfire,
+
+
 }

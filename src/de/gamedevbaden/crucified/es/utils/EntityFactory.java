@@ -6,7 +6,9 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.enums.Sound;
+import de.gamedevbaden.crucified.enums.Type;
 import de.gamedevbaden.crucified.es.components.*;
+import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 
 /**
  * This class provides static methods to create entities.
@@ -42,6 +44,40 @@ public class EntityFactory {
                 new Container());
 
         return player;
+    }
+
+    public static EntityId createEntityType(EntityData entityData, Type type) {
+        EntityId entityId = entityData.createEntity();
+
+        switch (type) {
+            case Campfire:
+                entityData.setComponents(entityId,
+                        new Model(ModelType.Campfire),
+                        new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE));
+                break;
+            default:
+        }
+        return entityId;
+    }
+
+
+    /**
+     * Returns the default model path for the specified type
+     *
+     * @param type the type you want the model of
+     * @return the model path for that type
+     */
+    public static String getModelForType(Type type) {
+        switch (type) {
+            case Campfire:
+                return ModelType.Campfire;
+            case FlashLight:
+                return ModelType.Headlamp;
+            case ReadablePaper:
+                return ModelType.Paper;
+            default:
+                return null;
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
@@ -38,6 +39,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private Camera cam;
     private SimpleApplication app;
     private ShadowRendererAppState shadowRendererAppState;
+    private HudAppState hudAppState;
 
     // scripts
     private Properties scripts;
@@ -61,7 +63,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.cam = app.getCamera();
         this.rootNode = ((SimpleApplication) app).getRootNode();
         this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
-
+        this.hudAppState = stateManager.getState(HudAppState.class);
         this.rootNode.attachChild(mainWorldNode);
 
         // load script file
@@ -145,6 +147,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // play predefined audio nodes
         world.depthFirstTraversal(spatial -> {
             if (spatial instanceof AudioNode) {
+                ((AudioNode) spatial).setVolume(0.5f);
                 ((AudioNode) spatial).play();
             }
         });
@@ -156,6 +159,8 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         if (scripts != null) {
             String text = scripts.getProperty(script.getKey());
             System.out.println(text);
+
+            hudAppState.showPaper(text);
         }
     }
 

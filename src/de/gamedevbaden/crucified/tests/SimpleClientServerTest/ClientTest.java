@@ -1,22 +1,14 @@
 package de.gamedevbaden.crucified.tests.SimpleClientServerTest;
 
-import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.jme3.scene.Node;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
-import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
-import de.gamedevbaden.crucified.appstates.view.FirstPersonCameraView;
-import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
-import de.gamedevbaden.crucified.utils.GameConstants;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 
 /**
@@ -61,30 +53,9 @@ public class ClientTest extends SimpleApplication {
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initFirstPersonCameraView(stateManager);
 
-        //   stateManager.attach(new VisualFlashLightAppState());
-        //   stateManager.attach(new HeadMovingAppState());
-
-        // create first person camera view
-        //  stateManager.attach(new FirstPersonCameraView(gameSession.getPlayer(), GameConstants.FIRST_PERSON_CAM_OFFSET));
-
-        //  stateManager.attach(new Loader());
 
         client.sendMessage(new ReadyForGameStartMessage(true));
 
     }
-
-    private class Loader extends AbstractAppState {
-
-        @Override
-        public void initialize(AppStateManager stateManager, Application app) {
-
-            GameSession session = stateManager.getState(GameSessionAppState.class).getGameSession();
-            Node player = (Node) stateManager.getState(ModelViewAppState.class).getSpatial(session.getPlayer());
-
-            stateManager.attach(new FirstPersonCameraView(player, GameConstants.FIRST_PERSON_CAM_OFFSET));
-            super.initialize(stateManager, app);
-        }
-    }
-
 
 }

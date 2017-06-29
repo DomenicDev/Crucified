@@ -12,6 +12,7 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InteractionType;
+import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.triggersystem.OnEnterTrigger;
@@ -189,7 +190,8 @@ public class SceneEntityLoader extends AbstractAppState {
                         if (script != null) {
                             entityData.setComponents(entityId,
                                     new InteractionComponent(InteractionType.ReadText),
-                                    new ReadableScript(script.getScript())
+                                    new ReadableScript(script.getScript()),
+                                    new Model(ModelType.Paper)
                             );
                         }
                         break;
@@ -199,6 +201,11 @@ public class SceneEntityLoader extends AbstractAppState {
                                 new Pickable(),
                                 new Equipable(),
                                 new FlashLight(false));
+                        break;
+
+                    case WoodenStick:
+                        entityData.setComponents(entityId,
+                                new Pickable());
                         break;
 
                     default:

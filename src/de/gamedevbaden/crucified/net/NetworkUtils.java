@@ -38,6 +38,8 @@ public class NetworkUtils {
         Serializer.registerClass(FlashLight.class);
         Serializer.registerClass(Type.class, new EnumSerializer());
         Serializer.registerClass(ObjectType.class);
+        Serializer.registerClass(NeedToBeCrafted.class);
+        Serializer.registerClass(FireState.class);
     }
 
     /**

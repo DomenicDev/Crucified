@@ -2,8 +2,12 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
         DiffuseMap : Repeat Textures/Props/WireFences/3td_woodPost_01_1024.jpg
         NormalMap : Repeat Textures/Props/WireFences/3td_woodPost_01_1024_NRM.png
+        Diffuse : 1.0 1.0 1.0 0.15
+        UseMaterialColors : false
+        Ambient : 1.0 1.0 1.0 0.68
      }
     AdditionalRenderState {
       FaceCull Back
+      Blend Off
     }
 }

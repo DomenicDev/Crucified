@@ -10,7 +10,9 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.listeners.InteractionListener;
 import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.Sound;
+import de.gamedevbaden.crucified.es.components.FireState;
 import de.gamedevbaden.crucified.es.components.InteractionComponent;
+import de.gamedevbaden.crucified.es.components.NeedToBeCrafted;
 import de.gamedevbaden.crucified.es.components.ReadableScript;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
@@ -45,6 +47,11 @@ public class InteractionAppState extends AbstractAppState {
 
     public void interactWith(EntityId playerId, EntityId interactableEntityId) {
         if (interactables.containsId(interactableEntityId)) {
+
+            if (!canInteract(interactableEntityId)) {
+                return;
+            }
+
             Entity entity = interactables.getEntity(interactableEntityId);
             InteractionComponent interactionComponent = entity.get(InteractionComponent.class);
             InteractionType type = interactionComponent.getType();
@@ -64,10 +71,16 @@ public class InteractionAppState extends AbstractAppState {
                     ReadableScript readableScript = entityData.getComponent(interactableEntityId, ReadableScript.class);
                     if (readableScript != null && readableScript.getScript() != null) {
                         GameCommander commander = commanderHolder.get(playerId);
-                        System.out.println(commander);
                         if (commander != null) {
                             commander.readNote(readableScript.getScript());
                         }
+                    }
+                    break;
+
+                case TurnOnCampfire:
+                    FireState fireState = entityData.getComponent(interactableEntityId, FireState.class);
+                    if (fireState != null) {
+                        entityData.setComponent(interactableEntityId, new FireState(true));
                     }
                     break;
 
@@ -76,14 +89,36 @@ public class InteractionAppState extends AbstractAppState {
 
             }
 
+            // call listeners
             for (InteractionListener l : listeners) {
                 l.onInteract(interactableEntityId);
+            }
+
+            // if this was a "one-time-only" interaction we remove the interaction component
+            if (interactionComponent.isOnlyOnce()) {
+                entityData.removeComponent(interactableEntityId, InteractionComponent.class);
             }
         }
     }
 
     public void addListener(InteractionListener listener) {
         listeners.add(listener);
+    }
+
+    /**
+     * Check whether a player can interact with the specified entity.
+     * This method checks things like if the specified entity does still need to be crafted.
+     *
+     * @param itemToInteract the entity a player wants to interact with
+     * @return true if interaction is possible otherwise false
+     */
+    private boolean canInteract(EntityId itemToInteract) {
+        if (entityData.getComponent(itemToInteract, NeedToBeCrafted.class) != null) {
+            // this entity does still need to be crafted, so no interaction possible
+            return false;
+        }
+
+        return true; // we are able to interact
     }
 
     @Override
