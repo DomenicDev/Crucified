@@ -13,9 +13,7 @@ import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.es.components.StoredIn;
 
 /**
- * This app state basically just culls the entities (its spatial)
- * when it is stored in the inventory, so it's not visible anymore.
- * <p>
+ * This app state basically just culls entities which are stored somewhere (e.g. the player's inventory).
  * Created by Domenic on 19.05.2017.
  */
 public class VisualStoringAppState extends AbstractAppState {

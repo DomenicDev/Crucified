@@ -4,6 +4,7 @@ import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
 
 /**
+ * This listener informs about in-game actions and interactions.
  * Created by Domenic on 03.05.2017.
  */
 public interface GameEventListener {

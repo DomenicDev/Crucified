@@ -81,6 +81,7 @@ public class SingleplayerTest extends SimpleApplication {
         GameInitializer.initGameSessionRelatedAppStates(stateManager, gameSession);
         GameInitializer.initGameLogicAppStates(stateManager);
         GameInitializer.initViewAppStates(stateManager);
+        GameInitializer.initSoundAppStates(stateManager);
         GameInitializer.initInputAppStates(stateManager);
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initFirstPersonCameraView(stateManager);
@@ -96,7 +97,7 @@ public class SingleplayerTest extends SimpleApplication {
                 new Model(ModelType.Campfire),
                 new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE),
                 new InteractionComponent(InteractionType.TurnOnCampfire, true),
-                new NeedToBeCrafted(Type.Campfire, items),
+                new NeedToBeCrafted(items),
                 new Transform(new Vector3f(0, 0.2f, 0)),
                 new ObjectType(Type.Campfire),
                 new FireState(false));
@@ -116,13 +117,6 @@ public class SingleplayerTest extends SimpleApplication {
         @Override
         public void initialize(AppStateManager stateManager, Application app) {
             stateManager.getState(GameCommanderAppState.class).loadScene(SceneEntityLoader.sceneToLoad);
-
-
-//            GameSession session = stateManager.getState(GameSessionAppState.class).getGameSession();
-//            Node player = (Node) stateManager.getState(ModelViewAppState.class).getSpatial(session.getPlayer());
-//
-//            stateManager.attach(new FirstPersonCameraView(player, GameConstants.FIRST_PERSON_CAM_OFFSET)); // 0,1.7,0
-
             super.initialize(stateManager, app);
         }
     }

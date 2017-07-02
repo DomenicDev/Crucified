@@ -12,9 +12,4 @@ import com.simsilica.es.EntityComponent;
  */
 @Serializable
 public class Container implements EntityComponent {
-
-    // todo:
-    // private ContainerType <<-- tells the system what kind of items this container can store
-    // private int size <<-- how many items this container can store
-
 }

@@ -1,7 +1,8 @@
-package de.gamedevbaden.crucified.utils;
+package de.gamedevbaden.crucified.appstates.listeners;
 
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.InputCommand;
+import de.gamedevbaden.crucified.utils.PlayerInputCollector;
 
 /**
  * A listener who listens for input changes.

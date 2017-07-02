@@ -5,6 +5,7 @@ import com.simsilica.es.EntityComponent;
 import de.gamedevbaden.crucified.enums.Sound;
 
 /**
+ * This component is used for certain sounds.
  * Created by Domenic on 09.05.2017.
  */
 @Serializable

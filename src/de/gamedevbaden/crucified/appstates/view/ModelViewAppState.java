@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <code>ModelViewAppState</code> represents all entities with a @link{ModelType} component visually in the scene graph.
+ * <code>ModelViewAppState</code> represents all entities with a {@link Model} component visually in the scene graph.
  * <p>
- * For "static" entities changed transformation will be applied as soon as received whereas dynamic (mobile) entities
- * are treated a little different. In order to get fluent movements interpolation for this entities is used.
+ * Updates are applied as they are received. When you want to handle the transform of a certain spatial
+ * in another app state you can use the <code>setExcludedFromUpdate()</code> method.
  * <p>
  * Created by Domenic on 11.04.2017.
  */

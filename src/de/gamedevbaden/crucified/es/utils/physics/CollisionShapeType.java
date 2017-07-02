@@ -1,6 +1,7 @@
 package de.gamedevbaden.crucified.es.utils.physics;
 
 /**
+ * A collection of all available different collision shape types.
  * Created by Domenic on 25.04.2017.
  */
 public class CollisionShapeType {

@@ -5,6 +5,7 @@ import com.jme3.network.serializing.Serializable;
 import de.gamedevbaden.crucified.enums.Scene;
 
 /**
+ * This message asks the client to load the specified scene.
  * Created by Domenic on 27.05.2017.
  */
 @Serializable

@@ -15,11 +15,12 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 /**
+ * The default implementation of our game client.
  * Created by Domenic on 04.05.2017.
  */
 public class GameClient extends AbstractAppState implements ClientStateListener {
 
-    CountDownLatch startedSignal;
+    private CountDownLatch startedSignal;
     private String address;
     private int port;
     private EntityData entityData;
@@ -38,10 +39,7 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
     public boolean connect(String address, int port, Application app, GameCommander gameCommander) {
         startedSignal = new CountDownLatch(1);
         try {
-            //     NetworkUtils.initMessageSerializers();
-
             this.client = Network.connectToServer(address, port);
-
             this.client.addClientStateListener(this);
 
             this.rmiClientService = new RmiClientService();
@@ -55,15 +53,12 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
             this.client.addMessageListener(new ClientMessageListener(app, gameCommander));
 
             this.client.start();
-            //        this.rmiClientService.share(gameCommander, GameCommander.class);
-            startedSignal.await();
+            this.startedSignal.await();
 
             this.gameSession = rmiClientService.getRemoteObject(GameSession.class);
             this.entityData = this.client.getServices().getService(EntityDataClientService.class).getEntityData();
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return false;

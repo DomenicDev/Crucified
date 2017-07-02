@@ -16,7 +16,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 
 /**
- * Mouse input to control the cam is captured here.
+ * This cam handles the basic camera motions.
  */
 public class CameraAppState extends AbstractAppState implements AnalogListener, ActionListener {
 

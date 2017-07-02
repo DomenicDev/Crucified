@@ -15,11 +15,9 @@ public class OnEnterTriggerUserData implements Savable {
 
     @Override
     public void write(JmeExporter ex) throws IOException {
-
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
-
     }
 }

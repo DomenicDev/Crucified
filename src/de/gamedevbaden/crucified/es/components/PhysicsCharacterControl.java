@@ -5,6 +5,7 @@ import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
 
 /**
+ * A physics character control is handled by the physics system.
  * Created by Domenic on 13.04.2017.
  */
 @Serializable

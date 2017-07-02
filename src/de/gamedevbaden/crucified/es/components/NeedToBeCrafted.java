@@ -14,15 +14,12 @@ import java.util.Map;
 @Serializable
 public class NeedToBeCrafted implements EntityComponent {
 
-    private Type resultType;
     private Map<Type, Integer> neededItems;
 
     public NeedToBeCrafted() {
-
     }
 
-    public NeedToBeCrafted(Type resultType, Map<Type, Integer> neededItems) {
-        this.resultType = resultType;
+    public NeedToBeCrafted(Map<Type, Integer> neededItems) {
         this.neededItems = neededItems;
     }
 
@@ -30,7 +27,4 @@ public class NeedToBeCrafted implements EntityComponent {
         return neededItems;
     }
 
-    public Type getResultType() {
-        return resultType;
-    }
 }

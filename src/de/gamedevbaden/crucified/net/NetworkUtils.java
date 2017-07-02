@@ -12,12 +12,13 @@ import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 /**
+ * This class provides util methods for networked game sessions.
  * Created by Domenic on 17.04.2017.
  */
 public class NetworkUtils {
 
     /**
-     * Only called by server
+     * Serializes all Components
      */
     public static void initEntityDataSerializers() {
         Serializer.registerClass(Transform.class);
@@ -43,7 +44,7 @@ public class NetworkUtils {
     }
 
     /**
-     * Called by server and client
+     * Serializes all Messages
      */
     public static void initMessageSerializers() {
         Serializer.registerClass(Scene.class, new EnumSerializer());

@@ -18,6 +18,8 @@ import de.gamedevbaden.crucified.es.components.EquippedBy;
 import de.gamedevbaden.crucified.es.components.Model;
 
 /**
+ * This app state watches equipped items and make them be positioned in their right position.
+ * This state "overrides" the entity's position and rotation in the game world.
  * Created by Domenic on 20.05.2017.
  */
 public class VisualEquipmentAppState extends AbstractAppState {
@@ -73,7 +75,6 @@ public class VisualEquipmentAppState extends AbstractAppState {
     }
 
     private void equipToPlayer(EntityId playerId, EntityId itemToEquip) {
-
         Spatial playerModel = modelViewAppState.getSpatial(playerId);
         Spatial itemModel = modelViewAppState.getSpatial(itemToEquip);
 
@@ -108,11 +109,9 @@ public class VisualEquipmentAppState extends AbstractAppState {
     }
 
     private void removeEquipable(Entity entity) {
-
         Spatial itemModel = modelViewAppState.getSpatial(entity.getId());
         modelViewAppState.attachSpatial(itemModel);
         modelViewAppState.setExcludedFromUpdate(entity.getId(), false);
-
     }
 
     @Override

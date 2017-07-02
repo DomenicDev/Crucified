@@ -19,6 +19,8 @@ import de.gamedevbaden.crucified.es.components.Transform;
 import java.util.HashMap;
 
 /**
+ * IMPORTANT: This class is not really used yet because Sounds are not really game objects...
+ * Yet, the only usage for this class is for trigger events but even those could be handled without this class.
  * Created by Domenic on 12.05.2017.
  */
 public class SoundAppState extends AbstractAppState {

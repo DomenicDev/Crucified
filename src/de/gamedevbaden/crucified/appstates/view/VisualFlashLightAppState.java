@@ -8,8 +8,6 @@ import com.jme3.light.Light;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -23,7 +21,7 @@ import de.gamedevbaden.crucified.es.components.Model;
 import java.util.HashMap;
 
 /**
- * This state watches for "Flash Light" entities and creates a SpotLight for each flash light.
+ * This state watches for "FlashLight" entities and creates a SpotLight for each flash light.
  * <p>
  * Created by Domenic on 09.06.2017.
  */
@@ -65,9 +63,15 @@ public class VisualFlashLightAppState extends AbstractAppState {
             }
 
         }
+
+        // update visual spot lights
+        for (Entity entityId : flashLights) {
+            updateLight(entityId.getId());
+        }
     }
 
     private void addFlashLight(Entity entity) {
+        // ToDo: Adjust spot light parameters for this game.
         FlashLight light = entity.get(FlashLight.class);
         SpotLight spot = new SpotLight();
         spot.setSpotRange(100f);                           // distance
@@ -91,31 +95,15 @@ public class VisualFlashLightAppState extends AbstractAppState {
     }
 
     /**
-     * This methods updates the visual light.
-     *
+     * This methods updates the visual spot light.
      * @param entity the flash light id
      */
     private void updateLight(EntityId entity) {
         Spatial flashLightModel = modelViewAppState.getSpatial(entity);
         SpotLight light = lights.get(entity);
         if (flashLightModel != null && light != null) {
-            Vector3f position = flashLightModel.getWorldTranslation();
-            Vector3f direction = flashLightModel.getWorldRotation().getRotationColumn(2);
-            // OPTIMIZE
-            light.setPosition(position);
-            light.setDirection(direction);
-        }
-    }
-
-    @Override
-    public void render(RenderManager rm) {
-        // update visual spot lights
-        // we call this in render() because we want to
-        // make sure all updates have been executed
-        // e.g. the players position could have been updated
-        // in the meantime.
-        for (Entity entityId : flashLights) {
-            updateLight(entityId.getId());
+            light.setPosition(flashLightModel.getWorldTranslation());
+            light.setDirection(flashLightModel.getWorldRotation().getRotationColumn(2, light.getDirection()));
         }
     }
 

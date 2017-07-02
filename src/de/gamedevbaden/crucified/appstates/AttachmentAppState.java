@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * NOTE: This app state might have some bugs. Furthermore it is not really used yet....
  * Created by Domenic on 12.05.2017.
  */
 public class AttachmentAppState extends AbstractAppState {

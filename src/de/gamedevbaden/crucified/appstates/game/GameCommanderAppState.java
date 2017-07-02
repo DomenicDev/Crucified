@@ -23,12 +23,11 @@ import de.gamedevbaden.crucified.userdata.EntityType;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
 /**
+ * This class implements the {@link GameCommander} interface.
  * Created by Domenic on 27.05.2017.
  */
 public class GameCommanderAppState extends AbstractAppState implements GameCommander {
@@ -72,10 +71,6 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             this.scripts = new Properties();
             this.scripts.loadFromXML(stringFileInput);
             stringFileInput.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvalidPropertiesFormatException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

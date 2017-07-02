@@ -11,11 +11,14 @@ import de.gamedevbaden.crucified.enums.Scene;
 public interface GameCommander {
 
     /**
-     * The game requires to load the supplied scene
-     *
+     * The game requires to load the supplied scene.
      * @param scene the path to the scene
      */
     void loadScene(Scene scene);
 
+    /**
+     * Tells the player to open up a special screen (gui) to show the specified text.
+     * @param script the script to read
+     */
     void readNote(PaperScript script);
 }

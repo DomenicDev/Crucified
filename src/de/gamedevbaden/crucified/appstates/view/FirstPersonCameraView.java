@@ -10,7 +10,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 
 /**
- * ToDo: Optimize update with camera node. There should not be any checks whether the camera is attached or not
+ * The current position of the specified player is applied to the camera.
  * Created by Domenic on 05.05.2017.
  */
 public class FirstPersonCameraView extends AbstractAppState {

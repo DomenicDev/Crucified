@@ -27,7 +27,6 @@ public class CharacterAnimationAppState extends AbstractAppState {
     private HashMap<EntityId, NewCharacterAnimControl> animControls;
     private ModelViewAppState modelAppState;
 
-
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
