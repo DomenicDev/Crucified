@@ -5,6 +5,8 @@ import com.simsilica.es.EntityComponent;
 import de.gamedevbaden.crucified.enums.Type;
 
 /**
+ * This component tags the entity with its "type".
+ * This is important for systems which need to handle entities with a certain type.
  * Created by Domenic on 15.06.2017.
  */
 @Serializable

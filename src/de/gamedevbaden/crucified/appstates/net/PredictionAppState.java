@@ -33,8 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This AppState runs tries to predict the movement of the player.
- * The player moves with a CharacterControl se we need to run local physics but we only add static
+ * This AppState tries to predict the movement of the player.
+ * The player moves with a CharacterControl so we need to run local physics but we only add static
  * rigid bodies to our local physic space.
  * <p>
  * Created by Domenic on 05.05.2017.

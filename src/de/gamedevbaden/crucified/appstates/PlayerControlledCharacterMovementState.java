@@ -7,9 +7,9 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.listeners.InputChangeListener;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.PlayerControlled;
-import de.gamedevbaden.crucified.utils.InputChangeListener;
 import de.gamedevbaden.crucified.utils.PlayerInputCollector;
 
 import java.util.HashMap;

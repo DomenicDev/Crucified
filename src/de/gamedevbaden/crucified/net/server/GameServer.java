@@ -25,7 +25,6 @@ import java.util.HashMap;
 
 /**
  * This class manages the server.
- *
  * Created by Domenic on 16.04.2017.
  */
 public class GameServer extends AbstractAppState implements ConnectionListener, MessageListener<HostedConnection> {

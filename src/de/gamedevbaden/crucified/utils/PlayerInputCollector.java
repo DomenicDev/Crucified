@@ -1,6 +1,7 @@
 package de.gamedevbaden.crucified.utils;
 
 /**
+ * Collects player input.
  * Created by Domenic on 01.05.2017.
  */
 public class PlayerInputCollector {

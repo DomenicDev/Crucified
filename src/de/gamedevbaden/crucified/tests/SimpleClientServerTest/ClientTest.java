@@ -48,6 +48,7 @@ public class ClientTest extends SimpleApplication {
         GameInitializer.initInputAppStates(stateManager);
         GameInitializer.initGameSessionRelatedAppStates(stateManager, gameSession);
         GameInitializer.initViewAppStates(stateManager);
+        GameInitializer.initSoundAppStates(stateManager);
         GameInitializer.initClientAppStates(stateManager);
         GameInitializer.initClientStatesWithGameSessionDependency(stateManager, gameSession);
         GameInitializer.initPlayerStates(stateManager);

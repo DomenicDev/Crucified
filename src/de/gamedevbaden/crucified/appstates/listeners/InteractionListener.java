@@ -11,7 +11,6 @@ public interface InteractionListener {
 
     /**
      * Is called when a player has interacted with an entity.
-     *
      * @param interactedEntity the entity the player interacted with
      */
     void onInteract(EntityId interactedEntity);

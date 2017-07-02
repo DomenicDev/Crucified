@@ -4,6 +4,7 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
+ * Sent by the client. Tells the server that the client is ready for game start.
  * Created by Domenic on 06.06.2017.
  */
 @Serializable

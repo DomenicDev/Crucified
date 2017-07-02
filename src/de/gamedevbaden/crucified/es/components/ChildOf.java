@@ -6,6 +6,7 @@ import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityId;
 
 /**
+ * This component stores the local translation and rotation for the parent entity.
  * Created by Domenic on 12.05.2017.
  */
 public class ChildOf implements EntityComponent {

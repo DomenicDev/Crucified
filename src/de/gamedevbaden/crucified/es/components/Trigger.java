@@ -5,6 +5,7 @@ import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.es.triggersystem.TriggerType;
 
 /**
+ * Triggers the events of the specified event group if triggered.
  * Created by Domenic on 09.05.2017.
  */
 public class Trigger implements EntityComponent {

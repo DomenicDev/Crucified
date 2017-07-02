@@ -10,8 +10,7 @@ import de.gamedevbaden.crucified.es.components.Decay;
 
 /**
  * Watches entities with a Decay component and removes them when their time is up.
- * <p>
- * Created by Domenic on 12.05.2017.
+ * Created by Paul Speed
  */
 public class DecayAppState extends AbstractAppState {
 

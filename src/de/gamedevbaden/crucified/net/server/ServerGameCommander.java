@@ -9,7 +9,7 @@ import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 
 /**
- * This is the server side implementation of the game commander.
+ * This is the server-side implementation of the game commander.
  * This implementation will just send messages to the corresponding client.
  * <p>
  * Created by Domenic on 12.06.2017.

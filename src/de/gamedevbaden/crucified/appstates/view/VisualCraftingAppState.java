@@ -3,7 +3,6 @@ package de.gamedevbaden.crucified.appstates.view;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.material.MaterialDef;
 import com.jme3.material.RenderState;
@@ -17,39 +16,36 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.enums.Type;
 import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.NeedToBeCrafted;
-import de.gamedevbaden.crucified.es.components.ObjectType;
 import de.gamedevbaden.crucified.es.components.Transform;
-import de.gamedevbaden.crucified.es.utils.EntityFactory;
 
 import java.util.HashMap;
 
 /**
- * This app state basically adds models for the entities which have to be crafted.
- * To differ those from the "final" entities they will be displayed transparently.
+ * This app state basically adds transparency for entities (models) which need to be crafted.
+ * When they are crafted the old settings are reapplied.
  * <p>
  * Created by Domenic on 28.06.2017.
  */
 public class VisualCraftingAppState extends AbstractAppState {
 
     private static final float ALPHA_VALUE = 0.35f;
+
     private HashMap<EntityId, Spatial> models;
     private HashMap<Geometry, MatInfoHolder> matHolder;
+
     private EntitySet itemsToCraft;
-    private AssetManager assetManager;
     private ModelViewAppState modelViewAppState;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.models = new HashMap<>();
         this.matHolder = new HashMap<>();
-        this.assetManager = app.getAssetManager();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.itemsToCraft = entityData.getEntities(NeedToBeCrafted.class, Transform.class, ObjectType.class, Model.class);
+        this.itemsToCraft = entityData.getEntities(NeedToBeCrafted.class, Transform.class, Model.class);
 
         for (Entity entity : itemsToCraft) {
             addTransparency(entity);
@@ -73,21 +69,9 @@ public class VisualCraftingAppState extends AbstractAppState {
     }
 
     private void addTransparency(Entity entity) {
-        Type type = entity.get(ObjectType.class).getObjectType();
-        String modelPath = EntityFactory.getModelForType(type);
-        if (modelPath == null) return;
-
-        Transform transform = entity.get(Transform.class);
-
-//        Spatial model = assetManager.loadModel(modelPath);
-//        model.setLocalTranslation(transform.getTranslation());
-//        model.setLocalRotation(transform.getRotation());
-//        model.setLocalScale(transform.getScale());
-//        model.setUserData(GameConstants.USER_DATA_ENTITY_ID, entity.getId().getId());
         Spatial model = modelViewAppState.getSpatial(entity.getId());
-        //  modelViewAppState.attachSpatial(model);
-
-        // give the model a transparent look
+        // we now search for geometries with a lighting material
+        // and add transparency to them
         model.depthFirstTraversal(spatial -> {
             if (spatial instanceof Geometry) {
                 Geometry geom = (Geometry) spatial;
@@ -154,7 +138,6 @@ public class VisualCraftingAppState extends AbstractAppState {
                     geom.getMaterial().getAdditionalRenderState().setBlendMode(infoHolder.blendMode);
                 }
             }
-
         });
     }
 
@@ -164,15 +147,18 @@ public class VisualCraftingAppState extends AbstractAppState {
         this.itemsToCraft.clear();
         this.itemsToCraft = null;
 
-        for (Spatial s : models.values()) {
-            s.removeFromParent();
-        }
-
         this.models.clear();
         this.models = null;
+
+        this.matHolder.clear();
+        this.matHolder = null;
         super.cleanup();
     }
 
+    /**
+     * A holder class which stores material parameters which are changed during crafting.
+     * Those are needed to later reapply the old settings.
+     */
     private class MatInfoHolder {
 
         RenderState.BlendMode blendMode;

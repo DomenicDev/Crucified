@@ -4,7 +4,6 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
-import com.jme3.audio.AudioNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -20,7 +19,7 @@ import de.gamedevbaden.crucified.es.components.Model;
 import java.util.HashMap;
 
 /**
- * This state adds particle effects and sounds for game objects like campfires, torches etc.
+ * This state adds particle effects for game objects like campfires, torches etc.
  * Created by Domenic on 28.06.2017.
  */
 public class FireEffectAppState extends AbstractAppState {
@@ -78,14 +77,11 @@ public class FireEffectAppState extends AbstractAppState {
 
     private void updateCampfireEffect(Entity entity) {
         Node effect = particleEffects.get(entity.getId());
-        AudioNode audio = (AudioNode) effect.getChild("FireAudio");
         FireState fireState = entity.get(FireState.class);
         if (fireState.isOn()) {
             effect.setCullHint(Spatial.CullHint.Inherit); // enable
-            audio.play();
         } else {
             effect.setCullHint(Spatial.CullHint.Always); // disable
-            audio.pause();
         }
     }
 

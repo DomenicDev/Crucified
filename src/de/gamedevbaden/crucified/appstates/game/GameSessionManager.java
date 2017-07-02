@@ -67,7 +67,7 @@ public class GameSessionManager extends AbstractAppState {
 
         private EntityId playerId;
 
-        public GameSessionImplementation(EntityId playerId) {
+        GameSessionImplementation(EntityId playerId) {
             this.playerId = playerId;
         }
 
@@ -77,11 +77,10 @@ public class GameSessionManager extends AbstractAppState {
         }
 
         @Override
-        public boolean pickUpItem(EntityId itemToPickup) {
+        public void pickUpItem(EntityId itemToPickup) {
             for (GameEventListener listener : listeners) {
                 listener.onItemPickup(playerId, itemToPickup);
             }
-            return true;
         }
 
         @Override

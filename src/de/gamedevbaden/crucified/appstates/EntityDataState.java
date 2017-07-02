@@ -5,7 +5,7 @@ import com.simsilica.es.EntityData;
 import com.simsilica.es.base.DefaultEntityData;
 
 /**
- * This app state just holds and creates the {@link EntityData} object.
+ * This app state just stores or creates an {@link EntityData} object.
  * Created by Domenic on 11.04.2017.
  */
 public class EntityDataState extends AbstractAppState {

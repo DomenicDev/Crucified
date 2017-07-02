@@ -45,6 +45,11 @@ public class InteractionAppState extends AbstractAppState {
         interactables.applyChanges();
     }
 
+    /**
+     * Let the specified player interact with the specified entity.
+     * @param playerId the player which interacts
+     * @param interactableEntityId the entity the player wants to interact with
+     */
     public void interactWith(EntityId playerId, EntityId interactableEntityId) {
         if (interactables.containsId(interactableEntityId)) {
 

@@ -3,6 +3,7 @@ package de.gamedevbaden.crucified.es.triggersystem;
 import de.gamedevbaden.crucified.enums.Sound;
 
 /**
+ * This event will play a certain sound.
  * Created by Domenic on 10.05.2017.
  */
 public class PlaySoundEventType implements EventType {

@@ -30,6 +30,14 @@ public class CraftingAppState extends AbstractAppState {
         super.initialize(stateManager, app);
     }
 
+    /**
+     * Applies the specified item for crafting.
+     * The {@link NeedToBeCrafted} component will be deleted when the specified item has been crafted.
+     * Most items need more than one item so this method needs to be called several times until
+     * the item is finally crafted.
+     * @param itemToCraft the item to craft
+     * @param ingredient the item you want to use (destroy) for crafting.
+     */
     public void putItemForCrafting(EntityId itemToCraft, EntityId ingredient) {
         // it is enough to call the update in here
         itemsToCraft.applyChanges();
@@ -87,7 +95,7 @@ public class CraftingAppState extends AbstractAppState {
                     entityData.removeComponent(itemToCraft, NeedToBeCrafted.class);
                 } else {
                     // else we update the component
-                    entityData.setComponent(itemToCraft, new NeedToBeCrafted(craftComponent.getResultType(), neededItems));
+                    entityData.setComponent(itemToCraft, new NeedToBeCrafted(neededItems));
                 }
             }
         }
