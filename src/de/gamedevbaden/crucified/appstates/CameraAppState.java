@@ -29,7 +29,7 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
             "MouseRightZoom"
         };
     private final Quaternion camRotation = new Quaternion();
-    private final int zommSpeed = 25;
+    private final int zoomSpeed = 25;
     private final int maxFieldOfView = 45;
     private final int minFieldOfView = 30;
     private float[] angles = new float[3];
@@ -148,10 +148,10 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
     
     private void zoom(float tpf) {
         if (zoomIn && fieldOfView > minFieldOfView) {
-            fieldOfView -= tpf * zommSpeed;
+            fieldOfView -= tpf * zoomSpeed;
             cam.setFrustumPerspective(fieldOfView, (float) cam.getWidth() / cam.getHeight(), 0.01f, 500);
         } else if (!zoomIn && fieldOfView < maxFieldOfView) {
-            fieldOfView += tpf * zommSpeed;
+            fieldOfView += tpf * zoomSpeed;
             cam.setFrustumPerspective(fieldOfView, (float) cam.getWidth() / cam.getHeight(), 0.01f, 500);
         }
     }
