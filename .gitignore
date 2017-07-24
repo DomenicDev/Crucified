@@ -5,3 +5,4 @@ nbproject/
 *.iml
 .gradle/
 *.dll
+*.jmp
