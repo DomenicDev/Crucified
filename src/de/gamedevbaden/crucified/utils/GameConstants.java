@@ -1,4 +1,4 @@
-package de.gamedevbaden.crucified.utils;
+.package de.gamedevbaden.crucified.utils;
 
 import com.jme3.math.Vector3f;
 
@@ -10,7 +10,7 @@ public class GameConstants {
     // ---------- INFO ABOUT THE GAME ITSELF ---------//
 
     public static final String GAME_NAME = "CRUCIFIED";
-    public static final float VERSION = 0.1f;
+    public static final float VERSION = 0.14f;
 
     //------------ USER DATA NAMES ---------------------//
 
