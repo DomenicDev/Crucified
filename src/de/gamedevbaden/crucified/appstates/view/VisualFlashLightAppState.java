@@ -8,6 +8,7 @@ import com.jme3.light.Light;
 import com.jme3.light.SpotLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.simsilica.es.Entity;
@@ -63,7 +64,10 @@ public class VisualFlashLightAppState extends AbstractAppState {
             }
 
         }
+    }
 
+    @Override
+    public void render(RenderManager rm) {
         // update visual spot lights
         for (Entity entityId : flashLights) {
             updateLight(entityId.getId());
