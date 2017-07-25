@@ -1,0 +1,78 @@
+group 'de.gamedevbaden'
+version '0.1'
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+repositories {
+    jcenter()
+    maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'}
+}
+
+
+mainClassName = 'de.gamedevbaden.tests.SimpleClientServerTest.ServerTest'
+ext.jmeVersion = "[3.1,)"
+
+project(":assets") {
+    apply plugin: "java"
+
+    buildDir = rootProject.file("build/assets")
+    sourceSets {
+        main {
+            resources {
+                srcDir '.'
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '*.jar')
+
+    //compile group: 'ch.qos.logback', name: 'logback-classic', version: jmeVersion.logback
+    compile group: 'org.jmonkeyengine', name: 'jme3-core',       version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-effects',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-networking', version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-plugins',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-jogg',       version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-terrain',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-blender',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-bullet',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-bullet-native',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-niftygui',   version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl',      version: jmeVersion
+
+    /*compile "org.jmonkeyengine:jme3-core:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-desktop:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-lwjgl:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-bullet-native:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-effects:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-jogg:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-jogl:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-lwjgl3:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-networking:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-plugins:$jmeVersion"
+    compile "org.jmonkeyengine:jme3-terrain:$jmeVersion"*/
+
+    //You need to uncomment nifty repository in the repositories section if you use this dependency
+    compile "org.jmonkeyengine:jme3-niftygui:$jmeVersion"
+
+    runtime project(':assets')
+}
+
+task runServer(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ServerTest'
+    standardInput = System.in
+}
+
+task runClient(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ClientTest'
+    standardInput = System.in
+}
+
+task wrapper(type: Wrapper) {
+}

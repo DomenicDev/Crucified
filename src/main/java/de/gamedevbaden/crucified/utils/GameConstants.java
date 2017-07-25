@@ -1,4 +1,4 @@
-.package de.gamedevbaden.crucified.utils;
+package de.gamedevbaden.crucified.utils;
 
 import com.jme3.math.Vector3f;
 
