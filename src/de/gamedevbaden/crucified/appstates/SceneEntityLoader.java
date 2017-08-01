@@ -5,19 +5,19 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.ModelKey;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
-import de.gamedevbaden.crucified.enums.InteractionType;
-import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.enums.Scene;
+import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.triggersystem.OnEnterTrigger;
 import de.gamedevbaden.crucified.es.triggersystem.PlaySoundEventType;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
+import de.gamedevbaden.crucified.userdata.CoopTaskUserData;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.ReadablePaperScriptUserData;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
@@ -40,7 +40,7 @@ public class SceneEntityLoader extends AbstractAppState {
 
     private static final String TEST_SCENE = "Scenes/TestScene.j3o";
     private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
-    public static Scene sceneToLoad = Scene.BeachScene;
+    public static Scene sceneToLoad = Scene.TestScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
@@ -79,6 +79,8 @@ public class SceneEntityLoader extends AbstractAppState {
         // 3. Search for trigger entities
         // because trigger might depend on other entities we initialize the triggers after the "normal" entities
         initTriggers(gameWorld, spatialEntities);
+
+        initCoopTasks(gameWorld, spatialEntities);
     }
 
     /**
@@ -109,7 +111,7 @@ public class SceneEntityLoader extends AbstractAppState {
     private void initEntities(Node rootNode, HashMap<Spatial, EntityId> entities) {
         rootNode.depthFirstTraversal(spatial -> {
 
-            EntityType t = spatial.getUserData("type");
+            EntityType t = spatial.getUserData(GameConstants.USER_DATA_ENTITY_TYPE);
             if (t != null) {
 
                 EntityId entityId = entityData.createEntity();
@@ -169,7 +171,9 @@ public class SceneEntityLoader extends AbstractAppState {
                     case Door:
                         entityData.setComponents(entityId,
                                 new PhysicsRigidBody(0, true, CollisionShapeType.BOX_COLLISION_SHAPE),
-                                new InteractionComponent(InteractionType.PlayTestSound));
+                                new InteractionComponent(InteractionType.PlayTestSound),
+                                new OpenedClosedState(),
+                                new OnMovement());
 
                         break;
                     case PickupableItem:
@@ -305,6 +309,38 @@ public class SceneEntityLoader extends AbstractAppState {
                 });
             }
         });
+    }
+
+    private void initCoopTasks(Node gameWorld, HashMap<Spatial, EntityId> spatialEntities) {
+        gameWorld.depthFirstTraversal(spatial -> {
+            CoopTaskUserData userData;
+            if (spatial instanceof Node && (userData = spatial.getUserData(GameConstants.USER_DATA_COOP_TAKS)) != null) {
+                Node root = (Node) spatial;
+                CoopTaskType type = userData.getType();
+
+                switch (type) {
+
+                    case CoopDoorTask:
+                        // get triggers
+                        Node triggersNode = (Node) root.getChild("Triggers");
+                        BoundingVolume volumeOne = triggersNode.getChild("TriggerBox1").getWorldBound();
+                        BoundingVolume volumeTwo = triggersNode.getChild("TriggerBox2").getWorldBound();
+
+                        // search door
+                        root.getChild(1).depthFirstTraversal(child -> {
+                            EntityType entityType;
+                            if ((entityType = child.getUserData(GameConstants.USER_DATA_ENTITY_TYPE)) != null && entityType.getType().equals(Type.Door)) {
+                                EntityId doorId = spatialEntities.get(child);
+
+                                EntityId coopTask = entityData.createEntity();
+                                entityData.setComponent(coopTask, new CoopDoorTask(volumeOne, volumeTwo, doorId));
+                            }
+                        });
+                        break;
+                }
+            }
+        });
+
     }
 
     private Transform createTransform(Spatial spatial) {
