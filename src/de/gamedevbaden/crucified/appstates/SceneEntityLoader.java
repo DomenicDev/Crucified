@@ -334,6 +334,9 @@ public class SceneEntityLoader extends AbstractAppState {
 
                                 EntityId coopTask = entityData.createEntity();
                                 entityData.setComponent(coopTask, new CoopDoorTask(volumeOne, volumeTwo, doorId));
+
+                                // remove interaction component, so the player can't open it like any other door
+                                entityData.removeComponent(doorId, InteractionComponent.class);
                             }
                         });
                         break;
