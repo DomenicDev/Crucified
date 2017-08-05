@@ -9,6 +9,7 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import de.gamedevbaden.crucified.appstates.DoorAppState;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.es.components.CoopDoorTask;
 import de.gamedevbaden.crucified.es.components.OpenedClosedState;
@@ -23,14 +24,17 @@ public class TestCoopDoorTask extends AbstractAppState {
     private EntitySet coopDoorTasks;
     private EntitySet players;
     private EntitySet doors;
-    private EntityData entityData;
+
+    private DoorAppState doorAppState;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
+        EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.coopDoorTasks = entityData.getEntities(CoopDoorTask.class);
         this.players = entityData.getEntities(Transform.class, PlayerControlled.class);
         this.doors = entityData.getEntities(OpenedClosedState.class);
+
+        this.doorAppState = stateManager.getState(DoorAppState.class);
 
         for (Entity entity : coopDoorTasks) {
             addEntity(entity);
@@ -100,11 +104,11 @@ public class TestCoopDoorTask extends AbstractAppState {
         if ((!data.isInsideOne() && !data.isInsideTwo()) && state.isOpened()) {
             // no one is standing on the triggers but the door is still open
             // so we set the open-close-state to false (closed)
-            entityData.setComponent(doorId, new OpenedClosedState(false));
+            doorAppState.setNewState(doorId, false);
         } else if (!state.isOpened() && (data.isInsideOne() || data.isInsideTwo())) {
             // there is at least one guy standing on a trigger but the state is still set to false
             // so we set it true (open)
-            entityData.setComponent(doorId, new OpenedClosedState(true));
+            doorAppState.setNewState(doorId, true);
         }
     }
 

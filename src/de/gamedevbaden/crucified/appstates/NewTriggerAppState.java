@@ -33,6 +33,8 @@ public class NewTriggerAppState extends AbstractAppState implements InteractionL
     private Map<EntityId, BoundingVolume> enterTriggers;
     private Map<EntityId, ArrayList<EntityId>> groupEvents;
 
+    private DoorAppState doorAppState;
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         stateManager.getState(InteractionAppState.class).addListener(this);
@@ -40,6 +42,8 @@ public class NewTriggerAppState extends AbstractAppState implements InteractionL
         this.interactTriggers = new HashMap<>();
         this.enterTriggers = new HashMap<>();
         this.groupEvents = new HashMap<>();
+
+        this.doorAppState = stateManager.getState(DoorAppState.class);
 
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.eventGroups = entityData.getEntities(EventGroup.class);
@@ -191,11 +195,7 @@ public class NewTriggerAppState extends AbstractAppState implements InteractionL
 
         if (eventType instanceof OpenCloseEvent) {
             EntityId targetId = ((OpenCloseEvent) eventType).getEntityId();
-            Entity targetEntity = entityData.getEntity(targetId, OpenedClosedState.class);
-            if (targetEntity != null && targetEntity.get(OpenedClosedState.class) != null) {
-                OpenedClosedState state = targetEntity.get(OpenedClosedState.class);
-                targetEntity.set(new OpenedClosedState(!state.isOpened()));
-            }
+            doorAppState.changeState(targetId);
         } else if (eventType instanceof PlaySoundEventType) {
             EntityId sound = entityData.createEntity();
             entityData.setComponents(sound,

@@ -171,7 +171,7 @@ public class SceneEntityLoader extends AbstractAppState {
                     case Door:
                         entityData.setComponents(entityId,
                                 new PhysicsRigidBody(0, true, CollisionShapeType.BOX_COLLISION_SHAPE),
-                                new InteractionComponent(InteractionType.PlayTestSound),
+                                new InteractionComponent(InteractionType.OpenDoor),
                                 new OpenedClosedState(),
                                 new OnMovement());
 

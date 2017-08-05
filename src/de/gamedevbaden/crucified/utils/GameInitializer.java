@@ -84,6 +84,8 @@ public class GameInitializer {
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
         stateManager.attach(new InteractionAppState());
+        stateManager.attach(new DoorAppState());
+        stateManager.attach(new PhysicalDoorAppState());
         stateManager.attach(new CraftingAppState());
         stateManager.attach(new DecayAppState());
         stateManager.attach(new NewTriggerAppState());

@@ -5,7 +5,7 @@ nbproject/
 *.iml
 .gradle/
 *.dll
-/dist/
+dist/
 *.jmp
 #some more files added by IntelliJ
 /hs_err_pid3128.log
