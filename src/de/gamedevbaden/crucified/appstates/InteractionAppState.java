@@ -10,10 +10,7 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.listeners.InteractionListener;
 import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.Sound;
-import de.gamedevbaden.crucified.es.components.FireState;
-import de.gamedevbaden.crucified.es.components.InteractionComponent;
-import de.gamedevbaden.crucified.es.components.NeedToBeCrafted;
-import de.gamedevbaden.crucified.es.components.ReadableScript;
+import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
 
@@ -29,12 +26,14 @@ public class InteractionAppState extends AbstractAppState {
     private EntitySet interactables;
     private EntityData entityData;
     private GameCommanderHolder commanderHolder;
+    private DoorAppState doorAppState;
 
     private ArrayList<InteractionListener> listeners = new ArrayList<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
+        this.doorAppState = stateManager.getState(DoorAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.interactables = entityData.getEntities(InteractionComponent.class);
         super.initialize(stateManager, app);
@@ -86,6 +85,13 @@ public class InteractionAppState extends AbstractAppState {
                     FireState fireState = entityData.getComponent(interactableEntityId, FireState.class);
                     if (fireState != null) {
                         entityData.setComponent(interactableEntityId, new FireState(true));
+                    }
+                    break;
+
+                case OpenDoor:
+                    OpenedClosedState state = entityData.getComponent(interactableEntityId, OpenedClosedState.class);
+                    if (state != null) {
+                        doorAppState.changeState(interactableEntityId);
                     }
                     break;
 
