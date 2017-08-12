@@ -10,8 +10,7 @@ repositories {
     maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'}
 }
 
-
-mainClassName = 'de.gamedevbaden.tests.SimpleClientServerTest.ServerTest'
+mainClassName = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ClientTest'
 ext.jmeVersion = "[3.1,)"
 
 project(":assets") {
