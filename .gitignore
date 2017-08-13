@@ -5,6 +5,7 @@ nbproject/
 *.iml
 .gradle/
 *.dll
+/.nb-gradle/
 dist/
 *.jmp
 #some more files added by IntelliJ
