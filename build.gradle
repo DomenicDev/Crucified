@@ -51,7 +51,7 @@ dependencies {
     compile group: 'org.jmonkeyengine', name: 'jme3-bullet-native',    version: jmeVersion
     compile group: 'org.jmonkeyengine', name: 'jme3-niftygui',   version: jmeVersion
     compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: jmeVersion
-    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl',      version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl3',      version: jmeVersion
 
     /*compile "org.jmonkeyengine:jme3-core:$jmeVersion"
     compile "org.jmonkeyengine:jme3-desktop:$jmeVersion"
