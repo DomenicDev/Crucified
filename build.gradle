@@ -22,6 +22,7 @@ project(":assets") {
         main {
             resources {
                 srcDir '.'
+                exclude 'out'
             }
         }
     }
