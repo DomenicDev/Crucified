@@ -77,13 +77,13 @@ dependencies {
 }
 
 task runServer(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
     main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ServerTest'
     standardInput = System.in
 }
 
 task runClient(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
     main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ClientTest'
     standardInput = System.in
 }
