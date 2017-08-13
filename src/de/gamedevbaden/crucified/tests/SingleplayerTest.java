@@ -86,7 +86,6 @@ public class SingleplayerTest extends SimpleApplication {
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initFirstPersonCameraView(stateManager);
 
-
         stateManager.attach(new Loader()); // load scene
 
 

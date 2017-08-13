@@ -10,7 +10,6 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.listeners.InteractionListener;
 import de.gamedevbaden.crucified.enums.InteractionType;
 import de.gamedevbaden.crucified.enums.Sound;
-import de.gamedevbaden.crucified.es.components.FireState;
 import de.gamedevbaden.crucified.es.components.InteractionComponent;
 import de.gamedevbaden.crucified.es.components.NeedToBeCrafted;
 import de.gamedevbaden.crucified.es.components.ReadableScript;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 
 /**
  * This app state defines what shall happen if players interact with various types of game objects.
- *
+ * <p>
  * Created by Domenic on 14.05.2017.
  */
 public class InteractionAppState extends AbstractAppState {
@@ -30,11 +29,16 @@ public class InteractionAppState extends AbstractAppState {
     private EntityData entityData;
     private GameCommanderHolder commanderHolder;
 
+    private DoorAppState doorAppState;
+    private FireAppState fireAppState;
+
     private ArrayList<InteractionListener> listeners = new ArrayList<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
+        this.doorAppState = stateManager.getState(DoorAppState.class);
+        this.fireAppState = stateManager.getState(FireAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.interactables = entityData.getEntities(InteractionComponent.class);
         super.initialize(stateManager, app);
@@ -47,7 +51,7 @@ public class InteractionAppState extends AbstractAppState {
 
     /**
      * Let the specified player interact with the specified entity.
-     * @param playerId the player which interacts
+     * @param playerId             the player which interacts
      * @param interactableEntityId the entity the player wants to interact with
      */
     public void interactWith(EntityId playerId, EntityId interactableEntityId) {
@@ -83,10 +87,11 @@ public class InteractionAppState extends AbstractAppState {
                     break;
 
                 case TurnOnCampfire:
-                    FireState fireState = entityData.getComponent(interactableEntityId, FireState.class);
-                    if (fireState != null) {
-                        entityData.setComponent(interactableEntityId, new FireState(true));
-                    }
+                    fireAppState.setFireState(interactableEntityId, true);
+                    break;
+
+                case OpenDoor:
+                    doorAppState.changeState(interactableEntityId);
                     break;
 
                 default:

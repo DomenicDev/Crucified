@@ -4,6 +4,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
@@ -75,6 +76,7 @@ public class GameInitializer {
     public static void initGameLogicAppStates(AppStateManager stateManager) {
         stateManager.attach(new PlayerInputControlAppState());
         stateManager.attach(new PhysicAppState());
+        stateManager.attach(new DoorAppState());
         stateManager.attach(new PhysicsPlayerMovementAppState());
         stateManager.attach(new PlayerControlledCharacterMovementState());
         stateManager.attach(new ItemFunctionalityAppState());
@@ -82,9 +84,13 @@ public class GameInitializer {
         stateManager.attach(new ItemStoreAppState());
         stateManager.attach(new EquipmentAppState());
         stateManager.attach(new InteractionAppState());
+        stateManager.attach(new FireAppState());
+        stateManager.attach(new DoorAppState());
+        stateManager.attach(new PhysicalDoorAppState());
         stateManager.attach(new CraftingAppState());
         stateManager.attach(new DecayAppState());
         stateManager.attach(new NewTriggerAppState());
+        stateManager.attach(new TestCoopDoorTask());
     }
 
 }
