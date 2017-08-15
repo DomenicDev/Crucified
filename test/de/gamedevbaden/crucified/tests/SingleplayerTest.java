@@ -19,8 +19,8 @@ import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.enums.InteractionType;
+import de.gamedevbaden.crucified.enums.ItemType;
 import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.enums.Type;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
@@ -90,15 +90,14 @@ public class SingleplayerTest extends SimpleApplication {
 
 
         EntityId campFire = entityData.createEntity();
-        HashMap<Type, Integer> items = new HashMap<>();
-        items.put(Type.WoodenStick, 2);
+        HashMap<ItemType, Integer> items = new HashMap<>();
+        items.put(ItemType.Firewood, 2);
         entityData.setComponents(campFire,
                 new Model(ModelType.Campfire),
                 new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE),
                 new InteractionComponent(InteractionType.TurnOnCampfire, true),
                 new NeedToBeCrafted(items),
                 new Transform(new Vector3f(0, 0.2f, 0)),
-                new ObjectType(Type.Campfire),
                 new FireState(false));
 
 

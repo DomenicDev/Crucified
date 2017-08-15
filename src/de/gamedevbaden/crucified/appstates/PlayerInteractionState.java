@@ -18,7 +18,7 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.enums.InputCommand;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.ItemType;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.utils.GameConstants;
 
@@ -53,13 +53,11 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
     private EntityId equippedItem;
     private EntityId storedItem;
 
-    private EntityData entityData;
-
     private ArrayList<PlayerInteractionListener> listeners;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
+        EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.interactableEntities = entityData.getEntities(InteractionComponent.class, Model.class);
         this.pickables = entityData.getEntities(Pickable.class);
         this.equipables = entityData.getEntities(Equipable.class);
@@ -160,8 +158,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
                     if (entitiesToCraft.containsId(entityId)) {
                         NeedToBeCrafted craftComponent = entitiesToCraft.getEntity(entityId).get(NeedToBeCrafted.class);
-                        Map<Type, Integer> neededItems = craftComponent.getNeededItems();
-                        for (Type type : neededItems.keySet()) {
+                        Map<ItemType, Integer> neededItems = craftComponent.getNeededItems();
+                        for (ItemType type : neededItems.keySet()) {
                             EntityId ingredient = inventoryState.getNextOfType(type);
                             if (ingredient != null) {
                                 for (PlayerInteractionListener l : listeners) {

@@ -6,9 +6,9 @@ import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.ItemType;
+import de.gamedevbaden.crucified.es.components.ItemComponent;
 import de.gamedevbaden.crucified.es.components.NeedToBeCrafted;
-import de.gamedevbaden.crucified.es.components.ObjectType;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,11 +22,13 @@ public class CraftingAppState extends AbstractAppState {
 
     private EntityData entityData;
     private EntitySet itemsToCraft;
+    private EntitySet items;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.itemsToCraft = entityData.getEntities(NeedToBeCrafted.class);
+        this.items = entityData.getEntities(ItemComponent.class);
         super.initialize(stateManager, app);
     }
 
@@ -41,26 +43,27 @@ public class CraftingAppState extends AbstractAppState {
     public void putItemForCrafting(EntityId itemToCraft, EntityId ingredient) {
         // it is enough to call the update in here
         itemsToCraft.applyChanges();
-        if (itemsToCraft.containsId(itemToCraft)) {
+        items.applyChanges();
 
-            ObjectType objectType = entityData.getComponent(ingredient, ObjectType.class);
-            if (objectType != null) {
+        if (itemsToCraft.containsId(itemToCraft) && items.containsId(ingredient)) {
 
-                Type type = objectType.getObjectType();
+            ItemType itemType = items.getEntity(ingredient).get(ItemComponent.class).getItemType();
+            if (itemType != null) {
 
                 // check whether this item is needed
                 NeedToBeCrafted craftComponent = itemsToCraft.getEntity(itemToCraft).get(NeedToBeCrafted.class);
-                Map<Type, Integer> neededItems = craftComponent.getNeededItems();
+                Map<ItemType, Integer> neededItems = craftComponent.getNeededItems();
 
-                ArrayList<Type> entriesToRemove = null;
+                ArrayList<ItemType> entriesToRemove = null;
 
-                for (Map.Entry<Type, Integer> e : neededItems.entrySet()) {
-                    if (e.getKey().equals(type)) {
+                for (Map.Entry<ItemType, Integer> e : neededItems.entrySet()) {
+                    // if true the item is still needed for crafting
+                    if (e.getKey().equals(itemType)) {
 
                         int count = e.getValue();
                         count--;
 
-                        // if we just add the last item of this type
+                        // if we just have added the last item of this type
                         // we later can remove this from the list
                         if (count <= 0) {
 
@@ -74,7 +77,7 @@ public class CraftingAppState extends AbstractAppState {
                             entriesToRemove.add(e.getKey());
 
                         } else {
-                            // still items needed so we update the list
+                            // still items needed to craft the specified object, so we update the list
                             neededItems.put(e.getKey(), count);
                         }
 
@@ -85,7 +88,7 @@ public class CraftingAppState extends AbstractAppState {
 
                 // remove all types which are no longer needed for crafting
                 if (entriesToRemove != null) {
-                    for (Type t : entriesToRemove) {
+                    for (ItemType t : entriesToRemove) {
                         neededItems.remove(t);
                     }
                 }
@@ -106,6 +109,10 @@ public class CraftingAppState extends AbstractAppState {
         this.itemsToCraft.release();
         this.itemsToCraft.clear();
         this.itemsToCraft = null;
+
+        this.items.release();
+        this.items.clear();
+        this.items = null;
         super.cleanup();
     }
 }

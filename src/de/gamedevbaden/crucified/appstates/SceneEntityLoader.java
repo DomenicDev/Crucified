@@ -40,7 +40,7 @@ public class SceneEntityLoader extends AbstractAppState {
 
     private static final String TEST_SCENE = "Scenes/TestScene.j3o";
     private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
-    public static Scene sceneToLoad = Scene.TestScene;
+    public static Scene sceneToLoad = Scene.BeachScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
@@ -132,9 +132,6 @@ public class SceneEntityLoader extends AbstractAppState {
                 // we also add the transform component to the entity
                 entityData.setComponent(entityId, createTransform(spatial));
 
-                // add object type as component
-                entityData.setComponent(entityId, new ObjectType(t.getType()));
-
                 switch (t.getType()) {
 
 //                    case DefaultModel:
@@ -204,12 +201,14 @@ public class SceneEntityLoader extends AbstractAppState {
                         entityData.setComponents(entityId,
                                 new Pickable(),
                                 new Equipable(),
-                                new FlashLight(false));
+                                new FlashLight(false),
+                                new ItemComponent(ItemType.Flashlight));
                         break;
 
                     case WoodenStick:
                         entityData.setComponents(entityId,
-                                new Pickable());
+                                new Pickable(),
+                                new ItemComponent(ItemType.Firewood));
                         break;
 
                     default:

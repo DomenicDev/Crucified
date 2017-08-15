@@ -9,9 +9,9 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.ItemType;
 import de.gamedevbaden.crucified.es.components.EquippedBy;
-import de.gamedevbaden.crucified.es.components.ObjectType;
+import de.gamedevbaden.crucified.es.components.ItemComponent;
 import de.gamedevbaden.crucified.es.components.StoredIn;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -29,10 +29,10 @@ public class PlayerInventoryState extends AbstractAppState {
         EntityId playerId = gameSession.getPlayer();
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         // get all entities which have been equipped by this player
-        this.equippedItems = entityData.getEntities(new FieldFilter<>(EquippedBy.class, "player", playerId), EquippedBy.class, ObjectType.class);
+        this.equippedItems = entityData.getEntities(new FieldFilter<>(EquippedBy.class, "player", playerId), EquippedBy.class, ItemComponent.class);
 
         // get all items this player stores
-        this.storedItems = entityData.getEntities(new FieldFilter<>(StoredIn.class, "container", playerId), StoredIn.class, ObjectType.class);
+        this.storedItems = entityData.getEntities(new FieldFilter<>(StoredIn.class, "container", playerId), StoredIn.class, ItemComponent.class);
 
         super.initialize(stateManager, app);
     }
@@ -46,13 +46,13 @@ public class PlayerInventoryState extends AbstractAppState {
     public EntityId getFlashlight() {
         // hard coded
         for (Entity entity : equippedItems) {
-            if (entity.get(ObjectType.class).getObjectType() == Type.FlashLight) {
+            if (entity.get(ItemComponent.class).getItemType() == ItemType.Flashlight) {
                 return entity.getId();
             }
         }
 
         for (Entity entity : storedItems) {
-            if (entity.get(ObjectType.class).getObjectType() == Type.FlashLight) {
+            if (entity.get(ItemComponent.class).getItemType() == ItemType.Flashlight) {
                 return entity.getId();
             }
         }
@@ -66,10 +66,10 @@ public class PlayerInventoryState extends AbstractAppState {
      * @param type the object type you are looking for
      * @return the next entity of the given type or null if it does not exist.
      */
-    public EntityId getNextOfType(Type type) {
+    public EntityId getNextOfType(ItemType type) {
         for (Entity entity : storedItems) {
-            ObjectType objectType = entity.get(ObjectType.class);
-            if (type.equals(objectType.getObjectType())) {
+            ItemComponent itemComponent = entity.get(ItemComponent.class);
+            if (type.equals(itemComponent.getItemType())) {
                 return entity.getId();
             }
         }
