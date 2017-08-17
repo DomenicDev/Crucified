@@ -19,6 +19,7 @@ public class GameConstants {
     public static final String USER_DATA_FOOTSTEP_SOUND = "footstep";
     public static final String USER_DATA_READABLE_SCRIPT = "script";
     public static final String USER_DATA_COOP_TAKS = "coopTask";
+    public static final String USER_DATA_STATIC_PHYSICAL_OBJECT = "staticPhysicalObject";
 
     public static final Vector3f FIRST_PERSON_CAM_OFFSET = new Vector3f(0.0f, 0.1f, 0.20f); // 0.2f, 1.8f, -1.0f
     public static final Vector3f THIRD_PERSON_CAM_OFFSET = new Vector3f(0.0f, 1.7f, -1.1f);
