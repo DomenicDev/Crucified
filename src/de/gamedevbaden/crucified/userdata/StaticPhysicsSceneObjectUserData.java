@@ -12,16 +12,7 @@ import java.io.IOException;
  */
 public class StaticPhysicsSceneObjectUserData implements Savable {
 
-    private boolean kinematic;
     private PhysicsShapeType shapeType;
-
-    public boolean isKinematic() {
-        return kinematic;
-    }
-
-    public void setKinematic(boolean kinematic) {
-        this.kinematic = kinematic;
-    }
 
     public PhysicsShapeType getShapeType() {
         return shapeType;
@@ -34,14 +25,12 @@ public class StaticPhysicsSceneObjectUserData implements Savable {
     @Override
     public void write(JmeExporter ex) throws IOException {
         OutputCapsule out = ex.getCapsule(this);
-        out.write(kinematic, "kinematic", false);
         out.write(shapeType, "shapeType", null);
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
         InputCapsule in = im.getCapsule(this);
-        this.kinematic = in.readBoolean("kinematic", false);
         this.shapeType = in.readEnum("shapeType", PhysicsShapeType.class, null);
     }
 
