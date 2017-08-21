@@ -35,8 +35,15 @@ public class StaticPhysicsSceneObjectUserData implements Savable {
     }
 
     public enum PhysicsShapeType {
+        /**
+         * Uses the model bound as box shape
+         */
         BoxShape,
+
+        /**
+         * Uses the mesh shape as collision.
+         * Also used for terrain.
+         */
         MeshShape,
-        TerrainShape
     }
 }
