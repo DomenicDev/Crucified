@@ -41,7 +41,7 @@ public class SceneEntityLoader extends AbstractAppState {
 
     private static final String TEST_SCENE = "Scenes/TestScene.j3o";
     private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
-    public static Scene sceneToLoad = Scene.TestScene;
+    public static Scene sceneToLoad = Scene.BeachScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
@@ -66,7 +66,7 @@ public class SceneEntityLoader extends AbstractAppState {
     public void createEntitiesFromScene(Scene scene) {
         // The initialization is done in several steps:
 
-        Node gameWorld = (Node) assetManager.loadModel(sceneToLoad.getScenePath());
+        Node gameWorld = (Node) assetManager.loadModel(scene.getScenePath());
 
         // 1. Create a HashMap to store the reference of a spatial (with entity data)
         // this map is filled when calling initEntities()
