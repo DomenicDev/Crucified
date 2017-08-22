@@ -12,6 +12,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.AssetLinkNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
@@ -26,6 +27,9 @@ import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
+import de.gamedevbaden.crucified.userdata.StaticPhysicsSceneObjectUserData;
+import de.gamedevbaden.crucified.utils.GameConstants;
+import de.gamedevbaden.crucified.utils.GameOptions;
 import de.gamedevbaden.crucified.utils.PlayerInputCollector;
 
 import java.util.ArrayList;
@@ -53,6 +57,8 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
     private HashMap<EntityId, RigidBodyControl> staticBodyControls;
     private HashMap<EntityId, CustomCharacterControl> characterControlHashMap;
+
+    private ArrayList<RigidBodyControl> staticPhysicalObjects = new ArrayList<>();
 
     // attributes for own (predicted) player
     private WatchedEntity player;
@@ -86,7 +92,8 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         this.inputCollector = new PlayerInputCollector();
 
         this.bulletAppState = stateManager.getState(BulletAppState.class);
-        //   this.bulletAppState.setDebugEnabled(true);
+        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
+
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
         this.playerModel = stateManager.getState(ModelViewAppState.class).getSpatial(playerId);
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
@@ -489,6 +496,38 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             bulletAppState.getPhysicsSpace().add(terrainControl);
         }
 
+    }
+
+    public void initStaticPhysicalObjects(Node gameWorld) {
+        gameWorld.depthFirstTraversal(spatial -> {
+            StaticPhysicsSceneObjectUserData userData;
+            if ((userData = spatial.getUserData(GameConstants.USER_DATA_STATIC_PHYSICAL_OBJECT)) != null) {
+                if (spatial.getParent() instanceof AssetLinkNode) spatial = spatial.getParent();
+                StaticPhysicsSceneObjectUserData.PhysicsShapeType type = userData.getShapeType();
+                if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.BoxShape) {
+                    addStaticPhysicalObject(spatial, CollisionShapeType.BOX_COLLISION_SHAPE);
+                } else if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.MeshShape) {
+                    addStaticPhysicalObject(spatial, CollisionShapeType.MESH_COLLISION_SHAPE);
+                }
+            }
+        });
+    }
+
+    private void addStaticPhysicalObject(Spatial object, int collisionShapeType) {
+        CollisionShape shape = null;
+        if (collisionShapeType == CollisionShapeType.BOX_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createBoxShape(object);
+        } else if (collisionShapeType == CollisionShapeType.MESH_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createMeshShape(object);
+        }
+        // create rigid body control and set translation and rotation
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(shape, 0);
+        rigidBodyControl.setPhysicsLocation(object.getWorldTranslation());
+        rigidBodyControl.setPhysicsRotation(object.getWorldRotation());
+        // add control to physic space
+        bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+        // add rigid body control to list
+        staticPhysicalObjects.add(rigidBodyControl);
     }
 
     @Override

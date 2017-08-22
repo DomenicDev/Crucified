@@ -11,10 +11,12 @@ import com.jme3.light.Light;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
+import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
+import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
@@ -43,6 +45,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private ShadowRendererAppState shadowRendererAppState;
     private HudAppState hudAppState;
     private GameWorldPagingManager pagingManager;
+    private PredictionAppState predictionAppState;
 
     // scripts
     private Properties scripts;
@@ -69,6 +72,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.hudAppState = stateManager.getState(HudAppState.class);
         this.rootNode.attachChild(mainWorldNode);
         this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
+        this.predictionAppState = stateManager.getState(PredictionAppState.class);
 
         // load script file
         try {
@@ -141,6 +145,11 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         if (scene.getFilterPath() != null) {
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
             app.getViewPort().addProcessor(fpp);
+        }
+
+        // we need to add local physics if we run a client
+        if (predictionAppState != null) {
+            predictionAppState.initStaticPhysicalObjects(world);
         }
 
         // create chunks for game world
