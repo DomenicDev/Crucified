@@ -15,6 +15,8 @@ import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
+import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
+import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
@@ -24,6 +26,7 @@ import de.gamedevbaden.crucified.userdata.EntityType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -39,6 +42,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private SimpleApplication app;
     private ShadowRendererAppState shadowRendererAppState;
     private HudAppState hudAppState;
+    private GameWorldPagingManager pagingManager;
 
     // scripts
     private Properties scripts;
@@ -64,6 +68,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
         this.hudAppState = stateManager.getState(HudAppState.class);
         this.rootNode.attachChild(mainWorldNode);
+        this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
 
         // load script file
         try {
@@ -137,6 +142,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
             app.getViewPort().addProcessor(fpp);
         }
+
+        // create chunks for game world
+        List<WorldChunk> chunks =  pagingManager.createChunksForGameWorld(world, 4, assetManager);
+        pagingManager.setChunks(chunks);
 
 
         // play predefined audio nodes

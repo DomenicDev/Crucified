@@ -9,6 +9,7 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
+import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.SoundAppState;
@@ -45,6 +46,7 @@ public class GameInitializer {
         stateManager.attach(new HeadMovingAppState());
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
+        stateManager.attach(new GameWorldPagingManager());
 
         // gui app states
         stateManager.attach(new HudAppState());
