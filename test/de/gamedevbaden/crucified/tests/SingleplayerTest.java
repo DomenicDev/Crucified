@@ -114,6 +114,7 @@ public class SingleplayerTest extends SimpleApplication {
 
         @Override
         public void initialize(AppStateManager stateManager, Application app) {
+            stateManager.getState(SceneEntityLoader.class).createEntitiesFromScene(SceneEntityLoader.sceneToLoad);
             stateManager.getState(GameCommanderAppState.class).loadScene(SceneEntityLoader.sceneToLoad);
             super.initialize(stateManager, app);
         }
