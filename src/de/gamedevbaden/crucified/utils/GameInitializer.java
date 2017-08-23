@@ -13,6 +13,7 @@ import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.SoundAppState;
+import de.gamedevbaden.crucified.appstates.story.StoryManager;
 import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -91,8 +92,10 @@ public class GameInitializer {
         stateManager.attach(new PhysicalDoorAppState());
         stateManager.attach(new CraftingAppState());
         stateManager.attach(new DecayAppState());
+        stateManager.attach(new NameAppState());
         stateManager.attach(new NewTriggerAppState());
         stateManager.attach(new TestCoopDoorTask());
+        stateManager.attach(new StoryManager());
     }
 
 }
