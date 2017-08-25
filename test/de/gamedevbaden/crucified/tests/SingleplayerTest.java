@@ -89,16 +89,7 @@ public class SingleplayerTest extends SimpleApplication {
         stateManager.attach(new Loader()); // load scene
 
 
-        EntityId campFire = entityData.createEntity();
-        HashMap<ItemType, Integer> items = new HashMap<>();
-        items.put(ItemType.Firewood, 2);
-        entityData.setComponents(campFire,
-                new Model(ModelType.Campfire),
-                new PhysicsRigidBody(0, false, CollisionShapeType.BOX_COLLISION_SHAPE),
-                new InteractionComponent(InteractionType.TurnOnCampfire, true),
-                new NeedToBeCrafted(items),
-                new Transform(new Vector3f(0, 0.2f, 0)),
-                new FireState(false));
+
 
 
         inputManager.addMapping("h", new KeyTrigger(KeyInput.KEY_H));
