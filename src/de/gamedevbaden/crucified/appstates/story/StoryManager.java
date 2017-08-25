@@ -133,6 +133,14 @@ public class StoryManager extends AbstractAppState {
                 }
                 return amountOfPickedUpWood >= 2;
             }
+
+            @Override
+            protected void cleanup() {
+                this.players.release();
+                this.woodenSticks.release();
+                this.players = null;
+                this.woodenSticks = null;
+            }
         });
 
         // next we want the players to make a campfire
