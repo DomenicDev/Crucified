@@ -6,7 +6,9 @@ import de.gamedevbaden.crucified.appstates.export.SettingsAppState;
 public class SettingsTest extends SimpleApplication {
 
     public static void main(String[] args) {
-        new SettingsTest().start();
+        SettingsTest test = new SettingsTest();
+        test.setShowSettings(false);
+        test.start();
     }
 
     @Override
