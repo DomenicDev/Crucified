@@ -19,7 +19,12 @@
         <effect>
             <onHover name="border"
                      color="#822f"
-                     post="true"/>
+                     post="true"
+                     />
+
+            <onHover name="playSound" sound="rollover" />
+
+            <onClick name="playSound" sound="click" />
 
             <onFocus name="imageOverlay"
                      filename="button/button.png"
