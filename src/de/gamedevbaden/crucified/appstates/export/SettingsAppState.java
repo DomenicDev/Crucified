@@ -10,6 +10,7 @@ import java.util.Properties;
 
 public class SettingsAppState extends AbstractAppState {
 
+    private Application app;
     private AppSettings appSettings;
     private Properties settings;
 
@@ -23,7 +24,11 @@ public class SettingsAppState extends AbstractAppState {
     private static final String SAMPLES = "samples";
     private static final String FULLSCREEN = "fullscreen";
 
-    enum ShadowQuality {
+    /**
+     * Quality can be used for various settings.
+     * Examples: Shadow Quality, Texture Quality, Anti-Aliasing quality...
+     */
+    enum Quality {
         Off,
         Low,
         Medium,
@@ -33,6 +38,7 @@ public class SettingsAppState extends AbstractAppState {
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        this.app = app;
         this.appSettings = app.getContext().getSettings();
 
         // load settings file
@@ -45,14 +51,21 @@ public class SettingsAppState extends AbstractAppState {
             e.printStackTrace();
         }
 
+        applyToAppSettings();
+
         super.initialize(stateManager, app);
     }
 
     public void applyToAppSettings() {
+        System.out.println(getWidth() + " " + getHeight() + " " + isVSyncEnabled() + " " + isFullscreen() + " " + getNumSamples());
         appSettings.setResolution(getWidth(), getHeight());
         appSettings.setVSync(isVSyncEnabled());
         appSettings.setFullscreen(isFullscreen());
         appSettings.setSamples(getNumSamples());
+
+        appSettings.setBitsPerPixel(24); // hard coded
+        appSettings.setFrequency(60); // hard coded, we have to set it otherwise app crashes
+        this.app.restart();
     }
 
     // --------- RESOLUTION -------------------- //
@@ -76,12 +89,12 @@ public class SettingsAppState extends AbstractAppState {
 
     // ------------ SHADOW QUALITY --------------------//
 
-    public void setShadowQuality(ShadowQuality q) {
+    public void setShadowQuality(Quality q) {
         storeProperty(SHADOW_QUALITY, q);
     }
 
-    public ShadowQuality getShadowQuality() {
-        return getEnumProperty(SHADOW_QUALITY, ShadowQuality.class);
+    public Quality getShadowQuality() {
+        return getEnumProperty(SHADOW_QUALITY, Quality.class);
     }
 
     // -------------- VSYNC ----------------- //
