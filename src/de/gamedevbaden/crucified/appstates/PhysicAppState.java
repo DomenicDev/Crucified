@@ -66,6 +66,7 @@ public class PhysicAppState extends AbstractAppState {
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
         this.bulletAppState = new BulletAppState();
+        this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         this.stateManager.attach(bulletAppState);
 
         this.characterControls = new HashMap<>();
