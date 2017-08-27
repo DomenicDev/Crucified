@@ -45,5 +45,6 @@ public class StaticPhysicsSceneObjectUserData implements Savable {
          * Also used for terrain.
          */
         MeshShape,
+
     }
 }
