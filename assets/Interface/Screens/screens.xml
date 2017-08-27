@@ -8,10 +8,16 @@
 
     <resourceBundle id="dialog" filename="Interface/dialogs/dialog" />
 
+    <!-- Register Sounds -->
+    <registerSound id="click" filename="Interface/Sounds/click1.wav" />
+    <registerSound id="rollover" filename="Interface/Sounds/rollover3.wav" />
+
+
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <!-- empty screen -->
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="emptyScreen" />
+
 
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->

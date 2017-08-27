@@ -19,12 +19,13 @@ public class NiftyAppState extends AbstractAppState implements NiftyScreenEventT
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        app.getInputManager().setCursorVisible(true);
         this.niftyDisplay = new NiftyJmeDisplay(app.getAssetManager(), app.getInputManager(), app.getAudioRenderer(), app.getGuiViewPort());
         this.nifty = niftyDisplay.getNifty();
         this.nifty.fromXml("Interface/Screens/screens.xml", "mainMenu",
                 new MainMenuScreenController(this));
 
-        this.nifty.setDebugOptionPanelColors(true); // for debugging
+        this.nifty.setDebugOptionPanelColors(false); // for debugging
 
         app.getGuiViewPort().addProcessor(niftyDisplay);
         super.initialize(stateManager, app);
