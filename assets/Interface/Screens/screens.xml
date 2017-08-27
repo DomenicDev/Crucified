@@ -5,7 +5,7 @@
     <useControls filename="nifty-default-controls.xml"/>
 
 
-    <resourceBundle id="dialog" filename="settings/lang/dialog" />
+    <resourceBundle id="dialog" filename="Interface/dialogs/dialog" />
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <!-- empty screen -->
