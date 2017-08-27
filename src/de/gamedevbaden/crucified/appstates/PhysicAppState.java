@@ -65,9 +65,7 @@ public class PhysicAppState extends AbstractAppState {
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
-
         this.bulletAppState = new BulletAppState();
-        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
         this.stateManager.attach(bulletAppState);
 
         this.characterControls = new HashMap<>();
