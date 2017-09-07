@@ -36,5 +36,7 @@ public interface NiftyScreenEventTracker {
     void onClickStopGame();
 
 
+    void onClickShowSettings();
 
+    void onClickShowCredits();
 }

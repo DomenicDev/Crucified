@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.system.AppSettings;
+import de.gamedevbaden.crucified.enums.Quality;
 
 import java.io.*;
 import java.util.Properties;
@@ -21,20 +22,8 @@ public class SettingsAppState extends AbstractAppState {
     private static final String WIDTH = "width";
     private static final String HEIGHT = "height";
     private static final String V_SYNC = "vsync";
-    private static final String SAMPLES = "samples";
+    private static final String AA_Quality = "antialiasing";
     private static final String FULLSCREEN = "fullscreen";
-
-    /**
-     * Quality can be used for various settings.
-     * Examples: Shadow Quality, Texture Quality, Anti-Aliasing quality...
-     */
-    enum Quality {
-        Off,
-        Low,
-        Medium,
-        High,
-        VeryHigh
-    }
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -57,16 +46,27 @@ public class SettingsAppState extends AbstractAppState {
     }
 
     public void applyToAppSettings() {
-        System.out.println(getWidth() + " " + getHeight() + " " + isVSyncEnabled() + " " + isFullscreen() + " " + getNumSamples());
         appSettings.setResolution(getWidth(), getHeight());
         appSettings.setVSync(isVSyncEnabled());
         appSettings.setFullscreen(isFullscreen());
-        appSettings.setSamples(getNumSamples());
+        appSettings.setSamples(getSamples(getShadowQuality()));
 
         appSettings.setBitsPerPixel(24); // hard coded
         appSettings.setFrequency(60); // hard coded, we have to set it otherwise app crashes
         this.app.restart();
     }
+
+    private int getSamples(Quality aaQuality) {
+        switch (aaQuality) {
+            case Off: return 1;
+            case Low: return 2;
+            case Medium: return 4;
+            case High: return 8;
+            case VeryHigh: return 16;
+            default: return 1;
+        }
+    }
+
 
     // --------- RESOLUTION -------------------- //
 
@@ -117,14 +117,14 @@ public class SettingsAppState extends AbstractAppState {
         return getBooleanProperty(FULLSCREEN);
     }
 
-    //------------ SAMPLES (ANTI ALIASING) ----------- //
+    //------------ AA_Quality (ANTI ALIASING) ----------- //
 
-    public void setNumSamples(int samples) {
-        storeProperty(SAMPLES, samples);
+    public void setAntiAliasingQuality(Quality q) {
+        storeProperty(AA_Quality, q);
     }
 
-    public int getNumSamples() {
-        return getIntProperty(SAMPLES);
+    public Quality getAntiAliasingQuality() {
+        return getEnumProperty(AA_Quality, Quality.class);
     }
 
    private <T extends Enum<T>> T getEnumProperty(String key, Class<T> c) {

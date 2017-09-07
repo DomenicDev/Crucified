@@ -18,6 +18,14 @@ public class MainMenuScreenController extends AbstractScreenController {
         eventTracker.onClickConnectToGame();
     }
 
+    public void showSettings() {
+        eventTracker.onClickShowSettings();
+    }
+
+    public void showCredits() {
+        eventTracker.onClickShowCredits();
+    }
+
     public void quitGame() {
         eventTracker.onClickStopGame();
     }

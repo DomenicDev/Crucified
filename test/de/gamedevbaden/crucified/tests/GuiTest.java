@@ -1,6 +1,7 @@
 package de.gamedevbaden.crucified.tests;
 
 import com.jme3.app.SimpleApplication;
+import de.gamedevbaden.crucified.appstates.export.SettingsAppState;
 import de.gamedevbaden.crucified.appstates.gui.GuiEventListener;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 
@@ -12,6 +13,7 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
 
     @Override
     public void simpleInitApp() {
+        stateManager.attach(new SettingsAppState());
         stateManager.attach(new NiftyAppState(this));
     }
 
