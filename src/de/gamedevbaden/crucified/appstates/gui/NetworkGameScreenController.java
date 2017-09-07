@@ -60,6 +60,7 @@ public class NetworkGameScreenController implements ScreenController {
 
     /**
      * Is called when the user clicks on the button to start the network game session.
+     * Can only be clicked when another player has joint this game session.
      */
     public void startNetworkGame() {
         // the following call tells the game main state to start the game session
