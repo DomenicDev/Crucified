@@ -67,7 +67,7 @@ public class SettingsScreenController implements ScreenController {
         this.resolutionBox.selectItem(currentRes);
 
         // check checkbox if vSync is enabled
-        vSyncCheckBox.setChecked(settingsAppState.isVSyncEnabled());
+        this.vSyncCheckBox.setChecked(settingsAppState.isVSyncEnabled());
 
         // select current aa quality
         this.antiAliasingBox.selectItem(settingsAppState.getAntiAliasingQuality());

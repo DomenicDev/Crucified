@@ -26,7 +26,6 @@ public class NetworkGameScreenController implements ScreenController {
 
     @Override
     public void onStartScreen() {
-
     }
 
     @Override
@@ -57,6 +56,7 @@ public class NetworkGameScreenController implements ScreenController {
     public void yes() {
         this.nifty.closePopup(this.sureAboutExitPopup.getId());
         this.nifty.gotoScreen(NiftyAppState.NiftyScreen.MainMenu.getScreenId());
+        this.guiEventListener.cancelNetworkGame();
     }
 
     /**

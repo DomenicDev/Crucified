@@ -21,6 +21,7 @@ public class MainMenuScreenController implements ScreenController {
 
     public void createCoopGame() {
         nifty.gotoScreen(NiftyAppState.NiftyScreen.NetworkGameScreen.getScreenId());
+        this.guiEventListener.createNetworkGame();
     }
 
     public void connectToGame() {
