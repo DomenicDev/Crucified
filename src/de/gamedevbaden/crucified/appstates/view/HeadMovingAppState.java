@@ -11,9 +11,9 @@ import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.HeadRotatingControl;
-import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.es.components.Model;
+import de.gamedevbaden.crucified.enums.SkeletonType;
 import de.gamedevbaden.crucified.es.components.PhysicsCharacterControl;
+import de.gamedevbaden.crucified.es.components.SkeletonComponent;
 
 import java.util.HashMap;
 
@@ -39,7 +39,7 @@ public class HeadMovingAppState extends AbstractAppState {
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.players = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Player), Model.class, PhysicsCharacterControl.class);
+        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), SkeletonComponent.class, PhysicsCharacterControl.class);
         for (Entity entity : players) {
             addHeadControl(entity);
         }
