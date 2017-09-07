@@ -5,6 +5,7 @@ import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.enums.ModelType;
+import de.gamedevbaden.crucified.enums.SkeletonType;
 import de.gamedevbaden.crucified.enums.Sound;
 import de.gamedevbaden.crucified.enums.Type;
 import de.gamedevbaden.crucified.es.components.*;
@@ -39,6 +40,7 @@ public class EntityFactory {
                 new Model(ModelType.Player),
                 new Transform(new Vector3f(0, 2, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
+                new SkeletonComponent(SkeletonType.Human),
                 new PlayerControlled(),
                 new CharacterMovementState(),
                 new Container());

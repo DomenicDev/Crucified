@@ -12,8 +12,10 @@ import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.NewCharacterAnimControl;
 import de.gamedevbaden.crucified.enums.ModelType;
+import de.gamedevbaden.crucified.enums.SkeletonType;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.Model;
+import de.gamedevbaden.crucified.es.components.SkeletonComponent;
 
 import java.util.HashMap;
 
@@ -24,14 +26,13 @@ import java.util.HashMap;
 public class CharacterAnimationAppState extends AbstractAppState {
 
     private EntitySet characters;
-    private HashMap<EntityId, NewCharacterAnimControl> animControls;
+    private HashMap<EntityId, NewCharacterAnimControl> animControls = new HashMap<>();
     private ModelViewAppState modelAppState;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Player), Model.class, CharacterMovementState.class);
-        this.animControls = new HashMap<>();
+        this.characters = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), SkeletonComponent.class, CharacterMovementState.class);
         this.modelAppState = stateManager.getState(ModelViewAppState.class);
 
         if (!characters.isEmpty()) {
@@ -101,6 +102,7 @@ public class CharacterAnimationAppState extends AbstractAppState {
         this.characters.release();
         this.characters.clear();
         this.characters = null;
+        this.animControls.clear();
         super.cleanup();
     }
 }
