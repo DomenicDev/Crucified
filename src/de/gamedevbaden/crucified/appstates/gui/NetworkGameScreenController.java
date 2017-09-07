@@ -1,6 +1,8 @@
 package de.gamedevbaden.crucified.appstates.gui;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.Button;
+import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -12,6 +14,10 @@ public class NetworkGameScreenController implements ScreenController {
     private GuiEventListener guiEventListener;
     private Nifty nifty;
 
+    private boolean secondPlayerConnected = false;
+
+    private Label secondPlayerStateLabel;
+    private Button startGameButton;
     private Element sureAboutExitPopup;
 
     public NetworkGameScreenController(GuiEventListener listener) {
@@ -21,16 +27,35 @@ public class NetworkGameScreenController implements ScreenController {
     @Override
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
         this.nifty = nifty;
+        this.secondPlayerStateLabel = nifty.getCurrentScreen().findNiftyControl("playerStateLabel", Label.class);
+        this.startGameButton = nifty.getCurrentScreen().findNiftyControl("startGameButton", Button.class);
         this.sureAboutExitPopup = nifty.createPopup("popupReallyCancel");
     }
 
     @Override
     public void onStartScreen() {
+        setSecondPlayerConnected(false);
     }
 
     @Override
     public void onEndScreen() {
+        setSecondPlayerConnected(false);
+    }
 
+    /**
+     * This is called as soon as another player joins or leaves the game.
+     * This will then activate the startGame button again to actually start the game session
+     * or disables it if the player has left the current session.
+     * @param connected the state change of the second player
+     */
+    public void setSecondPlayerConnected(boolean connected) {
+        if (connected) {
+            this.secondPlayerStateLabel.setText("Remote player has connected. Ready for Game start!");
+            this.startGameButton.activate();
+        } else {
+            this.secondPlayerStateLabel.setText("Waiting for another Player ....");
+            this.startGameButton.disable();
+        }
     }
 
     /**
