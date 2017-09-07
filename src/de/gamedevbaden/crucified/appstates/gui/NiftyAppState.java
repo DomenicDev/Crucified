@@ -4,7 +4,9 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.ViewPort;
 import de.gamedevbaden.crucified.appstates.export.SettingsAppState;
@@ -62,7 +64,7 @@ public class NiftyAppState extends AbstractAppState implements ActionListener{
         // remove default escape action
         app.getInputManager().deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
         // therefore we add our own routine
-        app.getInputManager().addMapping("ESC");
+        app.getInputManager().addMapping("ESC", new KeyTrigger(KeyInput.KEY_ESCAPE));
         app.getInputManager().addListener(this, "ESC");
 
         app.getGuiViewPort().addProcessor(niftyDisplay);
