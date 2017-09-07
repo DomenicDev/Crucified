@@ -14,8 +14,10 @@ import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.enums.ModelType;
+import de.gamedevbaden.crucified.enums.SkeletonType;
 import de.gamedevbaden.crucified.es.components.EquippedBy;
 import de.gamedevbaden.crucified.es.components.Model;
+import de.gamedevbaden.crucified.es.components.SkeletonComponent;
 
 /**
  * This app state watches equipped items and make them be positioned in their right position.
@@ -33,7 +35,7 @@ public class VisualEquipmentAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.equipables = entityData.getEntities(EquippedBy.class, Model.class);
-        this.players = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Player), Model.class);
+        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), Model.class);
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
         super.initialize(stateManager, app);
     }
@@ -95,7 +97,6 @@ public class VisualEquipmentAppState extends AbstractAppState {
                 itemModel.setLocalTranslation(0, 0, 0);
                 itemModel.setLocalRotation(Quaternion.IDENTITY);
                 itemModel.setCullHint(Spatial.CullHint.Inherit);
-
 
             } else {
                 // later we could check where exactly to attach that item
