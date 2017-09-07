@@ -42,6 +42,7 @@ public class NetworkUtils {
         Serializer.registerClass(ItemComponent.class);
         Serializer.registerClass(SkeletonType.class, new EnumSerializer());
         Serializer.registerClass(SkeletonComponent.class);
+        Serializer.registerClass(FootstepEmitter.class);
     }
 
     /**
