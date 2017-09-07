@@ -20,11 +20,11 @@ public class MainMenuScreenController implements ScreenController {
     }
 
     public void createCoopGame() {
-        // todo
+        nifty.gotoScreen(NiftyAppState.NiftyScreen.NetworkGameScreen.getScreenId());
     }
 
     public void connectToGame() {
-        // todo
+        this.nifty.gotoScreen(NiftyAppState.NiftyScreen.ConnectionScreen.getScreenId());
     }
 
     public void showSettings() {

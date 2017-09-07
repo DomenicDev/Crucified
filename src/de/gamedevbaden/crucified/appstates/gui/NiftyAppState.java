@@ -19,7 +19,9 @@ public class NiftyAppState extends AbstractAppState {
     public enum NiftyScreen {
 
         MainMenu("mainMenu"),
-        SettingsScreen("settingsScreen");
+        SettingsScreen("settingsScreen"),
+        NetworkGameScreen("networkGameScreen"),
+        ConnectionScreen("connectionScreen");
 
         NiftyScreen(String screenId) {
             this.screenId = screenId;
@@ -48,7 +50,9 @@ public class NiftyAppState extends AbstractAppState {
         this.nifty = niftyDisplay.getNifty();
         this.nifty.fromXml("Interface/Screens/screens.xml", NiftyScreen.MainMenu.getScreenId(),
                 new MainMenuScreenController(listener),
-                new SettingsScreenController(settingsAppState));
+                new SettingsScreenController(settingsAppState),
+                new NetworkGameScreenController(listener),
+                new ConnectionScreenController(listener));
 
         this.nifty.setDebugOptionPanelColors(false); // for debugging
 

@@ -58,7 +58,6 @@ public class SettingsScreenController implements ScreenController {
 
         // fill anti aliasing quality box
         fillDropDown(antiAliasingBox, Quality.values());
-
     }
 
     @Override

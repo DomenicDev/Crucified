@@ -24,16 +24,36 @@
     <popup id="popupSettingsApplied" childLayout="center" backgroundColor="#000a">
         <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
             <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
-                <text id="successText" style="setting#text" text="${dialog.settingsApplied}" />
+                <text id="successText" style="setting#text" text="${dialog.settingsApplied}"/>
             </panel>
             <panel id="okButtonPanel" childLayout="center" width="60%" height="25%" align="center" valign="center">
                 <control id="okButton" name="button" style="customButton" label="${dialog.okay}" valign="top">
-                    <interact onClick="ok()" />
+                    <interact onClick="ok()"/>
                 </control>
             </panel>
         </panel>
     </popup>
 
+    <popup id="popupReallyCancel" childLayout="center" backgroundColor="#000a">
+        <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+            <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                <text id="question" style="setting#text" text="${dialog.sureToCancel}"/>
+            </panel>
+            <panel id="buttonPanel" childLayout="horizontal" width="60%" height="25%" align="center" valign="center">
+                <panel id="yesPanel" childLayout="center">
+                    <control id="yesButton" name="button" style="customButton" label="${dialog.yes}" valign="top">
+                        <interact onClick="yes()"/>
+                    </control>
+                </panel>
+                <panel width="5%" />
+                <panel id="noPanel" childLayout="center">
+                    <control id="noButton" name="button" style="customButton" label="${dialog.no}" valign="top">
+                        <interact onClick="no()"/>
+                    </control>
+                </panel>
+            </panel>
+        </panel>
+    </popup>
 
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
@@ -128,10 +148,10 @@
 
                     <panel id="fullScreenPanel" style="setting#panel">
                         <panel id="fullScreenTextPanel" childLayout="center" width="44%" height="*">
-                            <text id="fullScreenText" style="setting#text" text="${dialog.fullScreen}" />
+                            <text id="fullScreenText" style="setting#text" text="${dialog.fullScreen}"/>
                         </panel>
                         <panel id="fullScreenCheckBoxPanel" childLayout="center" width="44%" height="*">
-                            <control id="fullScreenCheckBox" name="checkbox" />
+                            <control id="fullScreenCheckBox" name="checkbox"/>
                         </panel>
                     </panel>
 
@@ -161,6 +181,84 @@
 
                 </panel>
                 <panel id="emptyPanelBottom" width="100%" height="5%"/>
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- HOST NETWORK GAME SCREEN -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="networkGameScreen" controller="de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title"/>
+                </panel>
+                <panel id="emptyPanelTop" width="100%" height="*"/>
+                <panel id="mainContentPanel" style="nifty-panel" width="50%" height="65%" childLayout="vertical"
+                       align="left" valign="top">
+                    <panel id="serverStartedInfoPanel" childLayout="center" align="left" height="20%">
+                        <text id="serverStartedInfoText" style="setting#text" text="${dialog.serverStarted}"
+                              align="left"/>
+                    </panel>
+                    <panel id="playerStatePanel" childLayout="center" align="left" height="20%">
+                        <control id="playerStateLabel" name="label" text="Waiting for Player..." />
+                    </panel>
+
+                    <panel width="*" height="*" />
+
+                    <panel id="buttonPanel" childLayout="horizontal" height="20%">
+                        <panel id="startGameButtonPanel" childLayout="center">
+                            <control id="startGameButton" childLayout="center" name="button" style="customButton" label="${dialog.startNetworkGame}">
+                                <interact onClick="startNetworkGame()" />
+                            </control>
+                        </panel>
+                        <panel width="10%" />
+                        <panel id="cancelButtonPanel" childLayout="center">
+                            <control id="cancelButton" childLayout="center" name="button" style="customButton" label="${dialog.cancel}">
+                                <interact onClick="cancel()" />
+                            </control>
+                        </panel>
+                    </panel>
+                </panel>
+                <panel height="5%" />
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- CONNECTION SCREEN -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="connectionScreen" controller="de.gamedevbaden.crucified.appstates.gui.ConnectionScreenController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title"/>
+                </panel>
+                <panel id="emptyPanelTop" width="100%" height="*"/>
+                <panel width="40%" height="35%" childLayout="vertical" align="center" valign="center" style="nifty-panel">
+                    <panel id="textPanel" childLayout="center" align="left">
+                        <control id="enterIpLabel" name="label" text="${dialog.enterIp}" />
+                    </panel>
+                    <panel id="textFieldPanel" childLayout="center" align="left">
+                        <control id="ipTextField" name="textfield" />
+                    </panel>
+                    <panel height="*" />
+                    <panel id="buttonPanel" childLayout="horizontal" height="20%">
+                        <panel childLayout="center">
+                            <control id="connectButton" name="button" style="customButton" label="${dialog.connect}">
+                                <interact onClick="connect()" />
+                            </control>
+                        </panel>
+                        <panel width="5%" />
+                        <panel childLayout="center">
+                            <control id="cancelButton" name="button" style="customButton" label="${dialog.cancel}">
+                                <interact onClick="cancel()" />
+                            </control>
+                        </panel>
+                    </panel>
+                </panel>
+                <panel height="2%" />
             </panel>
         </layer>
     </screen>

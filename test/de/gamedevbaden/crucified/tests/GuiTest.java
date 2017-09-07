@@ -26,4 +26,24 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
     public void startSinglePlayerGame() {
 
     }
+
+    @Override
+    public void createNetworkGame() {
+
+    }
+
+    @Override
+    public void connectToNetworkGame(String ipAddress) {
+
+    }
+
+    @Override
+    public void cancelNetworkGame() {
+
+    }
+
+    @Override
+    public void startNetworkGame() {
+
+    }
 }

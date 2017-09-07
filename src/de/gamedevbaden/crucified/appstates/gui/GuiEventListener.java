@@ -6,4 +6,12 @@ public interface GuiEventListener {
 
     void startSinglePlayerGame();
 
+    void createNetworkGame();
+
+    void connectToNetworkGame(String ipAddress);
+
+    void cancelNetworkGame();
+
+    void startNetworkGame();
+
 }
