@@ -11,10 +11,8 @@ import com.simsilica.es.EntitySet;
 import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.NewCharacterAnimControl;
-import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.enums.SkeletonType;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
-import de.gamedevbaden.crucified.es.components.Model;
 import de.gamedevbaden.crucified.es.components.SkeletonComponent;
 
 import java.util.HashMap;
