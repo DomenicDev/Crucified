@@ -19,6 +19,24 @@
 
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- HERE WE DEFINE ALL POPUPS -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <popup id="popupSettingsApplied" childLayout="center" backgroundColor="#000a">
+        <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+            <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                <text id="successText" style="setting#text" text="${dialog.settingsApplied}" />
+            </panel>
+            <panel id="okButtonPanel" childLayout="center" width="60%" height="25%" align="center" valign="center">
+                <control id="okButton" name="button" style="customButton" label="${dialog.okay}" valign="top">
+                    <interact onClick="ok()" />
+                </control>
+            </panel>
+        </panel>
+    </popup>
+
+
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <!-- empty screen -->
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="emptyScreen"/>
@@ -126,7 +144,6 @@
                         </panel>
                     </panel>
                 </panel>
-
 
                 <panel id="buttonPanel" childLayout="horizontal" width="50%" height="10%" valign="center"
                        align="center">

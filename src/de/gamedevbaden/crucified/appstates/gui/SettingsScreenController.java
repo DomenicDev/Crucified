@@ -5,7 +5,9 @@ import de.gamedevbaden.crucified.enums.Quality;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.CheckBox;
 import de.lessvoid.nifty.controls.DropDown;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -14,7 +16,7 @@ import java.awt.*;
  * This screen controller applies the settings of the user by using
  * the {@link SettingsAppState}.
  */
-public class SettingsScreenController extends AbstractScreenController {
+public class SettingsScreenController implements ScreenController {
 
     private SettingsAppState settingsAppState;
 
@@ -24,10 +26,11 @@ public class SettingsScreenController extends AbstractScreenController {
     private CheckBox vSyncCheckBox;
     private CheckBox fullScreenCheckBox;
 
+    private Element settingsAppliedPopup;
+
     private Nifty nifty;
 
-    SettingsScreenController(NiftyScreenEventTracker eventTracker, SettingsAppState settingsAppState) {
-        super(eventTracker);
+    SettingsScreenController(SettingsAppState settingsAppState) {
         this.settingsAppState = settingsAppState;
     }
 
@@ -38,6 +41,9 @@ public class SettingsScreenController extends AbstractScreenController {
         this.antiAliasingBox = screen.findNiftyControl("antiAliasingDropDown", DropDown.class);
         this.vSyncCheckBox = screen.findNiftyControl("vSyncCheckBox", CheckBox.class);
         this.fullScreenCheckBox = screen.findNiftyControl("fullScreenCheckBox", CheckBox.class);
+
+        // create popup instance
+        this.settingsAppliedPopup = nifty.createPopup("popupSettingsApplied");
 
         // fill resolution box with values
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -71,6 +77,16 @@ public class SettingsScreenController extends AbstractScreenController {
         this.fullScreenCheckBox.setChecked(settingsAppState.isFullscreen());
     }
 
+    @Override
+    public void onEndScreen() {}
+
+    /**
+     * A simple helper method which fills the specified drop down element
+     * with the specified values
+     * @param dropDown the drop down element
+     * @param values the values to fill the drop down element with
+     * @param <T> the type of the values
+     */
     private <T> void fillDropDown(DropDown<T> dropDown, T[] values) {
         for (T value : values) {
             dropDown.addItem(value);
@@ -88,6 +104,9 @@ public class SettingsScreenController extends AbstractScreenController {
         return new int[] {width, height};
     }
 
+    /**
+     * Is called when the user clicks on the apply button
+     */
     public void apply() {
         int[] res = makeResInts(this.resolutionBox.getSelection());
         //...
@@ -101,9 +120,22 @@ public class SettingsScreenController extends AbstractScreenController {
         // finally apply
         settingsAppState.applyToAppSettings();
 
+        // show popup
+        nifty.showPopup(nifty.getCurrentScreen(), settingsAppliedPopup.getId(), null);
     }
 
+    /**
+     * this is called when the user clicks on the "ok" button of the popup
+     */
+    public void ok() {
+        this.nifty.closePopup(settingsAppliedPopup.getId());
+        this.nifty.gotoScreen(NiftyAppState.NiftyScreen.MainMenu.getScreenId());
+    }
+
+    /**
+     * Is called when the user clicks on the cancel button
+     */
     public void cancel() {
-        eventTracker.onClickBackToMainMenu();
+        this.nifty.gotoScreen(NiftyAppState.NiftyScreen.MainMenu.getScreenId());
     }
 }

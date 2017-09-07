@@ -1,33 +1,56 @@
 package de.gamedevbaden.crucified.appstates.gui;
 
-public class MainMenuScreenController extends AbstractScreenController {
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 
-    MainMenuScreenController(NiftyScreenEventTracker eventTracker) {
-        super(eventTracker);
+import javax.annotation.Nonnull;
+
+public class MainMenuScreenController implements ScreenController {
+
+    private Nifty nifty;
+    private GuiEventListener guiEventListener;
+
+    MainMenuScreenController(GuiEventListener guiEventListener) {
+        this.guiEventListener = guiEventListener;
     }
 
     public void startSingleplayerGame() {
-        eventTracker.onClickStartSinglePlayerGame();
+        this.guiEventListener.startSinglePlayerGame();
     }
 
     public void createCoopGame() {
-        eventTracker.onClickCreateCoopGame();
+        // todo
     }
 
     public void connectToGame() {
-        eventTracker.onClickConnectToGame();
+        // todo
     }
 
     public void showSettings() {
-        eventTracker.onClickShowSettings();
+        nifty.gotoScreen(NiftyAppState.NiftyScreen.SettingsScreen.getScreenId());
     }
 
     public void showCredits() {
-        eventTracker.onClickShowCredits();
+        // todo
     }
 
     public void quitGame() {
-        eventTracker.onClickStopGame();
+        this.guiEventListener.exitGame();
     }
 
+    @Override
+    public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
+        this.nifty = nifty;
+    }
+
+    @Override
+    public void onStartScreen() {
+
+    }
+
+    @Override
+    public void onEndScreen() {
+
+    }
 }
