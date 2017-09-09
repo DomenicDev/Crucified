@@ -1,7 +1,7 @@
 Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
         DiffuseMap : Flip Textures/Grass/J_Grass01.dds
-        AlphaDiscardThreshold : 0.1
+        AlphaDiscardThreshold : 0.3
      }
     AdditionalRenderState {
       FaceCull Off

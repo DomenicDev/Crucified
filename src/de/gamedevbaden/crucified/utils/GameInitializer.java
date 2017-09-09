@@ -46,6 +46,7 @@ public class GameInitializer {
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
         stateManager.attach(new HeadMovingAppState());
+        stateManager.attach(new TerrainGrassGeneratorAppState());
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
         stateManager.attach(new FireLightAppState());

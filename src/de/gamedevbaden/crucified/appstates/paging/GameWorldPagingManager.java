@@ -17,7 +17,7 @@ import com.jme3.scene.debug.WireBox;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.userdata.PagingOptionsUserData;
 import de.gamedevbaden.crucified.utils.GameConstants;
-import jme3tools.optimize.GeometryBatchFactory;
+import de.gamedevbaden.crucified.utils.Optimizer;
 
 import java.util.*;
 
@@ -326,7 +326,7 @@ public class GameWorldPagingManager extends AbstractAppState {
                 // see if we need to batch
                 if (options.isUseBatching()) {
                     // batch geometries
-                    GeometryBatchFactory.optimize(subNode);
+                    Optimizer.optimize(subNode);
 
                     // Since the scene is now optimized we need to remove the old (empty) nodes!
                     // To avoid a concurrent modifier exception we need to create a new list containing
