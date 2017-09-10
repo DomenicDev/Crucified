@@ -1,0 +1,10 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Player/eyebrow001.png
+        AlphaDiscardThreshold : 0.2
+     }
+    AdditionalRenderState {
+      FaceCull Back
+      Blend Alpha
+    }
+}

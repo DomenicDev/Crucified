@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Player/female_casualsuit01_diffuse.png
+        NormalMap : Textures/Player/female_casualsuit01_normal.png
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}
