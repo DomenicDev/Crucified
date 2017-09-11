@@ -8,7 +8,7 @@ public class ModelType {
     public static final String TestScene = "Models/Plane.j3o";
     public static final String TestTerrain = "Scenes/Terrains/TestTerrain.j3o";
     public static final String TestBox = "Models/TestBox.j3o";
-    public static final String Player = "Models/Player/TomNew.j3o";
+    public static final String Player = "Models/Player/NewTest/Tom.j3o";
     public static final String TriggerableDoor = "Models/TriggerableDoor.j3o";
     public static final String Door = "Models/Door.j3o";
     public static final String TestPickup = "Models/PickableItem.j3o";

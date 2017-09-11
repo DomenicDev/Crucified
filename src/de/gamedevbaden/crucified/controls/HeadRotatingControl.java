@@ -46,7 +46,7 @@ public class HeadRotatingControl extends AbstractControl {
         if (spatial != null) {
             // setup
             SkeletonControl skeletonControl = spatial.getControl(SkeletonControl.class);
-            this.headBone = skeletonControl.getSkeleton().getBone("Neck1");
+            this.headBone = skeletonControl.getSkeleton().getBone("neck_01");
             this.headBone.setUserControl(true);
             this.headBone.getLocalRotation().toAngles(initAngles);
             this.headRotation.set(headBone.getLocalRotation());

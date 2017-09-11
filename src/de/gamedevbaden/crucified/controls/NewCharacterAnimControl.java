@@ -31,19 +31,20 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             rightUpperBody = animControl.createChannel();
             leftUpperBody = animControl.createChannel();
 
-            lowerBody.addFromRootBone("LHipJoint");
-            lowerBody.addFromRootBone("RHipJoint");
+            lowerBody.addBone("Root");
+            lowerBody.addBone("pelvis");
+            lowerBody.addFromRootBone("thigh_l");
+            lowerBody.addFromRootBone("thigh_r");
 
-            upperBody.addBone("Hips");
-            upperBody.addBone("LowerBack");
-            upperBody.addBone("Spine");
-            upperBody.addBone("Spine1");
-            upperBody.addBone("Neck");
-            upperBody.addBone("Neck1");
-            upperBody.addBone("Head");
+            upperBody.addBone("pelvis");
+            upperBody.addBone("spine_01");
+            upperBody.addBone("spine_02");
+            upperBody.addBone("spine_03");
+            upperBody.addBone("neck_01");
+            upperBody.addBone("head");
 
-            leftUpperBody.addFromRootBone("LeftShoulder");
-            rightUpperBody.addFromRootBone("RightShoulder");
+            leftUpperBody.addFromRootBone("clavicle_l");
+            rightUpperBody.addFromRootBone("clavicle_r");
 
             animControl.addListener(this);
 
@@ -112,7 +113,6 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             setAnimation(CharacterAnimation.Runback, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
             setAnimation(CharacterAnimation.Idle, lowerBody, upperBody);
-
         }
 
         if (equippedModel != null) {
@@ -152,6 +152,8 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
             } else if (animName.equals(CharacterAnimation.Walk.getAnimName())) {
                 channel.setAnim(CharacterAnimation.Walk.getAnimName());
             }
+        } else if (state == CharacterMovementState.IDLE) {
+            channel.setAnim(CharacterAnimation.Idle.getAnimName());
         }
     }
 
@@ -162,8 +164,8 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
 
     public enum CharacterAnimation {
 
-        Idle("idle", 700),
-        Walk("walk", 400),
+        Idle("idle", 0.3f),
+        Walk("walk", 100),
         WalkBack("walkback", 300),
         Run("run", 350),
         Runback("runback", 300),
