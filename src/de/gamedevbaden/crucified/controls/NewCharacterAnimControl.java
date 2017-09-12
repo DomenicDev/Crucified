@@ -165,14 +165,12 @@ public class NewCharacterAnimControl extends AbstractControl implements AnimEven
     public enum CharacterAnimation {
 
         Idle("idle", 0.3f),
-        Walk("walk", 100),
-        WalkBack("walkback", 300),
-        Run("run", 350),
-        Runback("runback", 300),
-        SideLeft("side", 300),
-        SideRight("sideback", 300),
-        HoldTorch("HoldTorch", 100f),
-        T_Pose("T-Pose", 50);
+        Walk("walk", 0.3f),
+        WalkBack("walkback", 0.3f),
+        Run("run", 0.2f),
+        Runback("runback", 0.5f),
+        SideLeft("side", 0.2f),
+        SideRight("sideback", 0.2f);
 
         private String animName;
         private float blendTime;
