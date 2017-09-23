@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Flip Repeat Textures/Rocks/CliffWaterFall/3TD_RockBase_01.jpg
+        NormalMap : Flip Repeat Textures/Rocks/CliffWaterFall/RockNormal.png
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}
