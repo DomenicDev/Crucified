@@ -20,6 +20,7 @@ import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.userdata.CoopTaskUserData;
 import de.gamedevbaden.crucified.userdata.EntityType;
 import de.gamedevbaden.crucified.userdata.ReadablePaperScriptUserData;
+import de.gamedevbaden.crucified.userdata.StaticPhysicsSceneObjectUserData;
 import de.gamedevbaden.crucified.userdata.eventgroup.EventGroupData;
 import de.gamedevbaden.crucified.userdata.events.SoundEvent;
 import de.gamedevbaden.crucified.userdata.triggers.OnEnterTriggerUserData;
@@ -38,13 +39,12 @@ import java.util.logging.Logger;
  */
 public class SceneEntityLoader extends AbstractAppState {
 
-    private static final String TEST_SCENE = "Scenes/TestScene.j3o";
-    private static final String BEACH_SCENE = "Scenes/IslandVersion1.j3o";
-    public static Scene sceneToLoad = Scene.TestScene;
+    public static Scene sceneToLoad = Scene.BeachScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
     private AssetManager assetManager;
+    private PhysicAppState physicAppState;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -52,8 +52,7 @@ public class SceneEntityLoader extends AbstractAppState {
         this.stateManager = stateManager;
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.assetManager = app.getAssetManager();
-
-        createEntitiesFromScene(sceneToLoad);
+        this.physicAppState = stateManager.getState(PhysicAppState.class);
     }
 
     /**
@@ -65,13 +64,15 @@ public class SceneEntityLoader extends AbstractAppState {
     public void createEntitiesFromScene(Scene scene) {
         // The initialization is done in several steps:
 
-        Node gameWorld = (Node) assetManager.loadModel(sceneToLoad.getScenePath());
+        Node gameWorld = (Node) assetManager.loadModel(scene.getScenePath());
 
         // 1. Create a HashMap to store the reference of a spatial (with entity data)
         // this map is filled when calling initEntities()
         HashMap<Spatial, EntityId> spatialEntities = new HashMap<>();
 
-        initTerrain(scene, gameWorld);
+      //  initTerrain(scene, gameWorld);
+
+        initStaticPhysicalObjects(gameWorld);
 
         // 2. Search for entities in the scene graph and create "real" entity objects
         initEntities(gameWorld, spatialEntities);
@@ -108,6 +109,21 @@ public class SceneEntityLoader extends AbstractAppState {
         }
     }
 
+    private void initStaticPhysicalObjects(Node gameWorld) {
+        gameWorld.depthFirstTraversal(spatial -> {
+            StaticPhysicsSceneObjectUserData userData;
+            if ((userData = spatial.getUserData(GameConstants.USER_DATA_STATIC_PHYSICAL_OBJECT)) != null) {
+                if (spatial.getParent() instanceof AssetLinkNode) spatial = spatial.getParent();
+                StaticPhysicsSceneObjectUserData.PhysicsShapeType type = userData.getShapeType();
+                if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.BoxShape) {
+                    physicAppState.addStaticPhysicalObject(spatial, CollisionShapeType.BOX_COLLISION_SHAPE);
+                } else if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.MeshShape) {
+                    physicAppState.addStaticPhysicalObject(spatial, CollisionShapeType.MESH_COLLISION_SHAPE);
+                }
+            }
+        });
+    }
+
     private void initEntities(Node rootNode, HashMap<Spatial, EntityId> entities) {
         rootNode.depthFirstTraversal(spatial -> {
 
@@ -131,9 +147,6 @@ public class SceneEntityLoader extends AbstractAppState {
 
                 // we also add the transform component to the entity
                 entityData.setComponent(entityId, createTransform(spatial));
-
-                // add object type as component
-                entityData.setComponent(entityId, new ObjectType(t.getType()));
 
                 switch (t.getType()) {
 
@@ -204,12 +217,14 @@ public class SceneEntityLoader extends AbstractAppState {
                         entityData.setComponents(entityId,
                                 new Pickable(),
                                 new Equipable(),
-                                new FlashLight(false));
+                                new FlashLight(false),
+                                new ItemComponent(ItemType.Flashlight));
                         break;
 
                     case WoodenStick:
                         entityData.setComponents(entityId,
-                                new Pickable());
+                                new Pickable(),
+                                new ItemComponent(ItemType.Firewood));
                         break;
 
                     default:

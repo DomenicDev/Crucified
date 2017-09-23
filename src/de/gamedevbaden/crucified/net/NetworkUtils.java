@@ -3,9 +3,7 @@ package de.gamedevbaden.crucified.net;
 
 import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.EnumSerializer;
-import de.gamedevbaden.crucified.enums.PaperScript;
-import de.gamedevbaden.crucified.enums.Scene;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
@@ -38,9 +36,13 @@ public class NetworkUtils {
         Serializer.registerClass(PhysicsTerrain.class);
         Serializer.registerClass(FlashLight.class);
         Serializer.registerClass(Type.class, new EnumSerializer());
-        Serializer.registerClass(ObjectType.class);
         Serializer.registerClass(NeedToBeCrafted.class);
         Serializer.registerClass(FireState.class);
+        Serializer.registerClass(ItemType.class, new EnumSerializer());
+        Serializer.registerClass(ItemComponent.class);
+        Serializer.registerClass(SkeletonType.class, new EnumSerializer());
+        Serializer.registerClass(SkeletonComponent.class);
+        Serializer.registerClass(FootstepEmitter.class);
     }
 
     /**

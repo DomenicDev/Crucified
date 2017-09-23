@@ -10,6 +10,7 @@ import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 import de.gamedevbaden.crucified.utils.GameInitializer;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 /**
  * Created by Domenic on 26.04.2017.
@@ -24,6 +25,8 @@ public class ClientTest extends SimpleApplication {
     public void simpleInitApp() {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
+
+        GameOptions.ENABLE_PHYSICS_DEBUG = false;
 
         GameCommanderAppState gameCommander = new GameCommanderAppState(this);
         stateManager.attach(gameCommander);

@@ -25,6 +25,7 @@ import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -52,6 +53,8 @@ public class PhysicAppState extends AbstractAppState {
     // the integer value is used to make some steps until the
     // entity is removed from the list
 
+    private ArrayList<RigidBodyControl> staticPhysicalObjects;
+
     private AppStateManager stateManager;
     private BulletAppState bulletAppState;
     private ModelLoaderAppState modelLoader; // might be needed to create collision shapes out of a spatial
@@ -62,14 +65,15 @@ public class PhysicAppState extends AbstractAppState {
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
-
         this.bulletAppState = new BulletAppState();
-        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
+        this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         this.stateManager.attach(bulletAppState);
 
         this.characterControls = new HashMap<>();
         this.rigidBodyControls = new HashMap<>();
         this.movingEntities = new HashMap<>();
+
+        this.staticPhysicalObjects = new ArrayList<>();
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
@@ -218,6 +222,28 @@ public class PhysicAppState extends AbstractAppState {
 
     }
 
+    /**
+     * Creates a static rigid body control of that specified object and adds it to physics space.
+     * You can define which kind of shall be used for that.
+     * @param object the physical object you want to add to physic space
+     * @param collisionShapeType the type of the collision shape
+     */
+    void addStaticPhysicalObject(Spatial object, int collisionShapeType) {
+        CollisionShape shape = null;
+        if (collisionShapeType == CollisionShapeType.BOX_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createBoxShape(object);
+        } else if (collisionShapeType == CollisionShapeType.MESH_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createMeshShape(object);
+        }
+        // create rigid body control and set translation and rotation
+        RigidBodyControl rigidBodyControl = new RigidBodyControl(shape, 0);
+        rigidBodyControl.setPhysicsLocation(object.getWorldTranslation());
+        rigidBodyControl.setPhysicsRotation(object.getWorldRotation());
+        // add control to physic space
+        bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+        // add rigid body control to list
+        staticPhysicalObjects.add(rigidBodyControl);
+    }
 
     /**
      * Get the {@link CustomCharacterControl} for this entity.
@@ -353,6 +379,11 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodies.release();
         this.rigidBodies.clear();
         this.rigidBodies = null;
+
+        for (RigidBodyControl body : staticPhysicalObjects) {
+            body.getPhysicsSpace().remove(body);
+        }
+        staticPhysicalObjects.clear();
 
         if (stateManager.hasState(bulletAppState)) {
             stateManager.detach(bulletAppState);

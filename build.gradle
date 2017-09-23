@@ -57,7 +57,7 @@ dependencies {
     compile group: 'org.jmonkeyengine', name: 'jme3-bullet-native',    version: jmeVersion
     compile group: 'org.jmonkeyengine', name: 'jme3-niftygui',   version: jmeVersion
     compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: jmeVersion
-    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl',      version: jmeVersion
+    compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl3',      version: jmeVersion
 
     compile 'com.simsilica:sio2:1.0.3'
     compile 'com.simsilica:zay-es:1.2.1'
@@ -83,14 +83,20 @@ dependencies {
 }
 
 task runServer(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
     main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ServerTest'
     standardInput = System.in
 }
 
 task runClient(type: JavaExec) {
-    classpath sourceSets.main.runtimeClasspath + files('assets','.')
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
     main = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ClientTest'
+    standardInput = System.in
+}
+
+task runChunk(type: JavaExec) {
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
+    main = 'de.gamedevbaden.crucified.tests.ChunkTest'
     standardInput = System.in
 }
 

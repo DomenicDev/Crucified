@@ -76,7 +76,7 @@ public class PhysicalDoorAppState extends AbstractAppState implements DoorStateL
             Quaternion currentRotation = t.getRotation();
             Quaternion finalRotation = finalRot.get(entityId);
 
-            currentRotation.slerp(finalRotation, FACTOR);
+            currentRotation.slerp(finalRotation, tpf / FACTOR);
             currentRotation.normalizeLocal();
 
             // if we are near the final rotation we want

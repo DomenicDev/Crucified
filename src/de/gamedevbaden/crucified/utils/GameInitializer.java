@@ -9,9 +9,11 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
+import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.SoundAppState;
+import de.gamedevbaden.crucified.appstates.story.StoryManager;
 import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -36,6 +38,7 @@ public class GameInitializer {
 
     public static void initViewAppStates(AppStateManager stateManager) {
         stateManager.attach(new ModelViewAppState());
+        stateManager.attach(new LightingDistanceAppState());
         stateManager.attach(new VisualStoringAppState());
         stateManager.attach(new VisualEquipmentAppState());
         stateManager.attach(new CameraAppState());
@@ -43,8 +46,11 @@ public class GameInitializer {
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
         stateManager.attach(new HeadMovingAppState());
+        stateManager.attach(new TerrainGrassGeneratorAppState());
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
+        stateManager.attach(new FireLightAppState());
+        stateManager.attach(new GameWorldPagingManager());
 
         // gui app states
         stateManager.attach(new HudAppState());
@@ -89,8 +95,10 @@ public class GameInitializer {
         stateManager.attach(new PhysicalDoorAppState());
         stateManager.attach(new CraftingAppState());
         stateManager.attach(new DecayAppState());
+        stateManager.attach(new NameAppState());
         stateManager.attach(new NewTriggerAppState());
         stateManager.attach(new TestCoopDoorTask());
+        stateManager.attach(new StoryManager());
     }
 
 }

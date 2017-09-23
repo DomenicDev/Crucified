@@ -15,15 +15,22 @@ import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
+import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
+import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
+import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
+import de.gamedevbaden.crucified.appstates.view.TerrainGrassGeneratorAppState;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
+import de.gamedevbaden.crucified.userdata.PagingOptionsUserData;
+import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -38,7 +45,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private Camera cam;
     private SimpleApplication app;
     private ShadowRendererAppState shadowRendererAppState;
+    private TerrainGrassGeneratorAppState terrainGrassGeneratorAppState;
     private HudAppState hudAppState;
+    private GameWorldPagingManager pagingManager;
+    private PredictionAppState predictionAppState;
 
     // scripts
     private Properties scripts;
@@ -63,7 +73,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.rootNode = ((SimpleApplication) app).getRootNode();
         this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
         this.hudAppState = stateManager.getState(HudAppState.class);
+        this.terrainGrassGeneratorAppState = stateManager.getState(TerrainGrassGeneratorAppState.class);
         this.rootNode.attachChild(mainWorldNode);
+        this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
+        this.predictionAppState = stateManager.getState(PredictionAppState.class);
 
         // load script file
         try {
@@ -131,12 +144,42 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             }
         }
 
+        // add grass to terrain
+        for (Spatial spatial : world.getChildren()) {
+            if (spatial instanceof TerrainQuad) {
+                int grassTextureIndex = 0;
+                if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
+                    grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
+                }
+                TerrainQuad terrain = (TerrainQuad) spatial;
+                Node grassNode = terrainGrassGeneratorAppState.createGrassForTerrain(terrain, grassTextureIndex);
+                grassNode.setCullHint(Spatial.CullHint.Always);
+
+                System.out.println(grassNode.getChildren().size());
+                // we add paging options to the grass node, so it will
+                // be handled by the paging system
+                PagingOptionsUserData pagingOptions = new PagingOptionsUserData();
+                pagingOptions.setUseBatching(true);
+                grassNode.setUserData(GameConstants.USER_DATA_PAGING_OPTIONS, pagingOptions);
+                world.attachChild(grassNode);
+                break;
+            }
+        }
 
         // init filter if available --> need to be the last thing to add!
         if (scene.getFilterPath() != null) {
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
             app.getViewPort().addProcessor(fpp);
         }
+
+        // we need to add local physics if we run a client
+        if (predictionAppState != null) {
+            predictionAppState.initStaticPhysicalObjects(world);
+        }
+
+        // create chunks for game world
+        List<WorldChunk> chunks =  pagingManager.createChunksForGameWorld(world, 4, assetManager);
+        pagingManager.setChunks(chunks);
 
 
         // play predefined audio nodes

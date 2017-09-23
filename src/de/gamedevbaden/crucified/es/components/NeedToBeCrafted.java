@@ -2,7 +2,7 @@ package de.gamedevbaden.crucified.es.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.ItemType;
 
 import java.util.Map;
 
@@ -14,16 +14,16 @@ import java.util.Map;
 @Serializable
 public class NeedToBeCrafted implements EntityComponent {
 
-    private Map<Type, Integer> neededItems;
+    private Map<ItemType, Integer> neededItems;
 
     public NeedToBeCrafted() {
     }
 
-    public NeedToBeCrafted(Map<Type, Integer> neededItems) {
+    public NeedToBeCrafted(Map<ItemType, Integer> neededItems) {
         this.neededItems = neededItems;
     }
 
-    public Map<Type, Integer> getNeededItems() {
+    public Map<ItemType, Integer> getNeededItems() {
         return neededItems;
     }
 

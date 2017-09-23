@@ -13,15 +13,15 @@ public class PhysicsRigidBody implements EntityComponent {
 
     private float mass;
     private boolean kinematic;
-    private int collisionShapeType;
+    private int collisionShape;
 
     public PhysicsRigidBody() {
     }
 
-    public PhysicsRigidBody(float mass, boolean kinematic, int collisionType) {
+    public PhysicsRigidBody(float mass, boolean kinematic, int collisionShape) {
         this.mass = mass;
         this.kinematic = kinematic;
-        this.collisionShapeType = collisionType;
+        this.collisionShape = collisionShape;
     }
 
     public float getMass() {
@@ -33,6 +33,6 @@ public class PhysicsRigidBody implements EntityComponent {
     }
 
     public int getCollisionShapeType() {
-        return collisionShapeType;
+        return collisionShape;
     }
 }

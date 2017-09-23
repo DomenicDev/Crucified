@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles xmlns="http://nifty-gui.lessvoid.com/nifty-gui">
+
+    <style id="mainPanelStyle">
+        <attributes width="100%"
+                    height="100%"
+                    childLayout="vertical"
+                    valign="center"
+                    align="center" />
+    </style>
+
+</nifty-styles>

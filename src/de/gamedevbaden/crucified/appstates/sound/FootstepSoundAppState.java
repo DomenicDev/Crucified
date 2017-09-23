@@ -11,13 +11,11 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.controls.FootstepSoundControl;
-import de.gamedevbaden.crucified.enums.ModelType;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
-import de.gamedevbaden.crucified.es.components.Model;
+import de.gamedevbaden.crucified.es.components.FootstepEmitter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +28,7 @@ public class FootstepSoundAppState extends AbstractAppState {
 
     private EntitySet players;
     private AssetManager assetManager;
-    private Map<EntityId, FootstepSoundControl> controls;
+    private Map<EntityId, FootstepSoundControl> controls = new HashMap<>();
     private Node gameWorld;
 
     private ModelViewAppState modelViewAppState;
@@ -39,11 +37,10 @@ public class FootstepSoundAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         this.assetManager = app.getAssetManager();
         this.gameWorld = ((SimpleApplication) app).getRootNode();
-        this.controls = new HashMap<>();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.players = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Player), Model.class, CharacterMovementState.class);
+        this.players = entityData.getEntities(FootstepEmitter.class, CharacterMovementState.class);
 
         for (Entity entity : players) {
             addFootstepControl(entity);
@@ -99,10 +96,7 @@ public class FootstepSoundAppState extends AbstractAppState {
         this.players.release();
         this.players.clear();
         this.players = null;
-
         this.controls.clear();
-        this.controls = null;
-
         super.cleanup();
     }
 }
