@@ -23,7 +23,6 @@ import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
-import de.gamedevbaden.crucified.utils.GameOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -284,6 +283,7 @@ public class PhysicAppState extends AbstractAppState {
     private void addCharacterControl(Entity entity) {
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
+        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
         characterControl.setWalkDirection(pcc.getWalkDirection());
         characterControl.setViewDirection(pcc.getViewDirection());
         addPhysicsControl(characterControl);
