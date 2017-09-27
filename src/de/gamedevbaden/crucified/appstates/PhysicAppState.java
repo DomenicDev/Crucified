@@ -153,25 +153,25 @@ public class PhysicAppState extends AbstractAppState {
 
         // rigid body controls
         if (rigidBodies.applyChanges()) {
-
             for (Entity entity : rigidBodies.getAddedEntities()) {
-                addRigidBodyControl(entity);
+                PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
+                Transform transform = entity.get(Transform.class);
+                int shapeType = rigidBody.getCollisionShapeType();
+                CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getPath(), transform.getScale());
+                entity.set(new RigidBody(rigidBody.isKinematic(), rigidBody.getMass()));
+                entity.set(new CustomShape(collisionShape));
+                entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
             }
-
             for (Entity entity : rigidBodies.getChangedEntities()) {
                 if (entity.get(PhysicsRigidBody.class).isKinematic()) {
-                    RigidBodyControl rigidBodyControl = getRigidBodyControl(entity.getId());
                     Transform transform = entity.get(Transform.class);
-                    rigidBodyControl.setPhysicsLocation(transform.getTranslation());
-                    rigidBodyControl.setPhysicsRotation(transform.getRotation());
+                    entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
                 }
-
             }
-
             for (Entity entity : rigidBodies.getRemovedEntities()) {
-                removeRigidBodyControl(entity);
+                entityData.removeComponent(entity.getId(), RigidBody.class);
+                entityData.removeComponent(entity.getId(), CustomShape.class);
             }
-
         }
 
         // terrains
@@ -312,18 +312,6 @@ public class PhysicAppState extends AbstractAppState {
 
 
 
-    private void addRigidBodyControl(Entity entity) {
-        PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
-        Transform transform = entity.get(Transform.class);
-        int shapeType = entity.get(PhysicsRigidBody.class).getCollisionShapeType();
-        CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getPath(), transform.getScale());
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape, rigidBody.getMass());
-        addPhysicsControl(rigidBodyControl);
-        rigidBodyControl.setPhysicsLocation(transform.getTranslation());
-        rigidBodyControl.setPhysicsRotation(transform.getRotation());
-        rigidBodyControl.setKinematic(rigidBody.isKinematic());
-        rigidBodyControls.put(entity.getId(), rigidBodyControl);
-    }
 
     private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {
         if (type == CollisionShapeType.BOX_COLLISION_SHAPE) {
