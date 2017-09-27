@@ -3,6 +3,7 @@ package de.gamedevbaden.crucified.appstates;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -182,23 +183,16 @@ final class ESBulletInterface {
      * @param entity needs PhysicsCharacterControl
      */
     public void addCharacter(Entity entity){
-      /*
-
+        //TODO add run mode
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
-        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
-        characterControl.setWalkDirection(pcc.getWalkDirection());
-        characterControl.setViewDirection(pcc.getViewDirection());
-        addPhysicsControl(characterControl);
-        characterControls.put(entity.getId(), characterControl);
-        */
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        Transform transform = entity.get(Transform.class);
         //basic properties of the capsule
         PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
                 5,2, 0.2f, 0.5f, 1); //max sepped, acc, stepHeight, jumpHeight, maxJumpNumber
         entity.set(characterComp);
 
         entity.set(new PhysicsCharacterMovement(new Vector2f(pcc.getWalkDirection().x, pcc.getWalkDirection().z)));
+        entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
     }
 
     public void updateCharacter(Entity entity){

@@ -92,6 +92,12 @@ public class PhysicAppState extends AbstractAppState {
             PhysicsCharacterLogic characterLogic = new PhysicsCharacterLogic();
             characterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), esBulletState.getBulletSystem());
             physicsLogicManager.getPreTickLogicManager().attach(characterLogic);
+
+            // if there are already entities in the sets
+            // add them to the physics engine...
+            characters.forEach(bulletInterface::addCharacter);
+            rigidBodies.forEach(bulletInterface::addRigidBody);
+            terrains.forEach(bulletInterface::addTerrain);
         });
 
         this.movingEntities = new HashMap<>();
@@ -100,11 +106,6 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
         this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
 
-        // if there are already entities in the sets
-        // add them to the physics engine...
-        characters.forEach(bulletInterface::addCharacter);
-        rigidBodies.forEach(bulletInterface::addRigidBody);
-        terrains.forEach(bulletInterface::addTerrain);
 
         super.initialize(stateManager, app);
     }
@@ -215,7 +216,7 @@ public class PhysicAppState extends AbstractAppState {
         // create rigid body control and set translation and rotation
         EntityId staticEntityId = entityData.createEntity();
         entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), object.getWorldScale()));
-        Entity entity = entityData.watchEntity(staticEntityId, Transform.class);
+        Entity entity = entityData.getEntity(staticEntityId, Transform.class);
         bulletInterface.addRigidBody(entity, true, 0, shape);
     }
 
@@ -230,6 +231,8 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodies.release();
         this.characters = null;
         this.rigidBodies = null;
+
+        bulletInterface.close();
 
         stateManager.detach(stateManager.getState(ESBulletState.class));
         if(stateManager.getState(BulletDebugAppState.class) != null){
