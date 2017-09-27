@@ -147,7 +147,7 @@ final class ESBulletInterface {
      * @param mass
      * @param shape
      */
-    private void addRigidBody(Entity entity, boolean kinematic, float mass, CollisionShape shape){
+    public void addRigidBody(Entity entity, boolean kinematic, float mass, CollisionShape shape){
         Transform transform = entity.get(Transform.class);
         entity.set(new RigidBody(kinematic, mass));
         entity.set(new CustomShape(shape));

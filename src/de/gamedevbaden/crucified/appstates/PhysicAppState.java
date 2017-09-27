@@ -197,6 +197,26 @@ public class PhysicAppState extends AbstractAppState {
         movingEntities.put(entity.getId(), 0);
     }
 
+    /**
+     * Creates a static rigid body control of that specified object and adds it to physics space.
+     * You can define which kind of shall be used for that.
+     * @param object the physical object you want to add to physic space
+     * @param collisionShapeType the type of the collision shape
+     */
+    void addStaticPhysicalObject(Spatial object, int collisionShapeType) {
+        CollisionShape shape = null;
+        if (collisionShapeType == CollisionShapeType.BOX_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createBoxShape(object);
+        } else if (collisionShapeType == CollisionShapeType.MESH_COLLISION_SHAPE) {
+            shape = CollisionShapeFactory.createMeshShape(object);
+        }
+        // create rigid body control and set translation and rotation
+        EntityId staticEntityId = entityData.createEntity();
+        entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), new Vector3f()));
+        Entity entity = entityData.watchEntity(staticEntityId, Transform.class);
+        bulletInterface.addRigidBody(entity, true, 0, shape);
+    }
+
     @Override
     public void cleanup() {
         this.characters.applyChanges();
@@ -217,26 +237,5 @@ public class PhysicAppState extends AbstractAppState {
     }
 
 
-//    /**
-//     * Creates a static rigid body control of that specified object and adds it to physics space.
-//     * You can define which kind of shall be used for that.
-//     * @param object the physical object you want to add to physic space
-//     * @param collisionShapeType the type of the collision shape
-//     */
-//    void addStaticPhysicalObject(Spatial object, int collisionShapeType) {
-//        CollisionShape shape = null;
-//        if (collisionShapeType == CollisionShapeType.BOX_COLLISION_SHAPE) {
-//            shape = CollisionShapeFactory.createBoxShape(object);
-//        } else if (collisionShapeType == CollisionShapeType.MESH_COLLISION_SHAPE) {
-//            shape = CollisionShapeFactory.createMeshShape(object);
-//        }
-//        // create rigid body control and set translation and rotation
-//        RigidBodyControl rigidBodyControl = new RigidBodyControl(shape, 0);
-//        rigidBodyControl.setPhysicsLocation(object.getWorldTranslation());
-//        rigidBodyControl.setPhysicsRotation(object.getWorldRotation());
-//        // add control to physic space
-//        bulletAppState.getPhysicsSpace().add(rigidBodyControl);
-//        // add rigid body control to list
-//        staticPhysicalObjects.add(rigidBodyControl);
-//    }
+
 }
