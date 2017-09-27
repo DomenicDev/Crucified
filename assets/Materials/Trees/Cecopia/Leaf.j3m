@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Trees/Cecopia/largeFiscus.dds
         NormalMap : Textures/Trees/Cecopia/largeFiscus_NRM.dds
@@ -6,9 +6,11 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         Ambient : 1.0 1.0 1.0 1.0
         Diffuse : 1.0 1.0 1.0 1.0
         Specular : 1.0 1.0 1.0 1.0
-        UseMaterialColors : true
+        UseMaterialColors : false
         Shininess : 128.1
         AlphaDiscardThreshold : 0.3
+        WindSpeed : 5.0
+        WindStrength : 0.05
      }
     AdditionalRenderState {
       FaceCull Off

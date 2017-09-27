@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Plants/ElephantEar/GreenLeafLong.png
         NormalMap : Textures/Plants/ElephantEar/GreenLeafLong_NRM.dds
@@ -9,6 +9,8 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         Specular : 1.0 1.0 1.0 1.0
         AlphaDiscardThreshold : 0.1
         Shininess : 64.0
+        WindSpeed : 3.0
+        WindStrength : 0.1
      }
     AdditionalRenderState {
       Blend Alpha

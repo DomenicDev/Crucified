@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Plants/TropicFern/fern_image2.dds
         NormalMap : Textures/Plants/TropicFern/fern_image2_NRM.dds
@@ -9,6 +9,8 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         UseMaterialColors : true
         AlphaDiscardThreshold : 0.1
         Shininess : 64.0
+        WindStrength : 0.015
+        WindSpeed : 5.0
      }
     AdditionalRenderState {
       FaceCull Off
