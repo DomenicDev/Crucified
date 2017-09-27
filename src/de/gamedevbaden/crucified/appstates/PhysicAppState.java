@@ -169,6 +169,9 @@ public class PhysicAppState extends AbstractAppState {
      */
     private void applyNewChanges(Entity entity, Vector3f location, Quaternion rotation, Vector3f scale) {
         Transform currentTransform = entity.get(Transform.class);
+        if(location == null || rotation == null){
+            return;
+        }
 
         // we only will set a new Transform if the spatial has really changed its position, rotation or scale
         if (location.equals(currentTransform.getTranslation()) &&
