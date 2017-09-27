@@ -152,10 +152,12 @@ public class PhysicAppState extends AbstractAppState {
 
         // apply new transforms for characters
         for (Entity entity : characters) {
-            Vector3f location = null;
-            Quaternion rotation = null;//TODO: Shall that be changed? PlayerControlled Rotation is just a thing of the view, so how could we implement this instantly -> YES!!!! jvp
-            Vector3f scale = entity.get(Transform.class).getScale();
-            applyNewChanges(entity, location, rotation, scale);
+            PhysicsPosition pos = bulletInterface.getPhyicsPosition(entity);
+            if(pos != null) {
+                Vector3f scale = entity.get(Transform.class).getScale();
+                //TODO Rotation will be constant..
+                applyNewChanges(entity, pos.getLocation(), pos.getRotation(), scale);
+            }
         }
 
     }
@@ -169,9 +171,6 @@ public class PhysicAppState extends AbstractAppState {
      */
     private void applyNewChanges(Entity entity, Vector3f location, Quaternion rotation, Vector3f scale) {
         Transform currentTransform = entity.get(Transform.class);
-        if(location == null || rotation == null){
-            return;
-        }
 
         // we only will set a new Transform if the spatial has really changed its position, rotation or scale
         if (location.equals(currentTransform.getTranslation()) &&
@@ -215,7 +214,7 @@ public class PhysicAppState extends AbstractAppState {
         }
         // create rigid body control and set translation and rotation
         EntityId staticEntityId = entityData.createEntity();
-        entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), new Vector3f()));
+        entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), object.getWorldScale()));
         Entity entity = entityData.watchEntity(staticEntityId, Transform.class);
         bulletInterface.addRigidBody(entity, true, 0, shape);
     }
