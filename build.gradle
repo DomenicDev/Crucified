@@ -94,6 +94,12 @@ task runClient(type: JavaExec) {
     standardInput = System.in
 }
 
+task runSingleplayer(type: JavaExec) {
+    classpath sourceSets.test.runtimeClasspath + files('assets','.')
+    main = 'de.gamedevbaden.crucified.tests.SingleplayerTest'
+    standardInput = System.in
+}
+
 task runChunk(type: JavaExec) {
     classpath sourceSets.test.runtimeClasspath + files('assets','.')
     main = 'de.gamedevbaden.crucified.tests.ChunkTest'

@@ -8,6 +8,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
@@ -122,6 +123,12 @@ public class PhysicAppState extends AbstractAppState {
     @Override
     public void update(float tpf) {
         if (!stateManager.getState(ESBulletState.class).isInitialized()) return;
+
+        if(GameOptions.ENABLE_PHYSICS_DEBUG) {
+            if (stateManager.getState(BulletDebugAppState.class) == null) {
+                stateManager.attach(new BulletDebugAppState(bulletAppState.getPhysicsSpace()));
+            }
+        }
 
 
         // character controls
@@ -240,6 +247,16 @@ public class PhysicAppState extends AbstractAppState {
 
 
     private void addCharacter(Entity entity){
+      /*
+      
+        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
+        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
+        characterControl.setWalkDirection(pcc.getWalkDirection());
+        characterControl.setViewDirection(pcc.getViewDirection());
+        addPhysicsControl(characterControl);
+        characterControls.put(entity.getId(), characterControl);
+        */
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         //basic properties of the capsule
         PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
@@ -290,6 +307,7 @@ public class PhysicAppState extends AbstractAppState {
         entityData.removeComponent(entity.getId(), CustomShape.class);
         entityData.removeComponent(entity.getId(), RigidBody.class);
         entityData.removeComponent(entity.getId(), WarpPosition.class);
+        //removeRigidBodyControl(entity);
     }
 
 
