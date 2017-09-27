@@ -107,7 +107,7 @@ void main(){
    #endif
 
 
-
+  
    modelSpacePos.y += inColor.g * sin((modelSpacePos.z + g_Time) * m_WindSpeed) * m_WindStrength;
 
 

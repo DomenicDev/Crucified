@@ -1,0 +1,19 @@
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/BirdNest/birdnest01.dds
+        NormalMap : Textures/Plants/BirdNest/birdnest01_NRM.dds
+        SpecularMap : Textures/Plants/BirdNest/birdnest01_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        AlphaDiscardThreshold : 0.4
+        WindSpeed : 8.0
+        WindStrength : 0.05
+        Shininess : 60.0
+     }
+    AdditionalRenderState {
+      Blend Alpha
+      FaceCull Off
+    }
+}
