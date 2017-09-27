@@ -2,7 +2,6 @@ package de.gamedevbaden.crucified.utils;
 
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
@@ -30,7 +29,6 @@ public class GameInitializer {
 
     public static void initClientAppStates(AppStateManager stateManager) {
         stateManager.attach(new BulletAppState()); // local physics
-        //stateManager.attach(new BulletDebugAppState(stateManager.getState(BulletAppState.class).getPhysicsSpace()));
         stateManager.attach(new MovementInterpolator());
     }
 

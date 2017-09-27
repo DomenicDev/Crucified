@@ -8,7 +8,6 @@ apply plugin: 'idea'
 repositories {
     jcenter()
     maven { url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'}
-    maven { url "https://dl.bintray.com/jvpichowski/jME3-Tools/" }
 }
 
 mainClassName = 'de.gamedevbaden.crucified.tests.SimpleClientServerTest.ClientTest'
@@ -59,9 +58,6 @@ dependencies {
     compile group: 'org.jmonkeyengine', name: 'jme3-desktop',    version: jmeVersion
     compile group: 'org.jmonkeyengine', name: 'jme3-lwjgl3',      version: jmeVersion
 
-    compile 'com.simsilica:sio2:1.0.3'
-    compile 'com.simsilica:zay-es:1.2.1'
-
     /*compile "org.jmonkeyengine:jme3-core:$jmeVersion"
     compile "org.jmonkeyengine:jme3-desktop:$jmeVersion"
     compile "org.jmonkeyengine:jme3-lwjgl:$jmeVersion"
@@ -76,8 +72,6 @@ dependencies {
 
     //You need to uncomment nifty repository in the repositories section if you use this dependency
     compile "org.jmonkeyengine:jme3-niftygui:$jmeVersion"
-
-    compile 'com.jvpichowski:ZayES-Bullet:0.5.0'
 
     runtime project(':assets')
 }

@@ -37,7 +37,7 @@ public class ServerTest extends SimpleApplication {
     private EntityData entityData;
 
     public static void main(String[] args) {
-        new ServerTest().start(/*JmeContext.Type.Headless*/);
+        new ServerTest().start(JmeContext.Type.Headless);
     }
 
     @Override
