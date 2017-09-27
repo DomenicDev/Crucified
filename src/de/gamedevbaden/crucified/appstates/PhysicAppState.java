@@ -3,26 +3,14 @@ package de.gamedevbaden.crucified.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
-import com.jme3.bullet.control.PhysicsControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jvpichowski.jme3.es.bullet.components.CustomShape;
 import com.jvpichowski.jme3.es.bullet.components.PhysicsPosition;
-import com.jvpichowski.jme3.es.bullet.components.RigidBody;
-import com.jvpichowski.jme3.es.bullet.components.WarpPosition;
-import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacter;
 import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacterLogic;
-import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacterMovement;
 import com.jvpichowski.jme3.es.bullet.extension.logic.PhysicsSimpleLogicManager;
 import com.jvpichowski.jme3.states.ESBulletState;
 import com.simsilica.es.Entity;
@@ -32,11 +20,8 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
-import de.gamedevbaden.crucified.physics.CustomCharacterControl;
-import de.gamedevbaden.crucified.physics.PhysicConstants;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -143,7 +128,7 @@ public class PhysicAppState extends AbstractAppState {
 
         // apply new transforms for rigid bodies
         for (Entity entity : rigidBodies) {
-            PhysicsPosition pos = bulletInterface.getPhyicsPosition(entity);
+            PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
             if (pos != null && !entity.get(PhysicsRigidBody.class).isKinematic()) {
                 Vector3f scale = entity.get(Transform.class).getScale();
                 applyNewChanges(entity, pos.getLocation(), pos.getRotation(), scale);
@@ -153,7 +138,7 @@ public class PhysicAppState extends AbstractAppState {
 
         // apply new transforms for characters
         for (Entity entity : characters) {
-            PhysicsPosition pos = bulletInterface.getPhyicsPosition(entity);
+            PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
             if(pos != null) {
                 Vector3f scale = entity.get(Transform.class).getScale();
                 //TODO Rotation will be constant..

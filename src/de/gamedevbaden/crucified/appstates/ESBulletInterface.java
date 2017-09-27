@@ -188,7 +188,7 @@ final class ESBulletInterface {
         Transform transform = entity.get(Transform.class);
         //basic properties of the capsule
         PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
-                5,2, 0.2f, 0.5f, 1); //max sepped, acc, stepHeight, jumpHeight, maxJumpNumber
+                0.5f,0.5f, 0.2f, 0.5f, 1); //max speed, acc, stepHeight, jumpHeight, maxJumpNumber
         entity.set(characterComp);
 
         entity.set(new PhysicsCharacterMovement(new Vector2f(pcc.getWalkDirection().x, pcc.getWalkDirection().z)));
@@ -206,7 +206,7 @@ final class ESBulletInterface {
         entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
     }
 
-    public PhysicsPosition getPhyicsPosition(Entity entity){
+    public PhysicsPosition getPhysicsPosition(Entity entity){
         physicsPositions.applyChanges();
         if(physicsPositions.containsId(entity.getId())) {
             return physicsPositions.getEntity(entity.getId()).get(PhysicsPosition.class);
