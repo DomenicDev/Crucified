@@ -44,7 +44,7 @@ public class SingleplayerTest extends SimpleApplication {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
-        GameOptions.ENABLE_PHYSICS_DEBUG = false; // for test
+        GameOptions.ENABLE_PHYSICS_DEBUG = true; // for test
 
         // create entity data state
         EntityDataState entityDataState = new EntityDataState();
