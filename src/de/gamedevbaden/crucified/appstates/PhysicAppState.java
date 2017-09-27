@@ -8,6 +8,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -23,6 +24,7 @@ import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.CustomCharacterControl;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
+import de.gamedevbaden.crucified.utils.GameOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,6 +107,12 @@ public class PhysicAppState extends AbstractAppState {
     @Override
     public void update(float tpf) {
         if (!bulletAppState.isInitialized()) return;
+
+        if(GameOptions.ENABLE_PHYSICS_DEBUG) {
+            if (stateManager.getState(BulletDebugAppState.class) == null) {
+                stateManager.attach(new BulletDebugAppState(bulletAppState.getPhysicsSpace()));
+            }
+        }
 
 
         // character controls
