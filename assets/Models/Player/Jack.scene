@@ -1,0 +1,131 @@
+<scene exported_by="Domenic" formatVersion="1.0.1" export_time="1505086417.3575566" previous_export_time="0" >
+  <nodes >
+    <node name="Spot" >
+      <position z="1.082924" y="5.132328" x="0.000000" />
+      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="spot" powerScale="1.0" shadow="true" name="Spot" >
+        <position z="1.082924" y="5.132328" x="0.000000" />
+        <lightAttenuation constant="1.0" range="5000" quadratic="0.0" linear="0.04" />
+        <direction z="0.0" y="-1.0" x="0.0" />
+        <spotLightRange falloff="1.0" outer="0.7853981852531433" inner="0.6675884527838338" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+        <colourShadow b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Sun" >
+      <position z="-1.152241" y="2.029578" x="0.000000" />
+      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="directional" powerScale="1.0" name="Sun" >
+        <position z="-1.152241" y="2.029578" x="0.000000" />
+        <lightAttenuation constant="1.0" range="5000" quadratic="0.0" linear="0.04" />
+        <direction z="0.0" y="-1.0" x="0.0" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Point" >
+      <position z="1.172759" y="2.138181" x="0.000000" />
+      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="point" powerScale="1.0" name="Point" >
+        <position z="1.172759" y="2.138181" x="0.000000" />
+        <lightAttenuation constant="1.0" range="5000" quadratic="0.0" linear="0.04" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="base_male" >
+      <position z="-0.000000" y="0.000000" x="0.000000" />
+      <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+      <scale z="1.000000" y="1.000000" x="1.000000" />
+      <user_data value="" type="str" name="McpTPoseFile" />
+      <user_data value="1" type="int" name="McpTPoseLoaded" />
+      <user_data value="0" type="int" name="McpRestTPose" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="base_male-base" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-base" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-base.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+      <node name="base_male-eyebrow001" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-eyebrow001" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-eyebrow001.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+      <node name="base_male-low_poly" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-low_poly" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-low_poly.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+      <node name="base_male-male_casualsuit03" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-male_casualsuit03" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-male_casualsuit03.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+      <node name="base_male-shoes06" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-shoes06" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-shoes06.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+      <node name="base_male-short02" >
+        <position z="-0.000000" y="0.000000" x="0.000000" />
+        <rotation qy="0.000000" qz="-0.000000" qx="0.000000" qw="1.000000" />
+        <scale z="1.000000" y="1.000000" x="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity inertia_tensor="0.4000000059604645" lock_trans_z="False" physics_type="STATIC" mass="1.0" lock_rot_y="False" name="base_male-short02" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" velocity_min="0.0" velocity_max="0.0" actor="False" mass_radius="1.0" lock_trans_x="False" friction_x="1.0" lock_rot_z="False" meshFile="base_male-short02.mesh" friction_y="1.0" lock_trans_y="False" friction_z="1.0" ghost="False" />
+      </node>
+    </node>
+  </nodes>
+  <externals />
+  <environment >
+    <colourDiffuse b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourAmbient b="0.0" g="0.0" r="0.0" />
+    <colourBackground b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+  </environment>
+</scene>
