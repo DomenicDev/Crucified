@@ -11,10 +11,19 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.jvpichowski.jme3.es.bullet.components.CustomShape;
+import com.jvpichowski.jme3.es.bullet.components.RigidBody;
+import com.jvpichowski.jme3.es.bullet.components.WarpPosition;
+import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacter;
+import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacterLogic;
+import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacterMovement;
+import com.jvpichowski.jme3.es.bullet.extension.logic.PhysicsSimpleLogicManager;
+import com.jvpichowski.jme3.states.ESBulletState;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
@@ -48,8 +57,6 @@ public class PhysicAppState extends AbstractAppState {
     private EntitySet terrains;
     private EntityData entityData;
 
-    private HashMap<EntityId, CustomCharacterControl> characterControls;
-    private HashMap<EntityId, RigidBodyControl> rigidBodyControls;
     private HashMap<EntityId, Integer> movingEntities; // contains all entities who are moving right now
     // the integer value is used to make some steps until the
     // entity is removed from the list
@@ -57,7 +64,7 @@ public class PhysicAppState extends AbstractAppState {
     private ArrayList<RigidBodyControl> staticPhysicalObjects;
 
     private AppStateManager stateManager;
-    private BulletAppState bulletAppState;
+    //private BulletAppState bulletAppState;
     private ModelLoaderAppState modelLoader; // might be needed to create collision shapes out of a spatial
 
     @Override
@@ -66,12 +73,21 @@ public class PhysicAppState extends AbstractAppState {
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
-        this.bulletAppState = new BulletAppState();
-        this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
-        this.stateManager.attach(bulletAppState);
+        stateManager.attach(new ESBulletState(entityData));
+        ESBulletState esBulletState = stateManager.getState(ESBulletState.class);
+        esBulletState.onInitialize(() -> {
+            //add a logic manager for scripts which should be executed on the physics thread
+            PhysicsSimpleLogicManager physicsLogicManager = new PhysicsSimpleLogicManager();
+            physicsLogicManager.initialize(entityData, esBulletState.getBulletSystem());
+            //TODO in a real application don't forget to destroy it after usage:
+            //physicsLogicManager.destroy();
 
-        this.characterControls = new HashMap<>();
-        this.rigidBodyControls = new HashMap<>();
+            // add the character logic
+            PhysicsCharacterLogic characterLogic = new PhysicsCharacterLogic();
+            characterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), esBulletState.getBulletSystem());
+            physicsLogicManager.getPreTickLogicManager().attach(characterLogic);
+        });
+
         this.movingEntities = new HashMap<>();
 
         this.staticPhysicalObjects = new ArrayList<>();
@@ -85,7 +101,7 @@ public class PhysicAppState extends AbstractAppState {
         // create the physical controls for them...
         if (!characters.isEmpty()) {
             for (Entity entity : characters) {
-                addCharacterControl(entity);
+                addCharacter(entity);
             }
         }
 
@@ -106,7 +122,7 @@ public class PhysicAppState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        if (!bulletAppState.isInitialized()) return;
+        if (!stateManager.getState(ESBulletState.class).isInitialized()) return;
 
         if(GameOptions.ENABLE_PHYSICS_DEBUG) {
             if (stateManager.getState(BulletDebugAppState.class) == null) {
@@ -119,15 +135,18 @@ public class PhysicAppState extends AbstractAppState {
         if (characters.applyChanges()) {
 
             for (Entity entity : characters.getAddedEntities()) {
-                addCharacterControl(entity);
+                addCharacter(entity);
             }
 
             for (Entity entity : characters.getChangedEntities()) {
-                updateCharacterControl(entity);
+                PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+                entity.set(new PhysicsCharacterMovement(new Vector2f(pcc.getWalkDirection().x, pcc.getWalkDirection().z)));
+                //TODO ? characterControl.setViewDirection(pcc.getViewDirection());
             }
 
             for (Entity entity : characters.getRemovedEntities()) {
-                removeCharacterControl(entity);
+                entityData.removeComponent(entity.getId(), PhysicsCharacterMovement.class);
+                entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
             }
 
         }
@@ -157,11 +176,9 @@ public class PhysicAppState extends AbstractAppState {
 
         // terrains
         if (terrains.applyChanges()) {
-
             for (Entity entity : terrains.getAddedEntities()) {
                 addTerrain(entity);
             }
-
             for (Entity entity : terrains.getRemovedEntities()) {
                 removeTerrain(entity);
             }
@@ -182,9 +199,8 @@ public class PhysicAppState extends AbstractAppState {
 
         // apply new transforms for characters
         for (Entity entity : characters) {
-            CustomCharacterControl characterControl = characterControls.get(entity.getId());
-            Vector3f location = characterControl.getPhysicsRigidBody().getPhysicsLocation();
-            Quaternion rotation = characterControl.getCharacterRotation(); //ToDo: Shall that be changed? PlayerControlled Rotation is just a thing of the view, so how could we implement this instantly
+            Vector3f location = null;
+            Quaternion rotation = null;//TODO: Shall that be changed? PlayerControlled Rotation is just a thing of the view, so how could we implement this instantly -> YES!!!! jvp
             Vector3f scale = entity.get(Transform.class).getScale();
             applyNewChanges(entity, location, rotation, scale);
         }
@@ -229,6 +245,27 @@ public class PhysicAppState extends AbstractAppState {
 
     }
 
+
+    private void addCharacter(Entity entity){
+      /*
+      
+        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
+        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
+        characterControl.setWalkDirection(pcc.getWalkDirection());
+        characterControl.setViewDirection(pcc.getViewDirection());
+        addPhysicsControl(characterControl);
+        characterControls.put(entity.getId(), characterControl);
+        */
+        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
+        //basic properties of the capsule
+        PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
+                5,2, 0.2f, 0.5f, 1); //max sepped, acc, stepHeight, jumpHeight, maxJumpNumber
+        entity.set(characterComp);
+
+        entity.set(new PhysicsCharacterMovement(new Vector2f(pcc.getWalkDirection().x, pcc.getWalkDirection().z)));
+    }
+
     /**
      * Creates a static rigid body control of that specified object and adds it to physics space.
      * You can define which kind of shall be used for that.
@@ -252,24 +289,6 @@ public class PhysicAppState extends AbstractAppState {
         staticPhysicalObjects.add(rigidBodyControl);
     }
 
-    /**
-     * Get the {@link CustomCharacterControl} for this entity.
-     * @param entityId the entity id the character control is added to
-     * @return the character control or null if there is none
-     */
-    public CustomCharacterControl getCharacterControl(EntityId entityId) {
-        return characterControls.get(entityId);
-    }
-
-    /**
-     * Get the {@link RigidBodyControl} for this entity.
-     * @param entityId the entity id the rigid body contol is added to
-     * @return the rigid body control or null if there is none.
-     */
-    public RigidBodyControl getRigidBodyControl(EntityId entityId) {
-        return rigidBodyControls.get(entityId);
-    }
-
     private void addTerrain(Entity entity) {
         PhysicsTerrain terrain = entity.get(PhysicsTerrain.class);
         Transform transform = entity.get(Transform.class);
@@ -277,38 +296,21 @@ public class PhysicAppState extends AbstractAppState {
         if (terrainModel instanceof TerrainQuad) {
             float[] heightMap = ((TerrainQuad) terrainModel).getHeightMap();
             CollisionShape terrainShape = new HeightfieldCollisionShape(heightMap, transform.getScale());
-            RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
-            terrainControl.setPhysicsLocation(transform.getTranslation());
-            bulletAppState.getPhysicsSpace().add(terrainControl);
+            entity.set(new CustomShape(terrainShape));
+            entity.set(new RigidBody(false, 0)); //set kinematic to true
+            entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
         }
 
     }
 
     private void removeTerrain(Entity entity) {
-        removeRigidBodyControl(entity);
+        entityData.removeComponent(entity.getId(), CustomShape.class);
+        entityData.removeComponent(entity.getId(), RigidBody.class);
+        entityData.removeComponent(entity.getId(), WarpPosition.class);
+        //removeRigidBodyControl(entity);
     }
 
-    private void addCharacterControl(Entity entity) {
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
-        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
-        characterControl.setWalkDirection(pcc.getWalkDirection());
-        characterControl.setViewDirection(pcc.getViewDirection());
-        addPhysicsControl(characterControl);
-        characterControls.put(entity.getId(), characterControl);
-    }
 
-    private void updateCharacterControl(Entity entity) {
-        CustomCharacterControl characterControl = characterControls.get(entity.getId());
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        characterControl.setWalkDirection(pcc.getWalkDirection());
-        characterControl.setViewDirection(pcc.getViewDirection());
-    }
-
-    private void removeCharacterControl(Entity entity) {
-        CustomCharacterControl cc = characterControls.remove(entity.getId());
-        removePhysicsControl(cc.getPhysicsRigidBody());
-    }
 
     private void addRigidBodyControl(Entity entity) {
         PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
@@ -321,19 +323,6 @@ public class PhysicAppState extends AbstractAppState {
         rigidBodyControl.setPhysicsRotation(transform.getRotation());
         rigidBodyControl.setKinematic(rigidBody.isKinematic());
         rigidBodyControls.put(entity.getId(), rigidBodyControl);
-    }
-
-    private void removeRigidBodyControl(Entity entity) {
-        RigidBodyControl body = rigidBodyControls.remove(entity.getId());
-        removePhysicsControl(body);
-    }
-
-    private void addPhysicsControl(PhysicsControl control) {
-        bulletAppState.getPhysicsSpace().add(control);
-    }
-
-    private void removePhysicsControl(com.jme3.bullet.objects.PhysicsRigidBody control) {
-        bulletAppState.getPhysicsSpace().remove(control);
     }
 
     private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {
@@ -369,19 +358,16 @@ public class PhysicAppState extends AbstractAppState {
 
     @Override
     public void cleanup() {
+        this.characters.applyChanges();
+        for (Entity entity : characters.getRemovedEntities()) {
+            entityData.removeComponent(entity.getId(), PhysicsCharacterMovement.class);
+            entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
+        }
         for (Entity entity : characters) {
-            removeCharacterControl(entity);
+            entityData.removeComponent(entity.getId(), PhysicsCharacterMovement.class);
+            entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
         }
-        for (Entity entity : rigidBodies) {
-            removeRigidBodyControl(entity);
-        }
-        this.characterControls.clear();
-        this.rigidBodyControls.clear();
-        this.characterControls = null;
-        this.rigidBodyControls = null;
-
         this.characters.release();
-        this.characters.clear();
         this.characters = null;
 
         this.rigidBodies.release();
@@ -393,10 +379,7 @@ public class PhysicAppState extends AbstractAppState {
         }
         staticPhysicalObjects.clear();
 
-        if (stateManager.hasState(bulletAppState)) {
-            stateManager.detach(bulletAppState);
-        }
-        this.bulletAppState = null;
+        stateManager.detach(stateManager.getState(ESBulletState.class));
 
         super.cleanup();
     }
