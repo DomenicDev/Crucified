@@ -46,7 +46,7 @@ public class HeadRotatingControl extends AbstractControl {
         if (spatial != null) {
             // setup
             SkeletonControl skeletonControl = spatial.getControl(SkeletonControl.class);
-            this.headBone = skeletonControl.getSkeleton().getBone("neck_01");
+            this.headBone = skeletonControl.getSkeleton().getBone("Neck1");
             this.headBone.setUserControl(true);
             this.headBone.getLocalRotation().toAngles(initAngles);
             this.headRotation.set(headBone.getLocalRotation());
@@ -77,9 +77,8 @@ public class HeadRotatingControl extends AbstractControl {
 
             // we need to set the y and z-rotation to zero
             finalHeadRotation.toAngles(angles);
-            angles[0] += initAngles[0];
-            angles[1] = initAngles[1];
-            angles[2] = initAngles[2];
+            angles[1] = 0;
+            angles[2] = 0;
             finalHeadRotation.fromAngles(angles);
             // we update our oldViewDirection vector to avoid that all this
             // is computed more than necessary

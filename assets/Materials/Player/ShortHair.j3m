@@ -1,7 +1,0 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
-     MaterialParameters {
-        DiffuseMap : Textures/Player/short02_diffuse.png
-     }
-    AdditionalRenderState {
-    }
-}

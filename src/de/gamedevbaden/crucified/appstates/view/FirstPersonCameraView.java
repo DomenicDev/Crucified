@@ -30,7 +30,7 @@ public class FirstPersonCameraView extends AbstractAppState {
         this.cam = app.getCamera();
 
         // we attach our cam node to the head of the player model
-        Node head = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("head");
+        Node head = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("Head");
         this.cameraNode = new Node("CameraNode");
         this.cameraNode.setLocalTranslation(offset);
         head.attachChild(cameraNode);
