@@ -9,8 +9,8 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import com.jme3.util.TempVars;
 import com.jvpichowski.jme3.es.bullet.components.PhysicsPosition;
-import com.jvpichowski.jme3.es.bullet.extension.character.PhysicsCharacterLogic;
 import com.jvpichowski.jme3.es.bullet.extension.logic.PhysicsSimpleLogicManager;
 import com.jvpichowski.jme3.states.ESBulletState;
 import com.simsilica.es.Entity;
@@ -145,8 +145,9 @@ public class PhysicAppState extends AbstractAppState {
             PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
             if(pos != null) {
                 Vector3f scale = entity.get(Transform.class).getScale();
-                Quaternion rot = new Quaternion();
-                rot.lookAt(entity.get(PhysicsCharacterControl.class).getViewDirection(), Vector3f.UNIT_Y);
+                Quaternion rot = Quaternion.DIRECTION_Z.clone();
+                Vector3f viewDirection = entity.get(PhysicsCharacterControl.class).getViewDirection();
+                calculateNewForward(rot, viewDirection, Vector3f.UNIT_Y);
                 applyNewChanges(entity, pos.getLocation(), rot, scale);
             }
         }
@@ -208,6 +209,47 @@ public class PhysicAppState extends AbstractAppState {
         entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), object.getWorldScale()));
         Entity entity = entityData.getEntity(staticEntityId, Transform.class);
         bulletInterface.addRigidBody(entity, true, 0, shape);
+    }
+
+    /**
+     * This method works similar to Camera.lookAt but where lookAt sets the
+     * priority on the direction, this method sets the priority on the up vector
+     * so that the result direction vector and rotation is guaranteed to be
+     * perpendicular to the up vector.
+     *
+     * @param rotation The rotation to set the result on or null to create a new
+     * Quaternion, this will be set to the new "z-forward" rotation if not null
+     * @param direction The direction to base the new look direction on, will be
+     * set to the new direction
+     * @param worldUpVector The up vector to use, the result direction will be
+     * perpendicular to this
+     * @return
+     */
+    protected final void calculateNewForward(Quaternion rotation, Vector3f direction, Vector3f worldUpVector) {
+        if (direction == null) {
+            return;
+        }
+        TempVars vars = TempVars.get();
+        Vector3f newLeft = vars.vect1;
+        Vector3f newLeftNegate = vars.vect2;
+
+        newLeft.set(worldUpVector).crossLocal(direction).normalizeLocal();
+        if (newLeft.equals(Vector3f.ZERO)) {
+            if (direction.x != 0) {
+                newLeft.set(direction.y, -direction.x, 0f).normalizeLocal();
+            } else {
+                newLeft.set(0f, direction.z, -direction.y).normalizeLocal();
+            }
+        }
+        newLeftNegate.set(newLeft).negateLocal();
+        direction.set(worldUpVector).crossLocal(newLeftNegate).normalizeLocal();
+        if (direction.equals(Vector3f.ZERO)) {
+            direction.set(Vector3f.UNIT_Z);
+        }
+        if (rotation != null) {
+            rotation.fromAxes(newLeft, worldUpVector, direction);
+        }
+        vars.release();
     }
 
     @Override
