@@ -22,6 +22,7 @@ import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.physics.PhysicConstants;
+import de.gamedevbaden.crucified.physics.character.kinematic.KinematicCharacter;
 
 /**
  * This class contains the wiring between the entity data system and the ESBulletSystem.
@@ -187,8 +188,14 @@ final class ESBulletInterface {
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         Transform transform = entity.get(Transform.class);
         //basic properties of the capsule
-        PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
-                0.5f,0.5f, 0.2f, 0.5f, 1); //max speed, acc, stepHeight, jumpHeight, maxJumpNumber
+        //PhysicsCharacter characterComp = new PhysicsCharacter(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT,
+        //        0.5f,0.5f, 0.2f, 0.5f, 1); //max speed, acc, stepHeight, jumpHeight, maxJumpNumber
+        KinematicCharacter characterComp = new KinematicCharacter(
+                PhysicConstants.HUMAN_WEIGHT,
+                PhysicConstants.HUMAN_RADIUS,
+                PhysicConstants.HUMAN_HEIGHT,
+                0
+        );
         entity.set(characterComp);
 
         entity.set(new PhysicsCharacterMovement(new Vector2f(pcc.getWalkDirection().x, pcc.getWalkDirection().z)));
@@ -203,7 +210,8 @@ final class ESBulletInterface {
 
     public void removeCharacter(Entity entity){
         entityData.removeComponent(entity.getId(), PhysicsCharacterMovement.class);
-        entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
+        entityData.removeComponent(entity.getId(), KinematicCharacter.class);
+        //entityData.removeComponent(entity.getId(), PhysicsCharacter.class);
     }
 
     public PhysicsPosition getPhysicsPosition(Entity entity){

@@ -20,6 +20,7 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
+import de.gamedevbaden.crucified.physics.character.kinematic.KinematicCharacterLogic;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
 import java.util.HashMap;
@@ -74,9 +75,12 @@ public class PhysicAppState extends AbstractAppState {
             //physicsLogicManager.destroy();
 
             // add the character logic
-            PhysicsCharacterLogic characterLogic = new PhysicsCharacterLogic();
-            characterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), esBulletState.getBulletSystem());
-            physicsLogicManager.getPreTickLogicManager().attach(characterLogic);
+            //PhysicsCharacterLogic characterLogic = new PhysicsCharacterLogic();
+            //characterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), esBulletState.getBulletSystem());
+            //physicsLogicManager.getPreTickLogicManager().attach(characterLogic);
+            KinematicCharacterLogic kinematicCharacterLogic = new KinematicCharacterLogic();
+            kinematicCharacterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), entityData);
+            physicsLogicManager.getPreTickLogicManager().attach(kinematicCharacterLogic);
 
             // if there are already entities in the sets
             // add them to the physics engine...
