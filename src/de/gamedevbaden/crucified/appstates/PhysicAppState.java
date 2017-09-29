@@ -145,8 +145,9 @@ public class PhysicAppState extends AbstractAppState {
             PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
             if(pos != null) {
                 Vector3f scale = entity.get(Transform.class).getScale();
-                //TODO Rotation will be constant..
-                applyNewChanges(entity, pos.getLocation(), pos.getRotation(), scale);
+                Quaternion rot = new Quaternion();
+                rot.lookAt(entity.get(PhysicsCharacterControl.class).getViewDirection(), Vector3f.UNIT_Y);
+                applyNewChanges(entity, pos.getLocation(), rot, scale);
             }
         }
 
