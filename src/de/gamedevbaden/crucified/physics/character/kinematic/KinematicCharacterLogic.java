@@ -10,6 +10,7 @@ import com.jvpichowski.jme3.es.logic.SimpleLogicManager;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +28,13 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
     private WarpLogic warpLogic;
     private MoveLogic moveLogic;
     private BackPropagateLogic backPropagateLogic;
+
+    /**
+     * This map stores the player entity id as key and the associated physics entity id as value.
+     * We have to do this in case the player entity gets fully removed, that means that
+     * the PhysicsCharacterObject component also gets removed. so we would loose our "connection" component.
+     */
+    private HashMap<EntityId, EntityId> entityToPhysicsObjectMap = new HashMap<>();
 
     public void initLogic(SimpleLogicManager logicManager, EntityData entityData){
         this.entityData = entityData;
@@ -70,6 +78,9 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
                 new CustomShape(new CapsuleCollisionShape(character.getRadius(), character.getHeight()-character.getStepHeight())),
                 new Factor(new Vector3f(1,0,1), new Vector3f(0,0,0)));
         set(new PhysicsCharacterObject(physicsObject));
+
+        entityToPhysicsObjectMap.put(getId(), physicsObject);
+
         LOGGER.info("Character created: "+getId());
     }
     /**
@@ -78,7 +89,16 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
      */
     @Override
     public void destroy() {
-        entityData.removeEntity(get(PhysicsCharacterObject.class).getObject());
+        PhysicsCharacterObject physicsObject = get(PhysicsCharacterObject.class);
+        EntityId physicsObjectId;
+
+        if (physicsObject != null) {
+            physicsObjectId = physicsObject.getObject();
+        } else {
+            physicsObjectId = entityToPhysicsObjectMap.remove(getId());
+        }
+
+        entityData.removeEntity(physicsObjectId);
         entityData.removeComponent(getId(), PhysicsCharacterObject.class);
         LOGGER.info("Character removed: "+getId());
         super.destroy();
