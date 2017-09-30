@@ -10,11 +10,11 @@ import com.simsilica.es.EntityData;
  * The physics side of the character logic. It propagates the position back to the entity system
  * and handles the height.
  */
-final class BackPropagateLogic extends BaseSimpleEntityLogic{
+final class BackPropagateLogic extends BaseSimpleEntityLogic {
 
     private EntityData entityData;
 
-    public void initLogic(EntityData entityData){
+    public void initLogic(EntityData entityData) {
         this.entityData = entityData;
     }
 
@@ -34,8 +34,9 @@ final class BackPropagateLogic extends BaseSimpleEntityLogic{
         super.run();
         Vector3f pos = get(PhysicsPosition.class).getLocation();
         //TODO move stepheight to ESCharacter
-        float stepHeight = entityData.getEntity(get(ESCharacter.class).getCharacter(), KinematicCharacter.class).get(KinematicCharacter.class).getStepHeight();
-        pos.subtractLocal(0, stepHeight,0);
+        KinematicCharacter kinematicCharacter = entityData.getEntity(get(ESCharacter.class).getCharacter(), KinematicCharacter.class).get(KinematicCharacter.class);
+        float stepHeight = kinematicCharacter.getStepHeight();
+        pos.subtractLocal(0, stepHeight, 0);
         entityData.setComponent(get(ESCharacter.class).getCharacter(), new PhysicsPosition(pos, Quaternion.DIRECTION_Z));
     }
 }
