@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Trees/QueensPalm/PalmTrunkMap01.dds
+        NormalMap : Repeat Textures/Trees/QueensPalm/PalmTrunkMap01_NRM.dds
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}
