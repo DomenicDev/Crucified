@@ -77,8 +77,8 @@ public class PhysicsPlayerMovementAppState extends AbstractAppState {
 
         Vector3f walkDirection = new Vector3f();
 
-        float runningMultSpeed = 3f;
-        float walkingMultSpeed = 1.5f;
+        float runningMultSpeed = 5f;
+        float walkingMultSpeed = 3f;
 
         switch (movementState.getMovementState()) {
             case CharacterMovementState.IDLE:

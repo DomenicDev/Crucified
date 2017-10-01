@@ -8,6 +8,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
+import com.jme3.material.TechniqueDef;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
@@ -24,8 +25,6 @@ import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
-import de.gamedevbaden.crucified.userdata.PagingOptionsUserData;
-import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,6 +76,9 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.rootNode.attachChild(mainWorldNode);
         this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
         this.predictionAppState = stateManager.getState(PredictionAppState.class);
+
+        app.getRenderManager().setPreferredLightMode(TechniqueDef.LightMode.SinglePass);
+        app.getRenderManager().setSinglePassLightBatchSize(3);
 
         // load script file
         try {
@@ -145,26 +147,25 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         }
 
         // add grass to terrain
-        for (Spatial spatial : world.getChildren()) {
+    /*    for (Spatial spatial : world.getChildren()) {
             if (spatial instanceof TerrainQuad) {
-                int grassTextureIndex = 0;
                 if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
-                    grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
-                }
-                TerrainQuad terrain = (TerrainQuad) spatial;
-                Node grassNode = terrainGrassGeneratorAppState.createGrassForTerrain(terrain, grassTextureIndex);
-                grassNode.setCullHint(Spatial.CullHint.Always);
+                    int grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
+                    TerrainQuad terrain = (TerrainQuad) spatial;
+                    Node grassNode = terrainGrassGeneratorAppState.createGrassForTerrain(terrain, grassTextureIndex);
+                    grassNode.setCullHint(Spatial.CullHint.Always);
 
-                System.out.println(grassNode.getChildren().size());
-                // we add paging options to the grass node, so it will
-                // be handled by the paging system
-                PagingOptionsUserData pagingOptions = new PagingOptionsUserData();
-                pagingOptions.setUseBatching(true);
-                grassNode.setUserData(GameConstants.USER_DATA_PAGING_OPTIONS, pagingOptions);
-                world.attachChild(grassNode);
-                break;
+                    System.out.println(grassNode.getChildren().size());
+                    // we add paging options to the grass node, so it will
+                    // be handled by the paging system
+                    PagingOptionsUserData pagingOptions = new PagingOptionsUserData();
+                    pagingOptions.setUseBatching(true);
+                    grassNode.setUserData(GameConstants.USER_DATA_PAGING_OPTIONS, pagingOptions);
+                    world.attachChild(grassNode);
+                    break;
+                }
             }
-        }
+        } */
 
         // init filter if available --> need to be the last thing to add!
         if (scene.getFilterPath() != null) {
@@ -178,7 +179,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         }
 
         // create chunks for game world
-        List<WorldChunk> chunks =  pagingManager.createChunksForGameWorld(world, 4, assetManager);
+        List<WorldChunk> chunks = pagingManager.createChunksForGameWorld(world, 7, assetManager);
         pagingManager.setChunks(chunks);
 
 

@@ -183,7 +183,7 @@ public class GameWorldPagingManager extends AbstractAppState {
         BoundingBox gameWorldBoundingBox = (BoundingBox) gameWorld.getWorldBound();
 
         // for debugging
-        gameWorld.attachChild(visualizeBoundingBox(gameWorldBoundingBox, assetManager, ColorRGBA.Red));
+     //   gameWorld.attachChild(visualizeBoundingBox(gameWorldBoundingBox, assetManager, ColorRGBA.Red));
 
         float worldSizeX = gameWorldBoundingBox.getXExtent() * 2;
         float worldSizeZ = gameWorldBoundingBox.getZExtent() * 2;
