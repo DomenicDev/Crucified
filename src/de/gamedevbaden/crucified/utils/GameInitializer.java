@@ -2,14 +2,12 @@ package de.gamedevbaden.crucified.utils;
 
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
-import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
@@ -78,7 +76,7 @@ public class GameInitializer {
     }
 
     public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {
-        stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
+    //    stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
     }
 
     public static void initGameLogicAppStates(AppStateManager stateManager) {
