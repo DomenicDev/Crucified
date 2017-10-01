@@ -32,9 +32,13 @@ final class BackPropagateLogic extends BaseSimpleEntityLogic {
     @Override
     public void run() {
         super.run();
+        if(entityData.getEntity(get(ESCharacter.class).getCharacter()) == null){
+            entityData.removeEntity(getId());
+            return;
+        }
         Vector3f pos = get(PhysicsPosition.class).getLocation();
         //TODO move stepheight to ESCharacter
-        KinematicCharacter kinematicCharacter = entityData.getEntity(get(ESCharacter.class).getCharacter(), KinematicCharacter.class).get(KinematicCharacter.class);
+        KinematicCharacter kinematicCharacter = entityData.getComponent(get(ESCharacter.class).getCharacter(), KinematicCharacter.class);
         float stepHeight = kinematicCharacter.getStepHeight();
         pos.subtractLocal(0, stepHeight, 0);
         entityData.setComponent(get(ESCharacter.class).getCharacter(), new PhysicsPosition(pos, Quaternion.DIRECTION_Z));

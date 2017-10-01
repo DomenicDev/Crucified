@@ -34,7 +34,7 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
      * We have to do this in case the player entity gets fully removed, that means that
      * the PhysicsCharacterObject component also gets removed. so we would loose our "connection" component.
      */
-    private HashMap<EntityId, EntityId> entityToPhysicsObjectMap = new HashMap<>();
+    //private HashMap<EntityId, EntityId> entityToPhysicsObjectMap = new HashMap<>();
 
     public void initLogic(SimpleLogicManager logicManager, EntityData entityData){
         this.entityData = entityData;
@@ -79,7 +79,7 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
                 new Factor(new Vector3f(1,0,1), new Vector3f(0,0,0)));
         set(new PhysicsCharacterObject(physicsObject));
 
-        entityToPhysicsObjectMap.put(getId(), physicsObject);
+        //entityToPhysicsObjectMap.put(getId(), physicsObject);
 
         LOGGER.info("Character created: "+getId());
     }
@@ -89,16 +89,16 @@ public final class KinematicCharacterLogic extends BaseSimpleEntityLogic {
      */
     @Override
     public void destroy() {
-        PhysicsCharacterObject physicsObject = get(PhysicsCharacterObject.class);
-        EntityId physicsObjectId;
+        //hysicsCharacterObject physicsObject = get(PhysicsCharacterObject.class);
+        //EntityId physicsObjectId;
 
-        if (physicsObject != null) {
+      /*  if (physicsObject != null) {
             physicsObjectId = physicsObject.getObject();
         } else {
             physicsObjectId = entityToPhysicsObjectMap.remove(getId());
-        }
+        }*/
 
-        entityData.removeEntity(physicsObjectId);
+        //entityData.removeEntity(physicsObjectId);
         entityData.removeComponent(getId(), PhysicsCharacterObject.class);
         LOGGER.info("Character removed: "+getId());
         super.destroy();
