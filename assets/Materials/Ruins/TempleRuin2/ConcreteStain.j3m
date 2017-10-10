@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/TempleRuin_02/3td_ConcreteStain_01.jpg
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}

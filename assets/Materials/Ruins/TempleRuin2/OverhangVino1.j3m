@@ -1,0 +1,11 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/TempleRuin_02/3td_OverhangVino_01.png
+        NormalMap : Repeat Textures/Ruins/TempleRuin_02/3td_OverhangVino_01_NRM.png
+        AlphaDiscardThreshold : 0.4
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

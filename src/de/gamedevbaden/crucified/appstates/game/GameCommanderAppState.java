@@ -25,6 +25,8 @@ import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.userdata.EntityType;
+import de.gamedevbaden.crucified.userdata.PagingOptionsUserData;
+import de.gamedevbaden.crucified.utils.GameConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -147,7 +149,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         }
 
         // add grass to terrain
-    /*    for (Spatial spatial : world.getChildren()) {
+        for (Spatial spatial : world.getChildren()) {
             if (spatial instanceof TerrainQuad) {
                 if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
                     int grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
@@ -165,7 +167,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
                     break;
                 }
             }
-        } */
+        }
 
         // init filter if available --> need to be the last thing to add!
         if (scene.getFilterPath() != null) {
