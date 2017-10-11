@@ -318,7 +318,7 @@ public class GameWorldPagingManager extends AbstractAppState {
                 // so it becomes difficult to remove it afterwards
                 if (options.isHasCustomCollisionShapeGeometry()) {
                     subNode.depthFirstTraversal(spatial -> {
-                        if (spatial.getName().equals(GameConstants.CUSTOM_COLLISION_SHAPE_NAME)) spatial.removeFromParent();
+                        if (spatial.getName().equalsIgnoreCase(GameConstants.CUSTOM_COLLISION_SHAPE_NAME)) spatial.removeFromParent();
                     });
                 }
 
