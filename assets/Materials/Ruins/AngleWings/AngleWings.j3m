@@ -1,0 +1,14 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/AngleWings/AnglelWings_DIF.png
+        NormalMap : Repeat Textures/Ruins/AngleWings/AnglelWings_DET_NRM.png
+        SpecularMap : Repeat Textures/Ruins/AngleWings/AnglelWings_SPEC.png
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Shininess : 64.0
+     }
+    AdditionalRenderState {
+    }
+}
