@@ -316,10 +316,9 @@ public class GameWorldPagingManager extends AbstractAppState {
                 // I primarily wanted to batch the geometries first and remove the batched collision shape afterwards
                 // but for some reason batching did not always lead to the same index position for the geometry
                 // so it becomes difficult to remove it afterwards
-                String collisionObjectName = options.getCollisionObjectName();
-                if (collisionObjectName != null && !collisionObjectName.isEmpty()) {
+                if (options.isHasCustomCollisionShapeGeometry()) {
                     subNode.depthFirstTraversal(spatial -> {
-                        if (spatial.getName().equals(collisionObjectName)) spatial.removeFromParent();
+                        if (spatial.getName().equals(GameConstants.CUSTOM_COLLISION_SHAPE_NAME)) spatial.removeFromParent();
                     });
                 }
 
