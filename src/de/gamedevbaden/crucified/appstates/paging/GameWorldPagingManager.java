@@ -183,7 +183,7 @@ public class GameWorldPagingManager extends AbstractAppState {
         BoundingBox gameWorldBoundingBox = (BoundingBox) gameWorld.getWorldBound();
 
         // for debugging
-        gameWorld.attachChild(visualizeBoundingBox(gameWorldBoundingBox, assetManager, ColorRGBA.Red));
+     //   gameWorld.attachChild(visualizeBoundingBox(gameWorldBoundingBox, assetManager, ColorRGBA.Red));
 
         float worldSizeX = gameWorldBoundingBox.getXExtent() * 2;
         float worldSizeZ = gameWorldBoundingBox.getZExtent() * 2;
@@ -199,6 +199,7 @@ public class GameWorldPagingManager extends AbstractAppState {
                     worldSizeX = boundingBox.getXExtent() * 2;
                     worldSizeZ = boundingBox.getZExtent() * 2;
                     worldSizeY = boundingBox.getYExtent() * 2;
+                    gameWorldBoundingBox = boundingBox;
                     break;
                 }
             }
@@ -316,10 +317,9 @@ public class GameWorldPagingManager extends AbstractAppState {
                 // I primarily wanted to batch the geometries first and remove the batched collision shape afterwards
                 // but for some reason batching did not always lead to the same index position for the geometry
                 // so it becomes difficult to remove it afterwards
-                String collisionObjectName = options.getCollisionObjectName();
-                if (collisionObjectName != null && !collisionObjectName.isEmpty()) {
+                if (options.isHasCustomCollisionShapeGeometry()) {
                     subNode.depthFirstTraversal(spatial -> {
-                        if (spatial.getName().equals(collisionObjectName)) spatial.removeFromParent();
+                        if (spatial.getName().equalsIgnoreCase(GameConstants.CUSTOM_COLLISION_SHAPE_NAME)) spatial.removeFromParent();
                     });
                 }
 

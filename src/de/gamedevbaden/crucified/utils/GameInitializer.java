@@ -8,7 +8,6 @@ import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
-import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
 import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
@@ -45,7 +44,7 @@ public class GameInitializer {
         stateManager.attach(new CharacterAnimationAppState());
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
-        stateManager.attach(new HeadMovingAppState());
+  //      stateManager.attach(new HeadMovingAppState());
         stateManager.attach(new TerrainGrassGeneratorAppState());
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
@@ -76,7 +75,7 @@ public class GameInitializer {
     }
 
     public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {
-        stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
+   //     stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
     }
 
     public static void initGameLogicAppStates(AppStateManager stateManager) {

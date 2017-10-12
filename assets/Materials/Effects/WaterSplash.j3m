@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Misc/Particle.j3md {
+     MaterialParameters {
+        Texture : Textures/Effects/millsplash01.png
+     }
+    AdditionalRenderState {
+      Blend AlphaAdditive
+        FaceCull Off
+    }
+}

@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Ruins/SpeakingStones/3td_GreenHanger_01.png
+        AlphaDiscardThreshold : 0.1
+     }
+    AdditionalRenderState {
+      Blend Alpha
+    }
+}

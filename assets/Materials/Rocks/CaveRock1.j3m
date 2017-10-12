@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Rocks/CaveRock1/3TD_GrayCave_01.jpg
+        NormalMap : Repeat Textures/Rocks/CaveRock1/3TD_GrayCave_01_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

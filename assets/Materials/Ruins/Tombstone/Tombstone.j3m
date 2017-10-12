@@ -1,0 +1,13 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Ruins/Tombstone/TombStone_009_DIF.png
+        NormalMap : Textures/Ruins/Tombstone/TombStone_009_NRM.png
+        SpecularMap : Textures/Ruins/Tombstone/TombStone_009_DIF_SPEC.png
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Shininess : 128.0
+     }
+    AdditionalRenderState {
+    }
+}

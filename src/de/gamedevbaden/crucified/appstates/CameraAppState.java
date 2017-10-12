@@ -58,7 +58,7 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
         this.cam = app.getCamera();
         registerWithInput();
         //    resetCamera();
-        cam.setFrustumPerspective(45f, (float) app.getContext().getSettings().getWidth() / app.getContext().getSettings().getHeight(), 0.05f, 200);
+        cam.setFrustumPerspective(45f, (float) app.getContext().getSettings().getWidth() / app.getContext().getSettings().getHeight(), 0.05f, 300);
     }
 
     @Override

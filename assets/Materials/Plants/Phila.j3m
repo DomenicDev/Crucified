@@ -1,0 +1,18 @@
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/Phila/PhilLeaf01.dds
+        NormalMap : Textures/Plants/Phila/PhilLeaf01_NRM.dds
+        SpecularMap : Textures/Plants/Phila/PhilLeaf01_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        AlphaDiscardThreshold : 0.4
+        WindStrength : 0.05
+        WindSpeed : 3.0
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

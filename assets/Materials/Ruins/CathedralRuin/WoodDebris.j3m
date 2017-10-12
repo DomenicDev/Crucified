@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/CathedralRuin/3td_WoodDebris_17.jpg
+        NormalMap : Repeat Textures/Ruins/CathedralRuin/3td_WoodDebris_17_NRM.png
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}

@@ -1,14 +1,16 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
-        DiffuseMap : Textures/Trees/Banana/BananaLeaf01.dds
         NormalMap : Textures/Trees/Banana/BananaLeaf01_NRM.dds
+        Shininess : 128.0
+        DiffuseMap : Textures/Trees/Banana/BananaLeaf01.dds
         SpecularMap : Textures/Trees/Banana/BananaLeaf01_SPEC.dds
         UseMaterialColors : true
         Ambient : 1.0 1.0 1.0 1.0
         Diffuse : 1.0 1.0 1.0 1.0
         Specular : 1.0 1.0 1.0 1.0
-        AlphaDiscardThreshold : 0.1
-        Shininess : 128.0
+        WindSpeed : 5.0
+        WindStrength : 0.3
+        AlphaDiscardThreshold : 0.2
      }
     AdditionalRenderState {
       Blend Alpha

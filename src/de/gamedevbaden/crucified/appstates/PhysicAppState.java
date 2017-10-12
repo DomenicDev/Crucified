@@ -68,6 +68,7 @@ public class PhysicAppState extends AbstractAppState {
 
         this.bulletAppState = new BulletAppState();
         this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
         this.stateManager.attach(bulletAppState);
 
         this.characterControls = new HashMap<>();

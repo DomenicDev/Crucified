@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/SpeakingStones/3td_Stone_24.jpg
+        NormalMap : Repeat Textures/Ruins/SpeakingStones/3td_Stone_24_NRM.png
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}

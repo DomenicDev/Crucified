@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Props/DockWood/3td_DockWood_01.jpg
+        NormalMap : Repeat Textures/Props/DockWood/3td_DockWood_01_NRM.png
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}

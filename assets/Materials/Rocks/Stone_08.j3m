@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Rocks/Stone_08/3td_Stone_008_DIF.png
+        NormalMap : Textures/Rocks/Stone_08/3td_Stone_008_DIF_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

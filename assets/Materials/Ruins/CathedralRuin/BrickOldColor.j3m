@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/CathedralRuin/3td_BrickOldColor_34.jpg
+        NormalMap : Repeat Textures/Ruins/CathedralRuin/3td_BrickOldColor_34_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

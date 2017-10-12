@@ -7,9 +7,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
-import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
@@ -18,17 +16,10 @@ import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
-import de.gamedevbaden.crucified.enums.InteractionType;
-import de.gamedevbaden.crucified.enums.ItemType;
-import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
-import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
-
-import java.util.HashMap;
 
 /**
  * Created by Domenic on 21.05.2017.

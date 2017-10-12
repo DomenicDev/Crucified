@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Rocks/Stone_07/Stone_007_DIF_AMB.png
+        NormalMap : Textures/Rocks/Stone_07/Stone_007_NRM.png
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}

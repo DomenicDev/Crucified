@@ -38,7 +38,7 @@ public class EntityFactory {
         EntityId player = entityData.createEntity();
         entityData.setComponents(player,
                 new Model(ModelType.Player),
-                new Transform(new Vector3f(0, 2, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                new Transform(new Vector3f(0, 50, 50), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new SkeletonComponent(SkeletonType.Human),
                 new FootstepEmitter(),
