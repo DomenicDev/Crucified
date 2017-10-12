@@ -199,6 +199,7 @@ public class GameWorldPagingManager extends AbstractAppState {
                     worldSizeX = boundingBox.getXExtent() * 2;
                     worldSizeZ = boundingBox.getZExtent() * 2;
                     worldSizeY = boundingBox.getYExtent() * 2;
+                    gameWorldBoundingBox = boundingBox;
                     break;
                 }
             }
