@@ -1,9 +1,6 @@
 package de.gamedevbaden.crucified.controls;
 
-import com.jme3.animation.AnimChannel;
-import com.jme3.animation.AnimControl;
-import com.jme3.animation.AnimEventListener;
-import com.jme3.animation.LoopMode;
+import com.jme3.animation.*;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -22,6 +19,10 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         super.setSpatial(spatial);
         if (spatial != null) {
             // setup
+
+            SkeletonControl skeletonControl = spatial.getControl(SkeletonControl.class);
+            skeletonControl.setHardwareSkinningPreferred(false);
+
             AnimControl control = spatial.getControl(AnimControl.class);
             this.wholeBody = control.createChannel();
             this.upperBody = control.createChannel();
@@ -57,7 +58,6 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
             setReverseAnimation(DemonAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
-            System.out.println("idle");
             setAnimation(DemonAnimation.Idle, lowerBody, upperBody);
         }
 
@@ -130,6 +130,8 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             channel.setAnim(DemonAnimation.Walk.getAnimName());
         } else if (state == CharacterMovementState.MOVING_RIGHT) {
            channel.setAnim(DemonAnimation.Walk.getAnimName());
+        } else if (state == CharacterMovementState.IDLE) {
+            channel.setAnim(DemonAnimation.Idle.getAnimName());
         }
     }
 
