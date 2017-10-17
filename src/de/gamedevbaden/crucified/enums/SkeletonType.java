@@ -9,6 +9,11 @@ public enum SkeletonType {
     /**
      * A human skeleton (used by player characters).
      */
-    Human
+    Human,
+
+    /**
+     * Our demon model uses it's own skeleton and animations.
+     */
+    Demon;
 
 }
