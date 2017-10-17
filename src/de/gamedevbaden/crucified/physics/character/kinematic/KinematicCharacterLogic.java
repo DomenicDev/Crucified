@@ -10,7 +10,6 @@ import com.jvpichowski.jme3.es.logic.SimpleLogicManager;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
