@@ -19,10 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This app state will add grass to the areas of the terrain which a painted with a grass texture.
- * This app state wil divide the specified terrain into a grid with
- * the specified amount of cells. Grass will then only be visible in the cell the player is in
- * plus the cells around this cell.
+ * This app state will provide the functionality to generate grass for areas which are painted with a grass texture.
  */
 public class TerrainGrassGeneratorAppState extends AbstractAppState {
 
@@ -35,7 +32,7 @@ public class TerrainGrassGeneratorAppState extends AbstractAppState {
     }
 
     /**
-     * Will create one node which contains all the small grass batches for the specified terrain.
+     * Will create one node which contains all the grass entities.
      * Note: You should batch the grass afterwards, otherwise there might be a huge FPS drop for larger scenes.
      * @param terrain the terrain you want generate grass for
      * @param grassTexturePos the position of the texture (0 = first texture, 1 = second texture, ...)

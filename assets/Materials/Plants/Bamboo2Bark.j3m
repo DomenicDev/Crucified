@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/Bamboo2/3TD_BambooBark02.jpg
+        NormalMap : Textures/Plants/Bamboo2/3TD_BambooBark02_NRM.png
+     }
+    AdditionalRenderState {
+        FaceCull Back
+    }
+}

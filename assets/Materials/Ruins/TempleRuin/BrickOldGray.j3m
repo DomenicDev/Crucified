@@ -1,0 +1,9 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Ruins/TempleRuin_01/3td_BrickOldGray_02.jpg
+        NormalMap : Repeat Textures/Ruins/TempleRuin_01/3td_BrickOldGray_02_NRM.png
+     }
+    AdditionalRenderState {
+      FaceCull Back
+    }
+}

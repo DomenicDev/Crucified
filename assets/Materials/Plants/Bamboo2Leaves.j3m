@@ -1,0 +1,12 @@
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Plants/Bamboo2/3TD_YoungBamboo_01.png
+        AlphaDiscardThreshold : 0.2
+        WindStrength : 0.01
+        WindSpeed : 3.0
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

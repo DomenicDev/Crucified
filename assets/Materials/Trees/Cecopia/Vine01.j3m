@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Trees/Cecopia/GreenVine02.dds
         NormalMap : Textures/Trees/Cecopia/GreenVine02_NRM.dds
@@ -9,6 +9,8 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         UseMaterialColors : true
         Shininess : 128.0
         AlphaDiscardThreshold : 0.7
+        WindSpeed : 1.0
+        WindStrength : 0.05
      }
     AdditionalRenderState {
       FaceCull Off

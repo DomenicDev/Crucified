@@ -12,7 +12,7 @@ import java.io.IOException;
 public class PagingOptionsUserData implements Savable {
 
     private boolean useBatching;
-    private String collisionObjectName;
+    private boolean hasCustomCollisionShapeGeometry;
 
     public boolean isUseBatching() {
         return useBatching;
@@ -22,25 +22,25 @@ public class PagingOptionsUserData implements Savable {
         this.useBatching = useBatching;
     }
 
-    public String getCollisionObjectName() {
-        return collisionObjectName;
+    public boolean isHasCustomCollisionShapeGeometry() {
+        return hasCustomCollisionShapeGeometry;
     }
 
-    public void setCollisionObjectName(String collisionObjectName) {
-        this.collisionObjectName = collisionObjectName;
+    public void setHasCustomCollisionShapeGeometry(boolean hasCustomCollisionShapeGeometry) {
+        this.hasCustomCollisionShapeGeometry = hasCustomCollisionShapeGeometry;
     }
 
     @Override
     public void write(JmeExporter ex) throws IOException {
         OutputCapsule out = ex.getCapsule(this);
         out.write(useBatching, "useBatching", true);
-        out.write(collisionObjectName, "collisionObjectName", null);
+        out.write(hasCustomCollisionShapeGeometry, "useCustomShape", false);
     }
 
     @Override
     public void read(JmeImporter im) throws IOException {
         InputCapsule in = im.getCapsule(this);
         useBatching = in.readBoolean("useBatching", true);
-        collisionObjectName = in.readString("collisionObjectName", null);
+        hasCustomCollisionShapeGeometry = in.readBoolean("useCustomShape", false);
     }
 }

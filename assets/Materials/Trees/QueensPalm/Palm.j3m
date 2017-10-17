@@ -1,0 +1,19 @@
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
+     MaterialParameters {
+        DiffuseMap : Textures/Trees/QueensPalm/QueensPalm01.dds
+        NormalMap : Textures/Trees/QueensPalm/PalmTrunkMap01_NRM.dds
+        SpecularMap : Textures/Trees/QueensPalm/QueensPalm01_SPEC.dds
+        UseMaterialColors : true
+        Ambient : 1.0 1.0 1.0 1.0
+        Diffuse : 1.0 1.0 1.0 1.0
+        Specular : 1.0 1.0 1.0 1.0
+        Shininess : 64.0
+        AlphaDiscardThreshold : 0.4
+        WindSpeed : 7.0
+        WindStrength : 0.02
+     }
+    AdditionalRenderState {
+      FaceCull Off
+      Blend Alpha
+    }
+}

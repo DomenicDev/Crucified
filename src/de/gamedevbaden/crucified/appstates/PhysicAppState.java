@@ -13,6 +13,7 @@ import com.jme3.util.TempVars;
 import com.jvpichowski.jme3.es.bullet.components.PhysicsPosition;
 import com.jvpichowski.jme3.es.bullet.extension.logic.PhysicsSimpleLogicManager;
 import com.jvpichowski.jme3.states.ESBulletState;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
@@ -44,12 +45,14 @@ public class PhysicAppState extends AbstractAppState {
     private EntitySet terrains;
     private EntityData entityData;
 
+    private HashMap<EntityId, CustomCharacterControl> characterControls;
+    private HashMap<EntityId, RigidBodyControl> rigidBodyControls;
     private HashMap<EntityId, Integer> movingEntities; // contains all entities who are moving right now
     // the integer value is used to make some steps until the
     // entity is removed from the list
 
     private AppStateManager stateManager;
-    //private BulletAppState bulletAppState;
+    private BulletAppState bulletAppState;
     private ModelLoaderAppState modelLoader; // might be needed to create collision shapes out of a spatial
     private ESBulletInterface bulletInterface;
 
@@ -89,19 +92,21 @@ public class PhysicAppState extends AbstractAppState {
             terrains.forEach(bulletInterface::addTerrain);
         });
 
+
+        this.characterControls = new HashMap<>();
+        this.rigidBodyControls = new HashMap<>();
         this.movingEntities = new HashMap<>();
 
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
         this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
 
-
         super.initialize(stateManager, app);
     }
 
     @Override
     public void update(float tpf) {
-        if (!stateManager.getState(ESBulletState.class).isInitialized()) return;
+        if (!bulletAppState.isInitialized()) return;
 
         if(GameOptions.ENABLE_PHYSICS_DEBUG) {
             if (stateManager.getState(BulletDebugAppState.class) == null) {
@@ -151,7 +156,6 @@ public class PhysicAppState extends AbstractAppState {
                 applyNewChanges(entity, pos.getLocation(), rot, scale);
             }
         }
-
     }
 
     /**
@@ -265,11 +269,11 @@ public class PhysicAppState extends AbstractAppState {
         this.rigidBodies = null;
 
         bulletInterface.close();
-
         stateManager.detach(stateManager.getState(ESBulletState.class));
         if(stateManager.getState(BulletDebugAppState.class) != null){
             stateManager.detach(stateManager.getState(BulletDebugAppState.class));
         }
+
         super.cleanup();
     }
 

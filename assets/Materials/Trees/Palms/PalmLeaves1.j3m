@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Repeat Textures/Trees/Palm/Palm05.dds
         NormalMap : Repeat Textures/Trees/Palm/Palm05_NRM.dds
@@ -9,6 +9,8 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         Specular : 1.0 1.0 1.0 1.0
         UseMaterialColors : true
         Shininess : 128.0
+        WindStrength : 0.1
+        WindSpeed : 3.0
      }
     AdditionalRenderState {
       FaceCull Off

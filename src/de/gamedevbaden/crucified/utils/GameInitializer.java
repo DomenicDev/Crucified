@@ -28,7 +28,6 @@ public class GameInitializer {
 
     public static void initClientAppStates(AppStateManager stateManager) {
         stateManager.attach(new BulletAppState()); // local physics
-        //stateManager.attach(new BulletDebugAppState(stateManager.getState(BulletAppState.class).getPhysicsSpace()));
         stateManager.attach(new MovementInterpolator());
     }
 
@@ -45,7 +44,7 @@ public class GameInitializer {
         stateManager.attach(new CharacterAnimationAppState());
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
-        stateManager.attach(new HeadMovingAppState());
+  //      stateManager.attach(new HeadMovingAppState());
         stateManager.attach(new TerrainGrassGeneratorAppState());
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
@@ -75,8 +74,8 @@ public class GameInitializer {
         stateManager.attach(new GameSessionAppState(gameSession));
     }
 
-    public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {
-    //    stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
+    public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {   
+      //     stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
     }
 
     public static void initGameLogicAppStates(AppStateManager stateManager) {

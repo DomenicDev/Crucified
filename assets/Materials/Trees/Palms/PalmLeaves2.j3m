@@ -1,4 +1,4 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Trees/Palm/my_PalmLeaf_dry.dds
         NormalMap : Textures/Trees/Palm/my_PalmLeaf_final_NRM.dds
@@ -9,6 +9,8 @@ Material My Material : Common/MatDefs/Light/Lighting.j3md {
         Diffuse : 1.0 1.0 1.0 1.0
         Specular : 1.0 1.0 1.0 1.0
         UseMaterialColors : true
+        WindStrength : 0.1
+        WindSpeed : 3.0
      }
     AdditionalRenderState {
       Blend Alpha

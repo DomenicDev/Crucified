@@ -1,0 +1,8 @@
+Material My Material : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+        DiffuseMap : Repeat Textures/Rocks/CliffEdge/CliffEdge_001_Dif_AMB.png
+        NormalMap : Repeat Textures/Rocks/CliffEdge/CliffEdge_001_NRM.png
+     }
+    AdditionalRenderState {
+    }
+}

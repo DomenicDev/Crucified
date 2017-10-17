@@ -1,7 +1,9 @@
-Material My Material : Common/MatDefs/Light/Lighting.j3md {
+Material My Material : MatDefs/Misc/LightPlusWind.j3md {
      MaterialParameters {
         DiffuseMap : Textures/Grass/3td_BeachGrass_01.png
         AlphaDiscardThreshold : 0.1
+        WindStrength : 0.02
+        WindSpeed : 5.0
      }
     AdditionalRenderState {
       FaceCull Off
