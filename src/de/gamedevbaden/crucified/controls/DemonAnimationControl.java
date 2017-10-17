@@ -58,6 +58,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
             setReverseAnimation(DemonAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
+            System.out.println("idle");
             setAnimation(DemonAnimation.Idle, lowerBody, upperBody);
         }
 
