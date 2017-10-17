@@ -42,6 +42,7 @@ public class GameInitializer {
         stateManager.attach(new VisualEquipmentAppState());
         stateManager.attach(new CameraAppState());
         stateManager.attach(new CharacterAnimationAppState());
+        stateManager.attach(new DemonAnimationAppState());
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
   //      stateManager.attach(new HeadMovingAppState());
@@ -100,4 +101,9 @@ public class GameInitializer {
         stateManager.attach(new StoryManager());
     }
 
+    public static void initThirdPersonCameraView(AppStateManager stateManager) {
+        GameSession gameSession = stateManager.getState(GameSessionAppState.class).getGameSession();
+        stateManager.getState(ModelViewAppState.class).addModelListener(gameSession.getPlayer(), spatial -> stateManager.attach(new ThirdPersonCameraView((Node) spatial)));
+
+    }
 }

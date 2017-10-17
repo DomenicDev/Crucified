@@ -27,10 +27,12 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             this.upperBody = control.createChannel();
             this.lowerBody = control.createChannel();
 
+            this.upperBody.addBone("hips");
             this.upperBody.addFromRootBone("spine");
             this.lowerBody.addFromRootBone("thigh.R");
             this.lowerBody.addFromRootBone("thigh.L");
 
+            control.addListener(this);
         } else {
             // cleanup
         }
@@ -43,7 +45,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
     @Override
     protected void controlUpdate(float tpf) {
         if (state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
-            setAnimation(DemonAnimation.Walk, lowerBody, upperBody);
+           setAnimation(DemonAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) {
             setReverseAnimation(DemonAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_LEFT) {
@@ -55,6 +57,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
             setReverseAnimation(DemonAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
+            System.out.println("idle");
             setAnimation(DemonAnimation.Idle, lowerBody, upperBody);
         }
 
@@ -112,6 +115,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
 
     @Override
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+        System.out.println("done: " + animName + " for channel " + channel);
         if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.RUNNING_FORWARD_RIGHT) && animName.equals(DemonAnimation.Run.getAnimName())) {
             channel.setAnim(DemonAnimation.Run.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(DemonAnimation.Walk.getAnimName())) {
