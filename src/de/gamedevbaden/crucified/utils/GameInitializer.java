@@ -74,8 +74,8 @@ public class GameInitializer {
         stateManager.attach(new GameSessionAppState(gameSession));
     }
 
-    public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {
-   //     stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
+    public static void initClientStatesWithGameSessionDependency(AppStateManager stateManager, GameSession gameSession) {   
+      //     stateManager.attach(new PredictionAppState(gameSession.getPlayer()));
     }
 
     public static void initGameLogicAppStates(AppStateManager stateManager) {

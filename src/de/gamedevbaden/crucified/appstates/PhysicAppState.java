@@ -3,17 +3,16 @@ package de.gamedevbaden.crucified.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
-import com.jme3.bullet.control.PhysicsControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.debug.BulletDebugAppState;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.util.TempVars;
+import com.jvpichowski.jme3.es.bullet.components.PhysicsPosition;
+import com.jvpichowski.jme3.es.bullet.extension.logic.PhysicsSimpleLogicManager;
+import com.jvpichowski.jme3.states.ESBulletState;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
@@ -22,11 +21,9 @@ import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.view.ModelLoaderAppState;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
-import de.gamedevbaden.crucified.physics.CustomCharacterControl;
-import de.gamedevbaden.crucified.physics.PhysicConstants;
+import de.gamedevbaden.crucified.physics.character.kinematic.KinematicCharacterLogic;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -54,11 +51,10 @@ public class PhysicAppState extends AbstractAppState {
     // the integer value is used to make some steps until the
     // entity is removed from the list
 
-    private ArrayList<RigidBodyControl> staticPhysicalObjects;
-
     private AppStateManager stateManager;
     private BulletAppState bulletAppState;
     private ModelLoaderAppState modelLoader; // might be needed to create collision shapes out of a spatial
+    private ESBulletInterface bulletInterface;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -66,41 +62,44 @@ public class PhysicAppState extends AbstractAppState {
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
 
-        this.bulletAppState = new BulletAppState();
-        this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
-        this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
-        this.stateManager.attach(bulletAppState);
+        this.bulletInterface = ESBulletInterface.of(
+                entityData,
+                ESBulletInterface.HeightMapProvider.of(modelLoader),
+                ESBulletInterface.CollisionShapeProvider.of(modelLoader)
+        );
+
+        stateManager.attach(new ESBulletState(entityData));
+        ESBulletState esBulletState = stateManager.getState(ESBulletState.class);
+        esBulletState.onInitialize(() -> {
+            //add a logic manager for scripts which should be executed on the physics thread
+            PhysicsSimpleLogicManager physicsLogicManager = new PhysicsSimpleLogicManager();
+            physicsLogicManager.initialize(entityData, esBulletState.getBulletSystem());
+            //TODO in a real application don't forget to destroy it after usage:
+            //physicsLogicManager.destroy();
+
+            // add the character logic
+            //PhysicsCharacterLogic characterLogic = new PhysicsCharacterLogic();
+            //characterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), esBulletState.getBulletSystem());
+            //physicsLogicManager.getPreTickLogicManager().attach(characterLogic);
+            KinematicCharacterLogic kinematicCharacterLogic = new KinematicCharacterLogic();
+            kinematicCharacterLogic.initLogic(physicsLogicManager.getPreTickLogicManager(), entityData);
+            physicsLogicManager.getPreTickLogicManager().attach(kinematicCharacterLogic);
+
+            // if there are already entities in the sets
+            // add them to the physics engine...
+            characters.forEach(bulletInterface::addCharacter);
+            rigidBodies.forEach(bulletInterface::addRigidBody);
+            terrains.forEach(bulletInterface::addTerrain);
+        });
+
 
         this.characterControls = new HashMap<>();
         this.rigidBodyControls = new HashMap<>();
         this.movingEntities = new HashMap<>();
 
-        this.staticPhysicalObjects = new ArrayList<>();
-
-        EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
         this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
-
-        // if there are already entities in the sets
-        // create the physical controls for them...
-        if (!characters.isEmpty()) {
-            for (Entity entity : characters) {
-                addCharacterControl(entity);
-            }
-        }
-
-        if (!rigidBodies.isEmpty()) {
-            for (Entity entity : rigidBodies) {
-                addRigidBodyControl(entity);
-            }
-        }
-
-        if (!terrains.isEmpty()) {
-            for (Entity entity : terrains) {
-                addTerrain(entity);
-            }
-        }
 
         super.initialize(stateManager, app);
     }
@@ -111,85 +110,52 @@ public class PhysicAppState extends AbstractAppState {
 
         if(GameOptions.ENABLE_PHYSICS_DEBUG) {
             if (stateManager.getState(BulletDebugAppState.class) == null) {
-                stateManager.attach(new BulletDebugAppState(bulletAppState.getPhysicsSpace()));
+                stateManager.attach(new BulletDebugAppState(stateManager.getState(ESBulletState.class).getPhysicsSpace()));
             }
         }
 
-
         // character controls
         if (characters.applyChanges()) {
-
-            for (Entity entity : characters.getAddedEntities()) {
-                addCharacterControl(entity);
-            }
-
-            for (Entity entity : characters.getChangedEntities()) {
-                updateCharacterControl(entity);
-            }
-
-            for (Entity entity : characters.getRemovedEntities()) {
-                removeCharacterControl(entity);
-            }
-
+            characters.getAddedEntities().forEach(bulletInterface::addCharacter);
+            characters.getChangedEntities().forEach(bulletInterface::updateCharacter);
+            characters.getRemovedEntities().forEach(bulletInterface::removeCharacter);
         }
 
         // rigid body controls
         if (rigidBodies.applyChanges()) {
-            for (Entity entity : rigidBodies.getAddedEntities()) {
-                PhysicsRigidBody rigidBody = entity.get(PhysicsRigidBody.class);
-                Transform transform = entity.get(Transform.class);
-                int shapeType = rigidBody.getCollisionShapeType();
-                CollisionShape collisionShape = getCollisionShape(shapeType, entity.get(Model.class).getPath(), transform.getScale());
-                entity.set(new RigidBody(rigidBody.isKinematic(), rigidBody.getMass()));
-                entity.set(new CustomShape(collisionShape));
-                entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
-            }
-            for (Entity entity : rigidBodies.getChangedEntities()) {
-                if (entity.get(PhysicsRigidBody.class).isKinematic()) {
-                    Transform transform = entity.get(Transform.class);
-                    entity.set(new WarpPosition(transform.getTranslation(), transform.getRotation()));
-                }
-            }
-            for (Entity entity : rigidBodies.getRemovedEntities()) {
-                entityData.removeComponent(entity.getId(), RigidBody.class);
-                entityData.removeComponent(entity.getId(), CustomShape.class);
-            }
+            rigidBodies.getAddedEntities().forEach(bulletInterface::addRigidBody);
+            rigidBodies.getChangedEntities().forEach(bulletInterface::updateRigidBody);
+            rigidBodies.getRemovedEntities().forEach(bulletInterface::removeRigidBody);
         }
 
         // terrains
         if (terrains.applyChanges()) {
-
-            for (Entity entity : terrains.getAddedEntities()) {
-                addTerrain(entity);
-            }
-
-            for (Entity entity : terrains.getRemovedEntities()) {
-                removeTerrain(entity);
-            }
+            terrains.getAddedEntities().forEach(bulletInterface::addTerrain);
+            terrains.getRemovedEntities().forEach(bulletInterface::removeTerrain);
         }
 
 
         // apply new transforms for rigid bodies
         for (Entity entity : rigidBodies) {
-            com.jme3.bullet.objects.PhysicsRigidBody rigidBody = rigidBodyControls.get(entity.getId());
-            if (!entity.get(PhysicsRigidBody.class).isKinematic()) {
-                Vector3f location = rigidBody.getPhysicsLocation();
-                Quaternion rotation = rigidBody.getPhysicsRotation();
+            PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
+            if (pos != null && !entity.get(PhysicsRigidBody.class).isKinematic()) {
                 Vector3f scale = entity.get(Transform.class).getScale();
-                applyNewChanges(entity, location, rotation, scale);
+                applyNewChanges(entity, pos.getLocation(), pos.getRotation(), scale);
             }
         }
 
 
         // apply new transforms for characters
         for (Entity entity : characters) {
-            CustomCharacterControl characterControl = characterControls.get(entity.getId());
-            Vector3f location = characterControl.getPhysicsRigidBody().getPhysicsLocation();
-            Quaternion rotation = characterControl.getCharacterRotation(); //ToDo: Shall that be changed? PlayerControlled Rotation is just a thing of the view, so how could we implement this instantly
-            Vector3f scale = entity.get(Transform.class).getScale();
-            applyNewChanges(entity, location, rotation, scale);
+            PhysicsPosition pos = bulletInterface.getPhysicsPosition(entity);
+            if(pos != null) {
+                Vector3f scale = entity.get(Transform.class).getScale();
+                Quaternion rot = Quaternion.DIRECTION_Z.clone();
+                Vector3f viewDirection = entity.get(PhysicsCharacterControl.class).getViewDirection();
+                calculateNewForward(rot, viewDirection, Vector3f.UNIT_Y);
+                applyNewChanges(entity, pos.getLocation(), rot, scale);
+            }
         }
-
     }
 
     /**
@@ -227,7 +193,6 @@ public class PhysicAppState extends AbstractAppState {
             entityData.setComponent(entity.getId(), new OnMovement());
         }
         movingEntities.put(entity.getId(), 0);
-
     }
 
     /**
@@ -244,149 +209,74 @@ public class PhysicAppState extends AbstractAppState {
             shape = CollisionShapeFactory.createMeshShape(object);
         }
         // create rigid body control and set translation and rotation
-        RigidBodyControl rigidBodyControl = new RigidBodyControl(shape, 0);
-        rigidBodyControl.setPhysicsLocation(object.getWorldTranslation());
-        rigidBodyControl.setPhysicsRotation(object.getWorldRotation());
-        // add control to physic space
-        bulletAppState.getPhysicsSpace().add(rigidBodyControl);
-        // add rigid body control to list
-        staticPhysicalObjects.add(rigidBodyControl);
+        EntityId staticEntityId = entityData.createEntity();
+        entityData.setComponent(staticEntityId, new Transform(object.getWorldTranslation(), object.getWorldRotation(), object.getWorldScale()));
+        Entity entity = entityData.getEntity(staticEntityId, Transform.class);
+        bulletInterface.addRigidBody(entity, true, 0, shape);
     }
 
     /**
-     * Get the {@link CustomCharacterControl} for this entity.
-     * @param entityId the entity id the character control is added to
-     * @return the character control or null if there is none
+     * This method works similar to Camera.lookAt but where lookAt sets the
+     * priority on the direction, this method sets the priority on the up vector
+     * so that the result direction vector and rotation is guaranteed to be
+     * perpendicular to the up vector.
+     *
+     * @param rotation The rotation to set the result on or null to create a new
+     * Quaternion, this will be set to the new "z-forward" rotation if not null
+     * @param direction The direction to base the new look direction on, will be
+     * set to the new direction
+     * @param worldUpVector The up vector to use, the result direction will be
+     * perpendicular to this
+     * @return
      */
-    public CustomCharacterControl getCharacterControl(EntityId entityId) {
-        return characterControls.get(entityId);
-    }
-
-    /**
-     * Get the {@link RigidBodyControl} for this entity.
-     * @param entityId the entity id the rigid body contol is added to
-     * @return the rigid body control or null if there is none.
-     */
-    public RigidBodyControl getRigidBodyControl(EntityId entityId) {
-        return rigidBodyControls.get(entityId);
-    }
-
-    private void addTerrain(Entity entity) {
-        PhysicsTerrain terrain = entity.get(PhysicsTerrain.class);
-        Transform transform = entity.get(Transform.class);
-        Spatial terrainModel = ((Node) modelLoader.loadModel(terrain.getScenePath())).getChild(terrain.getTerrainName());
-        if (terrainModel instanceof TerrainQuad) {
-            float[] heightMap = ((TerrainQuad) terrainModel).getHeightMap();
-            CollisionShape terrainShape = new HeightfieldCollisionShape(heightMap, transform.getScale());
-            RigidBodyControl terrainControl = new RigidBodyControl(terrainShape, 0);
-            terrainControl.setPhysicsLocation(transform.getTranslation());
-            bulletAppState.getPhysicsSpace().add(terrainControl);
+    protected final void calculateNewForward(Quaternion rotation, Vector3f direction, Vector3f worldUpVector) {
+        if (direction == null) {
+            return;
         }
+        TempVars vars = TempVars.get();
+        Vector3f newLeft = vars.vect1;
+        Vector3f newLeftNegate = vars.vect2;
 
-    }
-
-    private void removeTerrain(Entity entity) {
-        removeRigidBodyControl(entity);
-    }
-
-    private void addCharacterControl(Entity entity) {
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
-        characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
-        characterControl.setWalkDirection(pcc.getWalkDirection());
-        characterControl.setViewDirection(pcc.getViewDirection());
-        addPhysicsControl(characterControl);
-        characterControls.put(entity.getId(), characterControl);
-    }
-
-    private void updateCharacterControl(Entity entity) {
-        CustomCharacterControl characterControl = characterControls.get(entity.getId());
-        PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
-        characterControl.setWalkDirection(pcc.getWalkDirection());
-        characterControl.setViewDirection(pcc.getViewDirection());
-    }
-
-    private void removeCharacterControl(Entity entity) {
-        CustomCharacterControl cc = characterControls.remove(entity.getId());
-        removePhysicsControl(cc.getPhysicsRigidBody());
-    }
-
-
-    private void removeRigidBodyControl(Entity entity) {
-        RigidBodyControl body = rigidBodyControls.remove(entity.getId());
-        removePhysicsControl(body);
-    }
-
-    private void addPhysicsControl(PhysicsControl control) {
-        bulletAppState.getPhysicsSpace().add(control);
-    }
-
-    private void removePhysicsControl(com.jme3.bullet.objects.PhysicsRigidBody control) {
-        bulletAppState.getPhysicsSpace().remove(control);
-    }
-
-    private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {
-        if (type == CollisionShapeType.BOX_COLLISION_SHAPE) {
-            Spatial model = modelLoader.loadModel(modelPath);
-            model.setLocalScale(scale);
-            return CollisionShapeFactory.createBoxShape(model);
-        } else if (type == CollisionShapeType.MESH_COLLISION_SHAPE) {
-            Spatial model = modelLoader.loadModel(modelPath);
-            if (model != null) {
-                model.setLocalScale(scale);
-                return CollisionShapeFactory.createMeshShape(model);
+        newLeft.set(worldUpVector).crossLocal(direction).normalizeLocal();
+        if (newLeft.equals(Vector3f.ZERO)) {
+            if (direction.x != 0) {
+                newLeft.set(direction.y, -direction.x, 0f).normalizeLocal();
+            } else {
+                newLeft.set(0f, direction.z, -direction.y).normalizeLocal();
             }
-            return null;
-        } else if (type == CollisionShapeType.TERRAIN_COLLISION_SHAPE) {
-            // Terrain is handled a bit differently.
-            // Terrain is not linked into the scene, but added as a part of the scene
-            // That's why we need to search for the TerrainQuad
-            Node model = (Node) modelLoader.loadModel(modelPath);
-            model.setLocalScale(scale);
-
-            for (Spatial s : model.getChildren()) {
-                if (s instanceof TerrainQuad) {
-                    // we create the shape out of the first quad we find
-                    return CollisionShapeFactory.createMeshShape(s);
-                }
-            }
-
         }
-        return null;
-
+        newLeftNegate.set(newLeft).negateLocal();
+        direction.set(worldUpVector).crossLocal(newLeftNegate).normalizeLocal();
+        if (direction.equals(Vector3f.ZERO)) {
+            direction.set(Vector3f.UNIT_Z);
+        }
+        if (rotation != null) {
+            rotation.fromAxes(newLeft, worldUpVector, direction);
+        }
+        vars.release();
     }
 
     @Override
     public void cleanup() {
-        for (Entity entity : characters) {
-            removeCharacterControl(entity);
-        }
-        for (Entity entity : rigidBodies) {
-            removeRigidBodyControl(entity);
-        }
-        this.characterControls.clear();
-        this.rigidBodyControls.clear();
-        this.characterControls = null;
-        this.rigidBodyControls = null;
-
+        this.characters.applyChanges();
+        //TODO for all because otherwise they have to be cleaned from the entity system before this cleanup method is called?
+        characters.getRemovedEntities().forEach(bulletInterface::removeCharacter);
+        rigidBodies.getRemovedEntities().forEach(bulletInterface::removeRigidBody);
+        terrains.getRemovedEntities().forEach(bulletInterface::removeTerrain);
         this.characters.release();
-        this.characters.clear();
-        this.characters = null;
-
         this.rigidBodies.release();
-        this.rigidBodies.clear();
+        this.characters = null;
         this.rigidBodies = null;
 
-        for (RigidBodyControl body : staticPhysicalObjects) {
-            body.getPhysicsSpace().remove(body);
+        bulletInterface.close();
+        stateManager.detach(stateManager.getState(ESBulletState.class));
+        if(stateManager.getState(BulletDebugAppState.class) != null){
+            stateManager.detach(stateManager.getState(BulletDebugAppState.class));
         }
-        staticPhysicalObjects.clear();
-
-        if (stateManager.hasState(bulletAppState)) {
-            stateManager.detach(bulletAppState);
-        }
-        this.bulletAppState = null;
 
         super.cleanup();
     }
+
+
+
 }
