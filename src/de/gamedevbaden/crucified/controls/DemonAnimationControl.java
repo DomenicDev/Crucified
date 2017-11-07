@@ -21,7 +21,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             // setup
 
             SkeletonControl skeletonControl = spatial.getControl(SkeletonControl.class);
-            skeletonControl.setHardwareSkinningPreferred(false);
+        //    skeletonControl.setHardwareSkinningPreferred(true);
 
             AnimControl control = spatial.getControl(AnimControl.class);
             this.wholeBody = control.createChannel();
