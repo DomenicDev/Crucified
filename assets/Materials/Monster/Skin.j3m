@@ -1,7 +1,6 @@
 Material My Material : Common/MatDefs/Light/Lighting.j3md {
      MaterialParameters {
-        DiffuseMap : Repeat Textures/Monster/skin.JPG
-        NormalMap : Textures/Monster/normals.JPG
+        DiffuseMap : Textures/Monster/skin.JPG
      }
     AdditionalRenderState {
     }

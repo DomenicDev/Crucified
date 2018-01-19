@@ -1,0 +1,34 @@
+<scene exported_by="Domenic" previous_export_time="1508259342.4365633" formatVersion="1.0.1" export_time="1508260995.784346" >
+  <nodes >
+    <node name="metarig" >
+      <position x="0.000000" z="-0.000000" y="0.000000" />
+      <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+      <scale x="1.000000" z="1.000000" y="1.000000" />
+      <user_data value="" type="str" name="McpTPoseFile" />
+      <user_data value="1" type="int" name="McpTPoseDefined" />
+      <user_data value="" type="str" name="McpUndoAction" />
+      <user_data value="" type="str" name="McpActionName" />
+      <user_data value="0" type="int" name="MhReverseHip" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="Group32285" >
+        <position x="0.000000" z="-0.000000" y="0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale x="1.000000" z="1.000000" y="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity friction_y="1.0" meshFile="Group32285.mesh" lock_trans_z="False" anisotropic_friction="False" friction_x="1.0" velocity_max="0.0" actor="False" mass="1.0" velocity_min="0.0" lock_rot_y="False" mass_radius="1.0" lock_rot_z="False" name="Group32285" physics_type="STATIC" damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" lock_trans_x="False" inertia_tensor="0.4000000059604645" ghost="False" lock_trans_y="False" friction_z="1.0" lock_rot_x="False" />
+      </node>
+    </node>
+  </nodes>
+  <externals />
+  <environment >
+    <colourAmbient b="0.0" r="0.0" g="0.0" />
+    <colourBackground b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+    <colourDiffuse b="0.05087608844041824" r="0.05087608844041824" g="0.05087608844041824" />
+  </environment>
+</scene>
