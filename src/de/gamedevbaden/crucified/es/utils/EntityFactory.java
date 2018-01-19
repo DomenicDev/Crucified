@@ -53,7 +53,7 @@ public class EntityFactory {
         EntityId monster = entityData.createEntity();
         entityData.setComponents(monster,
                 new Model(ModelType.Demon),
-                new Transform(new Vector3f(0,5,0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
+                new Transform(new Vector3f(0,100,0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new SkeletonComponent(SkeletonType.Demon),
                 new PlayerControlled(),

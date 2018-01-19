@@ -78,6 +78,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             if (channel != null) {
                 channel.setAnim(anim.getAnimName(), anim.getBlendTime());
                 channel.setLoopMode(LoopMode.DontLoop);
+                channel.setSpeed(anim.getSpeed());
             }
         }
     }
@@ -90,7 +91,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             if (channel != null) {
                 channel.setAnim(anim.getAnimName(), anim.getBlendTime());
                 channel.setLoopMode(LoopMode.DontLoop);
-                channel.setSpeed(-1); // we need to negate the speed, that will play it reverse
+                channel.setSpeed(-1 * anim.getSpeed()); // we need to negate the speed, that will play it reverse
             }
         }
     }
@@ -116,7 +117,6 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
 
     @Override
     public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-        System.out.println("done: " + animName + " for channel " + channel);
         if ((state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.RUNNING_FORWARD_RIGHT) && animName.equals(DemonAnimation.Run.getAnimName())) {
             channel.setAnim(DemonAnimation.Run.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) && animName.equals(DemonAnimation.Walk.getAnimName())) {
@@ -134,6 +134,9 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         } else if (state == CharacterMovementState.IDLE) {
             channel.setAnim(DemonAnimation.Idle.getAnimName());
         }
+        if (animName.equals(DemonAnimation.Walk.getAnimName())) {
+            channel.setSpeed(channel.getSpeed() * DemonAnimation.Walk.getSpeed());
+        }
     }
 
     @Override
@@ -143,17 +146,29 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
 
     private enum DemonAnimation {
 
-        Idle("Idle", 0.5f),
+        Idle("Idle", 0.2f),
         Run("FastRun", 0.3f),
-        Walk("StrongWalk", 1f);
+        Walk("StrongWalk", 0.3f, 2);
 
         DemonAnimation(String animName, float blendTime) {
             this.animName = animName;
             this.blendTime = blendTime;
+            this.speed = 1f;
+        }
+
+        DemonAnimation(String animName, float blendTime, float speed) {
+            this.animName = animName;
+            this.blendTime = blendTime;
+            this.speed = speed;
         }
 
         private String animName;
         private float blendTime;
+        private float speed;
+
+        public float getSpeed() {
+            return speed;
+        }
 
         String getAnimName() {
             return this.animName;
