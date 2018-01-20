@@ -79,7 +79,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
         this.predictionAppState = stateManager.getState(PredictionAppState.class);
 
-        app.getRenderManager().setPreferredLightMode(TechniqueDef.LightMode.SinglePass);
+        app.getRenderManager().setPreferredLightMode(TechniqueDef.LightMode.SinglePassAndImageBased);
         app.getRenderManager().setSinglePassLightBatchSize(3);
 
         // load script file
