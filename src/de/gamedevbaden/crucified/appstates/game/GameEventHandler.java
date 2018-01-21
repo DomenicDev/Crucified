@@ -6,6 +6,7 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.gamelogic.ArtifactContainerAppState;
 import de.gamedevbaden.crucified.game.GameEventListener;
 
 /**
@@ -24,6 +25,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private EquipmentAppState equipmentAppState;
     private ItemFunctionalityAppState itemFunctionalityAppState;
     private CraftingAppState craftingAppState;
+    private ArtifactContainerAppState artifactContainerAppState;
 
     public GameEventHandler(GameSessionManager gameSession) {
         gameSession.addGameEventListener(this);
@@ -38,6 +40,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
         this.equipmentAppState = stateManager.getState(EquipmentAppState.class);
         this.itemFunctionalityAppState = stateManager.getState(ItemFunctionalityAppState.class);
         this.craftingAppState = stateManager.getState(CraftingAppState.class);
+        this.artifactContainerAppState = stateManager.getState(ArtifactContainerAppState.class);
         super.initialize(stateManager, app);
     }
 
@@ -90,5 +93,10 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     @Override
     public void onItemPutForCraft(EntityId itemToCraft, EntityId ingredient) {
         craftingAppState.putItemForCrafting(itemToCraft, ingredient);
+    }
+
+    @Override
+    public void onPutArtifactIntoContainer(EntityId containerId, EntityId artifactId) {
+        artifactContainerAppState.throwArtifactIntoContainer(containerId, artifactId);
     }
 }

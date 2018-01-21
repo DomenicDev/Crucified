@@ -6,6 +6,8 @@ import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
+import de.gamedevbaden.crucified.appstates.gamelogic.ArtifactContainerAppState;
+import de.gamedevbaden.crucified.appstates.gamelogic.GameLogicAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
@@ -100,6 +102,8 @@ public class GameInitializer {
         stateManager.attach(new NewTriggerAppState());
         stateManager.attach(new TestCoopDoorTask());
         stateManager.attach(new StoryManager());
+        stateManager.attach(new ArtifactContainerAppState());
+        stateManager.attach(new GameLogicAppState());
     }
 
     public static void initThirdPersonCameraView(AppStateManager stateManager) {

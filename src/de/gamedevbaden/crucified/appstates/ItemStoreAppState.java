@@ -3,14 +3,12 @@ package de.gamedevbaden.crucified.appstates;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.appstates.listeners.ItemStorageListener;
-import de.gamedevbaden.crucified.es.components.Container;
-import de.gamedevbaden.crucified.es.components.Pickable;
-import de.gamedevbaden.crucified.es.components.StoredIn;
-import de.gamedevbaden.crucified.es.components.Transform;
+import de.gamedevbaden.crucified.es.components.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,7 @@ public class ItemStoreAppState extends AbstractAppState {
     private EntitySet pickables;
     private EntitySet containers;
     private EntitySet storedEntities;
+    private EntitySet itemTypeEntities;
     private EntityData entityData;
 
     private List<ItemStorageListener> listeners = new ArrayList<>();
@@ -36,6 +35,7 @@ public class ItemStoreAppState extends AbstractAppState {
         this.pickables = entityData.getEntities(Pickable.class);
         this.containers = entityData.getEntities(Container.class);
         this.storedEntities = entityData.getEntities(StoredIn.class);
+        this.itemTypeEntities = entityData.getEntities(ItemComponent.class);
         super.initialize(stateManager, app);
     }
 
@@ -44,17 +44,43 @@ public class ItemStoreAppState extends AbstractAppState {
         pickables.applyChanges();
         containers.applyChanges();
         storedEntities.applyChanges();
+        itemTypeEntities.applyChanges();
     }
 
-    public void storeItem(EntityId container, EntityId itemToPickup) {
+    public boolean storeItem(EntityId container, EntityId itemToPickup) {
         if (container != null && itemToPickup != null && containers.containsId(container) && pickables.containsId(itemToPickup)) {
+            // we now check if this item can even put into this container
+            // we first check the type then the capacity
+            Container c = containers.getEntity(container).get(Container.class);
+            if (c.getTypeToStore() != null) {
+                Entity e = itemTypeEntities.getEntity(itemToPickup);
+                if (e == null || !e.get(ItemComponent.class).getItemType().equals(c.getTypeToStore())) {
+                    return false;
+                }
+            }
+            if (c.getCapacity() != -1) {
+                int itemCounter = 0;
+                for (Entity entity : storedEntities) {
+                    if (entity.get(StoredIn.class).getContainer().equals(container)) {
+                        itemCounter++;
+                    }
+                }
+                if (itemCounter >= c.getCapacity()) {
+                    // the container is full
+                    // no more items can be stored
+                    return false;
+                }
+            }
+
             this.entityData.setComponents(itemToPickup, new StoredIn(container) /*, new ChildOf(container)*/);
 
             // call listeners
             for (ItemStorageListener l : listeners) {
                 l.onItemStored(itemToPickup);
             }
+            return true;
         }
+        return false;
     }
 
     public void dropItem(EntityId container, EntityId itemToDrop) {

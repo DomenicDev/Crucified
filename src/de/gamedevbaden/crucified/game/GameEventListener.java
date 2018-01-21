@@ -27,4 +27,6 @@ public interface GameEventListener {
 
     void onItemPutForCraft(EntityId itemToCraft, EntityId ingredient);
 
+    void onPutArtifactIntoContainer(EntityId containerId, EntityId artifactId);
+
 }

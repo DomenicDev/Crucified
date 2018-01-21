@@ -72,6 +72,11 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     }
 
     @Override
+    public void onPutArtifactIntoContainer(EntityId containerId, EntityId artifactId) {
+        gameSession.putArtifactIntoContainer(containerId, artifactId);
+    }
+
+    @Override
     public void onInteractionWith(EntityId interactedEntity) {
         gameSession.interactWithEntity(interactedEntity);
     }

@@ -41,9 +41,11 @@ public class EntityFactory {
                 new Transform(new Vector3f(0, 5, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new SkeletonComponent(SkeletonType.Human),
+                new AliveComponent(),
                 new FootstepEmitter(),
                 new PlayerControlled(),
                 new CharacterMovementState(),
+                new CanPickupArtifactCompont(),
                 new Container());
 
         return player;

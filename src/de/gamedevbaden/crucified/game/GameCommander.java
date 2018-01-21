@@ -1,5 +1,6 @@
 package de.gamedevbaden.crucified.game;
 
+import de.gamedevbaden.crucified.enums.GameDecisionType;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 
@@ -21,4 +22,11 @@ public interface GameCommander {
      * @param script the script to read
      */
     void readNote(PaperScript script);
+
+    /**
+     * This is called when the game is finished.
+     *
+     * @param decisionType tells who has won.
+     */
+    void onGameDecided(GameDecisionType decisionType);
 }

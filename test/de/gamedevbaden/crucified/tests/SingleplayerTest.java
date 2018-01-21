@@ -56,7 +56,7 @@ public class SingleplayerTest extends SimpleApplication {
         stateManager.attach(new GameEventHandler(sessionManager));
 
         // create GameSession for our player
-        GameSession gameSession = sessionManager.createSession(EntityFactory.createDemon(entityData));
+        GameSession gameSession = sessionManager.createSession(EntityFactory.createPlayer(entityData));
 
         // create GameCommanderHolder
         GameCommanderHolder commanderHolder = new GameCommanderHolder();
@@ -75,8 +75,8 @@ public class SingleplayerTest extends SimpleApplication {
         GameInitializer.initSoundAppStates(stateManager);
         GameInitializer.initInputAppStates(stateManager);
         GameInitializer.initPlayerStates(stateManager);
-   //     GameInitializer.initFirstPersonCameraView(stateManager);
-        GameInitializer.initThirdPersonCameraView(stateManager);
+        GameInitializer.initFirstPersonCameraView(stateManager);
+        // GameInitializer.initThirdPersonCameraView(stateManager);
 
         stateManager.attach(new Loader()); // load scene
 

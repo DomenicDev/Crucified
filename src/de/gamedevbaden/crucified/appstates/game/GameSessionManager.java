@@ -134,6 +134,13 @@ public class GameSessionManager extends AbstractAppState {
         }
 
         @Override
+        public void putArtifactIntoContainer(EntityId containerId, EntityId artifactId) {
+            for (GameEventListener listener : listeners) {
+                listener.onPutArtifactIntoContainer(containerId, artifactId);
+            }
+        }
+
+        @Override
         public void putItemToCraft(EntityId itemToCraft, EntityId ingredient) {
             for (GameEventListener listener : listeners) {
                 listener.onItemPutForCraft(itemToCraft, ingredient);

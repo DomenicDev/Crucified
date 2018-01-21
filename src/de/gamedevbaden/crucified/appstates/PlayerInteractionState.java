@@ -40,6 +40,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
     private EntitySet equipables;
     private EntitySet entitiesToCraft;
     private EntitySet interactableEntities;
+    private EntitySet containers;
 
     private ModelViewAppState modelViewAppState;
     private PlayerInventoryState inventoryState;
@@ -62,6 +63,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.pickables = entityData.getEntities(Pickable.class);
         this.equipables = entityData.getEntities(Equipable.class);
         this.entitiesToCraft = entityData.getEntities(NeedToBeCrafted.class);
+        this.containers = entityData.getEntities(Container.class);
 
         this.cam = app.getCamera();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
@@ -137,6 +139,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         pickables.applyChanges();
         equipables.applyChanges();
         entitiesToCraft.applyChanges();
+        containers.applyChanges();
     }
 
     @Override
@@ -156,7 +159,19 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                     long id = closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID);
                     EntityId entityId = new EntityId(id);
 
-                    if (entitiesToCraft.containsId(entityId)) {
+                    if (containers.containsId(entityId)) {
+                        // we check if this an artifact container
+                        Container c = containers.getEntity(entityId).get(Container.class);
+                        if (c.getTypeToStore() == ItemType.Artifact) {
+                            // we now check if the player has an artifact
+                            EntityId artifactId = inventoryState.getNextOfType(ItemType.Artifact);
+                            if (artifactId != null) {
+                                for (PlayerInteractionListener listener : listeners) {
+                                    listener.onPutArtifactIntoContainer(entityId, artifactId);
+                                }
+                            }
+                        }
+                    } else if (entitiesToCraft.containsId(entityId)) {
                         NeedToBeCrafted craftComponent = entitiesToCraft.getEntity(entityId).get(NeedToBeCrafted.class);
                         Map<ItemType, Integer> neededItems = craftComponent.getNeededItems();
                         for (ItemType type : neededItems.keySet()) {
@@ -208,6 +223,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
 
     public interface PlayerInteractionListener {
+
+        void onPutArtifactIntoContainer(EntityId containerId, EntityId artifactId);
 
         void onInteractionWith(EntityId interactedEntity);
 

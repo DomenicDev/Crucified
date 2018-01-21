@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class SceneEntityLoader extends AbstractAppState {
 
-    public static Scene sceneToLoad = Scene.TestScene;
+    public static Scene sceneToLoad = Scene.GameLogicTestScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
@@ -225,6 +225,18 @@ public class SceneEntityLoader extends AbstractAppState {
                         entityData.setComponents(entityId,
                                 new Pickable(),
                                 new ItemComponent(ItemType.Firewood));
+                        break;
+
+                    case ArtifactContainer:
+                        entityData.setComponents(entityId,
+                                new Container(1, ItemType.Artifact),
+                                new InteractionComponent(InteractionType.ThrowArtifactIntoContainer, true));
+                        break;
+                    case Artifact:
+                        entityData.setComponents(entityId,
+                                new Pickable(),
+                                new ArtifactComponent(),
+                                new ItemComponent(ItemType.Artifact));
                         break;
 
                     default:

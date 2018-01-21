@@ -4,6 +4,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.game.GameCommander;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -21,6 +22,10 @@ public class GameCommanderHolder extends AbstractAppState {
 
     public GameCommander get(EntityId player) {
         return map.get(player);
+    }
+
+    public Collection<GameCommander> getAll() {
+        return map.values();
     }
 
     @Override

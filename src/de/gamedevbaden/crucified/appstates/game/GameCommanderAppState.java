@@ -21,6 +21,7 @@ import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
 import de.gamedevbaden.crucified.appstates.view.ShadowRendererAppState;
 import de.gamedevbaden.crucified.appstates.view.TerrainGrassGeneratorAppState;
+import de.gamedevbaden.crucified.enums.GameDecisionType;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
@@ -203,6 +204,12 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
             hudAppState.showPaper(text);
         }
+    }
+
+    @Override
+    public void onGameDecided(GameDecisionType decisionType) {
+        // Todo
+        System.out.println(decisionType);
     }
 
     public Node getMainWorldNode() {

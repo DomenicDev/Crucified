@@ -5,6 +5,7 @@ import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.EnumSerializer;
 import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
+import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
@@ -54,6 +55,8 @@ public class NetworkUtils {
         Serializer.registerClass(ReadyForGameStartMessage.class);
         Serializer.registerClass(PaperScript.class, new EnumSerializer());
         Serializer.registerClass(ReadNoteMessage.class);
+        Serializer.registerClass(GameDecisionType.class, new EnumSerializer());
+        Serializer.registerClass(GameDecidedMessage.class);
     }
 
 }

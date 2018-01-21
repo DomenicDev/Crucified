@@ -5,6 +5,7 @@ import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import de.gamedevbaden.crucified.game.GameCommander;
+import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 
@@ -39,6 +40,14 @@ public class ClientMessageListener implements MessageListener<Client> {
             this.app.enqueue(() -> {
                 ReadNoteMessage rm = (ReadNoteMessage) m;
                 gameCommander.readNote(rm.getScript());
+                return null;
+            });
+        }
+
+        if (m instanceof GameDecidedMessage) {
+            this.app.enqueue(() -> {
+                GameDecidedMessage dm = (GameDecidedMessage) m;
+                gameCommander.onGameDecided(dm.getGameDecisionType());
                 return null;
             });
         }

@@ -9,5 +9,6 @@ public enum InteractionType {
     PlayTestSound,
     ReadText,
     TurnOnCampfire,
+    ThrowArtifactIntoContainer,
 
 }

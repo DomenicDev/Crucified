@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.net.server;
 
 import com.jme3.network.HostedConnection;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
+import de.gamedevbaden.crucified.enums.GameDecisionType;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
@@ -30,5 +31,10 @@ public class ServerGameCommander implements GameCommander {
     @Override
     public void readNote(PaperScript script) {
         conn.send(new ReadNoteMessage(script));
+    }
+
+    @Override
+    public void onGameDecided(GameDecisionType decisionType) {
+
     }
 }

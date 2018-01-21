@@ -89,5 +89,18 @@ public enum Type {
      */
     Campfire,
 
+    /**
+     * This type of container can only hold
+     * artifacts and only one of those at a time.
+     */
+    ArtifactContainer,
+
+    /**
+     * This types the entity as an artifact
+     * which can be picked up by the player
+     * and thrown into the ArtifactContainer.
+     */
+    Artifact,
+
 
 }

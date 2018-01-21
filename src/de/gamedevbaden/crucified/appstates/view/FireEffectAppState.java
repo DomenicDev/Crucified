@@ -10,11 +10,10 @@ import com.simsilica.es.Entity;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
-import de.gamedevbaden.crucified.enums.ModelType;
+import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.es.components.FireState;
-import de.gamedevbaden.crucified.es.components.Model;
+import de.gamedevbaden.crucified.es.components.Transform;
 
 import java.util.HashMap;
 
@@ -30,14 +29,19 @@ public class FireEffectAppState extends AbstractAppState {
 
     private HashMap<EntityId, Node> particleEffects;
 
+    private Node fireEffectNode;
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.particleEffects = new HashMap<>();
         this.assetManager = app.getAssetManager();
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
+        this.fireEffectNode = new Node("FireEffectNode");
+        stateManager.getState(GameCommanderAppState.class).getMainWorldNode().attachChild(fireEffectNode);
+
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.campFires = entityData.getEntities(new FieldFilter<>(Model.class, "path", ModelType.Campfire), FireState.class, Model.class);
+        this.campFires = entityData.getEntities(FireState.class, Transform.class);
 
         for (Entity entity : campFires) {
             addCampfireEffect(entity);
@@ -68,15 +72,18 @@ public class FireEffectAppState extends AbstractAppState {
     }
 
     private void addCampfireEffect(Entity entity) {
-        Node model = (Node) modelViewAppState.getSpatial(entity.getId());
+        Transform t = entity.get(Transform.class);
         Node effect = (Node) assetManager.loadModel("Models/Effects/Campfire.j3o");
-        model.attachChild(effect);
+        effect.setLocalTranslation(t.getTranslation());
+        fireEffectNode.attachChild(effect);
         particleEffects.put(entity.getId(), effect);
         updateCampfireEffect(entity);
     }
 
     private void updateCampfireEffect(Entity entity) {
+        Transform t = entity.get(Transform.class);
         Node effect = particleEffects.get(entity.getId());
+        effect.setLocalTranslation(t.getTranslation());
         FireState fireState = entity.get(FireState.class);
         if (fireState.isOn()) {
             effect.setCullHint(Spatial.CullHint.Inherit); // enable

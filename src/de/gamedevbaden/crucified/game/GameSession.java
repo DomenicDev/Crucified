@@ -70,6 +70,14 @@ public interface GameSession {
     void toggleFlashLight(EntityId flashLightId);
 
     /**
+     * This method will put the specified artifact into the specified container.
+     *
+     * @param containerId the container id
+     * @param artifactId  the artifact id
+     */
+    void putArtifactIntoContainer(EntityId containerId, EntityId artifactId);
+
+    /**
      * Apply the specified ingredient item for crafting the specified item.
      * This might need to be called several times since several items are needed to craft
      * a certain entity

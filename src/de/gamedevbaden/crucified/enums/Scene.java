@@ -10,7 +10,8 @@ public enum Scene {
 
     TestScene("Scenes/TestScene.j3o", null),
     BeachScene("Scenes/BeachScene.j3o", "Scenes/BeachSceneFilter.j3f"),
-    FinalIslandScene("Scenes/NewIslandSetting/IslandNew.j3o", "Scenes/NewIslandSetting/IslandFilterNew.j3f", new Vector3f(44.062027f, 2.62f, 152.44156f));
+    FinalIslandScene("Scenes/NewIslandSetting/IslandNew.j3o", "Scenes/NewIslandSetting/IslandFilterNew.j3f", new Vector3f(44.062027f, 2.62f, 152.44156f)),
+    GameLogicTestScene("Scenes/TestGameLogicScene.j3o", null);
 
     private String scenePath;
     private String filterPath;
