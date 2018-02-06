@@ -25,6 +25,9 @@ import de.gamedevbaden.crucified.net.server.GameServer;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * A simple server test application for testing in game features.
  *
@@ -42,6 +45,7 @@ public class ServerTest extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        Logger.getLogger("").setLevel(Level.FINE);
         setPauseOnLostFocus(false);
         GameOptions.ENABLE_PHYSICS_DEBUG = true; // for now
 

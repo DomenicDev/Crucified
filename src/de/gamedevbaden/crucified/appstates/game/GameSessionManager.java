@@ -3,6 +3,7 @@ package de.gamedevbaden.crucified.appstates.game;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.ActionType;
 import de.gamedevbaden.crucified.game.GameEventListener;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -144,6 +145,13 @@ public class GameSessionManager extends AbstractAppState {
         public void putItemToCraft(EntityId itemToCraft, EntityId ingredient) {
             for (GameEventListener listener : listeners) {
                 listener.onItemPutForCraft(itemToCraft, ingredient);
+            }
+        }
+
+        @Override
+        public void performAction(ActionType actionType) {
+            for (GameEventListener listener : listeners) {
+                listener.onPerformAction(getPlayer(), actionType);
             }
         }
 

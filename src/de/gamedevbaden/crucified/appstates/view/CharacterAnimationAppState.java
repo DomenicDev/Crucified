@@ -30,7 +30,7 @@ public class CharacterAnimationAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.characters = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), SkeletonComponent.class, CharacterMovementState.class);
+        this.characters = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.HUMAN), SkeletonComponent.class, CharacterMovementState.class);
         this.modelAppState = stateManager.getState(ModelViewAppState.class);
 
         if (!characters.isEmpty()) {

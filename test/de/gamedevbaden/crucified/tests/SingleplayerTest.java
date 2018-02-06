@@ -99,6 +99,8 @@ public class SingleplayerTest extends SimpleApplication {
         public void initialize(AppStateManager stateManager, Application app) {
             stateManager.getState(SceneEntityLoader.class).createEntitiesFromScene(SceneEntityLoader.sceneToLoad);
             stateManager.getState(GameCommanderAppState.class).loadScene(SceneEntityLoader.sceneToLoad);
+
+            EntityFactory.createDemon(stateManager.getState(EntityDataState.class).getEntityData());
             super.initialize(stateManager, app);
         }
     }

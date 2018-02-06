@@ -28,6 +28,8 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             this.upperBody = control.createChannel();
             this.lowerBody = control.createChannel();
 
+            System.out.println("DE:: " + Thread.currentThread().getName());
+
             this.upperBody.addBone("hips");
             this.upperBody.addFromRootBone("spine");
             this.lowerBody.addFromRootBone("thigh.R");

@@ -35,7 +35,7 @@ public class VisualEquipmentAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.equipables = entityData.getEntities(EquippedBy.class, Model.class);
-        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), Model.class);
+        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.HUMAN), Model.class);
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
         super.initialize(stateManager, app);
     }

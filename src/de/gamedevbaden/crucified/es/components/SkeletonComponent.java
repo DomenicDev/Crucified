@@ -2,7 +2,6 @@ package de.gamedevbaden.crucified.es.components;
 
 import com.jme3.network.serializing.Serializable;
 import com.simsilica.es.EntityComponent;
-import de.gamedevbaden.crucified.enums.SkeletonType;
 
 /**
  * This component gives information about the skeleton used for animations.
@@ -13,16 +12,16 @@ import de.gamedevbaden.crucified.enums.SkeletonType;
 @Serializable
 public class SkeletonComponent implements EntityComponent {
 
-    private SkeletonType skeletonType;
+    private int skeletonType;
 
     public SkeletonComponent() {
     }
 
-    public SkeletonComponent(SkeletonType skeletonType) {
+    public SkeletonComponent(int skeletonType) {
         this.skeletonType = skeletonType;
     }
 
-    public SkeletonType getSkeletonType() {
+    public int getSkeletonType() {
         return skeletonType;
     }
 }

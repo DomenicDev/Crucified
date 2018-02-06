@@ -1,5 +1,7 @@
 package de.gamedevbaden.crucified.appstates.view;
 
+import com.jme3.animation.Bone;
+import com.jme3.animation.Skeleton;
 import com.jme3.animation.SkeletonControl;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
@@ -29,8 +31,13 @@ public class FirstPersonCameraView extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         this.cam = app.getCamera();
 
+        Skeleton skeleton = playerModel.getControl(SkeletonControl.class).getSkeleton();
+        Bone headBone = skeleton.getBone("Head");
+        if (headBone == null) {
+            headBone = skeleton.getBone("head");
+        }
         // we attach our cam node to the head of the player model
-        Node head = playerModel.getControl(SkeletonControl.class).getAttachmentsNode("Head");
+        Node head = playerModel.getControl(SkeletonControl.class).getAttachmentsNode(headBone.getName());
         this.cameraNode = new Node("CameraNode");
         this.cameraNode.setLocalTranslation(offset);
         head.attachChild(cameraNode);
