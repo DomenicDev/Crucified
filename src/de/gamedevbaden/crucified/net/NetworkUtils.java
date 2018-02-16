@@ -46,6 +46,7 @@ public class NetworkUtils {
         Serializer.registerClass(FootstepEmitter.class);
         Serializer.registerClass(ActionType.class, new EnumSerializer());
         Serializer.registerClass(ActionGroupComponent.class);
+        Serializer.registerClass(ActionComponent.class);
         Serializer.registerClass(DummyComponent.class);
         Serializer.registerClass(AliveComponent.class);
     }
