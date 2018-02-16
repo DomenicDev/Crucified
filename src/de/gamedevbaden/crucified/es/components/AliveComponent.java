@@ -5,15 +5,17 @@ import com.simsilica.es.EntityComponent;
 
 @Serializable
 public class AliveComponent implements EntityComponent {
-/*
-    private Vector3f v;
+
+    private int health;
 
     public AliveComponent() {
-        this.v = new Vector3f(10, 5, 1);
     }
 
-    public Vector3f getV() {
-        return v;
+    public AliveComponent(int health) {
+        this.health = health;
     }
-    */
+
+    public int getHealth() {
+        return health;
+    }
 }

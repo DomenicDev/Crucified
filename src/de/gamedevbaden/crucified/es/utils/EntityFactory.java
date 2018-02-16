@@ -38,13 +38,14 @@ public class EntityFactory {
                 new Model(ModelType.Player),
                 new Transform(new Vector3f(0, 10, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
-                new AliveComponent(),
+                new AliveComponent(100),
                 new FootstepEmitter(),
                 new PlayerControlled(),
+                new ExplosionImpactComponent(),
                 new CharacterMovementState(),
                 new CanPickupArtifactCompont(),
                 new Container(),
-                new ActionGroupComponent(ActionType.Scream, ActionType.Attack)
+                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
         );
 
         return player;
@@ -59,8 +60,9 @@ public class EntityFactory {
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new FootstepEmitter(),
                 new PlayerControlled(),
+                new AliveComponent(100),
                 new CharacterMovementState(),
-                new ActionGroupComponent(ActionType.Scream, ActionType.Attack)
+                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
         );
         return monster;
     }

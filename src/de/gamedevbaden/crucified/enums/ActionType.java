@@ -5,7 +5,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public enum ActionType {
 
-    Attack(3f),
+    ShootFireball(3f),
 
     Scream(1);
 

@@ -39,14 +39,9 @@ public class DemonAnimationAppState extends AbstractAppState {
 
         if (monsters.applyChanges()) {
 
-            for (Entity e : monsters) {
-                System.out.println("SKEL: " + e.get(SkeletonComponent.class).getSkeletonType());
-            }
-
             System.out.println(Thread.currentThread().getName());
 
             for (Entity entity : monsters.getAddedEntities()) {
-                System.out.println("for: " + entity.getId() + entity.get(SkeletonComponent.class).getSkeletonType());
                 addControl(entity);
             }
 

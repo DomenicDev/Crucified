@@ -4,6 +4,8 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HeightfieldCollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
@@ -27,6 +29,8 @@ import de.gamedevbaden.crucified.utils.GameOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The <code>{@link PhysicAppState}</code> takes care of all physical entities.
@@ -45,6 +49,8 @@ public class PhysicAppState extends AbstractAppState {
     private EntitySet characters;
     private EntitySet rigidBodies;
     private EntitySet terrains;
+    private EntitySet fireballs;
+    private EntitySet nonFireballResistentEntities;
     private EntityData entityData;
 
     private HashMap<EntityId, CustomCharacterControl> characterControls;
@@ -54,6 +60,8 @@ public class PhysicAppState extends AbstractAppState {
     // entity is removed from the list
 
     private ArrayList<RigidBodyControl> staticPhysicalObjects;
+
+    private FireballCollisionListener fireballListener = new FireballCollisionListener();
 
     private AppStateManager stateManager;
     private BulletAppState bulletAppState;
@@ -69,6 +77,7 @@ public class PhysicAppState extends AbstractAppState {
         this.bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         this.bulletAppState.setDebugEnabled(GameOptions.ENABLE_PHYSICS_DEBUG);
         this.stateManager.attach(bulletAppState);
+        this.bulletAppState.getPhysicsSpace().addCollisionListener(fireballListener);
 
         this.characterControls = new HashMap<>();
         this.rigidBodyControls = new HashMap<>();
@@ -80,6 +89,8 @@ public class PhysicAppState extends AbstractAppState {
         this.characters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.rigidBodies = entityData.getEntities(Model.class, PhysicsRigidBody.class, Transform.class);
         this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
+        this.fireballs = entityData.getEntities(PhysicsRigidBody.class, Transform.class, Fireball.class, Model.class);
+        this.nonFireballResistentEntities = entityData.getEntities(PhysicsCharacterControl.class, ExplosionImpactComponent.class, AliveComponent.class);
 
         // if there are already entities in the sets
         // create the physical controls for them...
@@ -98,6 +109,12 @@ public class PhysicAppState extends AbstractAppState {
         if (!terrains.isEmpty()) {
             for (Entity entity : terrains) {
                 addTerrain(entity);
+            }
+        }
+
+        if (!fireballs.isEmpty()) {
+            for (Entity entity : fireballs) {
+                fireFireball(entity);
             }
         }
 
@@ -159,6 +176,19 @@ public class PhysicAppState extends AbstractAppState {
             for (Entity entity : terrains.getRemovedEntities()) {
                 removeTerrain(entity);
             }
+        }
+
+        nonFireballResistentEntities.applyChanges();
+        if (fireballs.applyChanges()) {
+
+            for (Entity entity : fireballs.getAddedEntities()) {
+                fireFireball(entity);
+            }
+
+            for (Entity entity : fireballs.getRemovedEntities()) {
+                removeFireball(entity);
+            }
+
         }
 
 
@@ -329,6 +359,63 @@ public class PhysicAppState extends AbstractAppState {
 
     private void removePhysicsControl(com.jme3.bullet.objects.PhysicsRigidBody control) {
         bulletAppState.getPhysicsSpace().remove(control);
+    }
+
+    private void fireFireball(Entity entity) {
+        RigidBodyControl rigidBody = getRigidBodyControl(entity.getId());
+        rigidBody.setGravity(new Vector3f(0, 0, 0));
+        rigidBody.setLinearVelocity(entity.get(Fireball.class).getDirection().normalize().multLocal(10));
+        fireballListener.flyingFireballs.put(entity.getId(), rigidBody);
+    }
+
+    private void removeFireball(Entity entity) {
+        fireballListener.flyingFireballs.remove(entity.getId());
+    }
+
+    private class FireballCollisionListener implements PhysicsCollisionListener {
+
+        private List<EntityId> entitiesToRemove = new ArrayList<>();
+        private HashMap<EntityId, RigidBodyControl> flyingFireballs = new HashMap<>();
+
+        @Override
+        public void collision(PhysicsCollisionEvent event) {
+            for (Map.Entry<EntityId, RigidBodyControl> e : flyingFireballs.entrySet()) {
+                if (event.getObjectA().equals(e.getValue()) || event.getObjectB().equals(e.getValue())) {
+                    entityData.removeEntity(e.getKey());
+                    entitiesToRemove.add(e.getKey());
+
+                    System.out.println(nonFireballResistentEntities.size());
+                    for (Entity entity : nonFireballResistentEntities) {
+                        CustomCharacterControl ccc = getCharacterControl(entity.getId());
+                        com.jme3.bullet.objects.PhysicsRigidBody physicsRigidBody = ccc.getPhysicsRigidBody();
+                        if (event.getObjectA().equals(physicsRigidBody) || event.getObjectB().equals(physicsRigidBody)) {
+                            AliveComponent healthComp = nonFireballResistentEntities.getEntity(entity.getId()).get(AliveComponent.class);
+                            int newHealth = healthComp.getHealth() - 40;
+                            if (newHealth <= 0) {
+                                entityData.removeComponent(entity.getId(), AliveComponent.class);
+                            } else {
+                                entityData.setComponent(entity.getId(), new AliveComponent(newHealth));
+                            }
+                            break;
+                        } else {
+                            // if no player was hit we create a little fire effect
+                            EntityId fire = entityData.createEntity();
+                            entityData.setComponents(fire,
+                                    new FireState(true),
+                                    new Transform(event.getPositionWorldOnA()),
+                                    new Decay(20000));
+                        }
+
+                    }
+
+
+                }
+            }
+            for (EntityId entityId : entitiesToRemove) {
+                flyingFireballs.remove(entityId);
+            }
+            entitiesToRemove.clear();
+        }
     }
 
     private CollisionShape getCollisionShape(int type, String modelPath, Vector3f scale) {

@@ -91,12 +91,13 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         return server;
     }
 
+    private int playerCounter = 0;
     @Override
     public void connectionAdded(Server server, HostedConnection conn) {
 
         System.out.println("Client #" + conn.getId() + " has connected!");
 
-        EntityId player = EntityFactory.createDemon(entityData);
+        EntityId player = (playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
 
         System.out.println(player);
 

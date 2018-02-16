@@ -88,8 +88,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.inputManager.addListener(this, InputCommand.Interaction.name());
         this.inputManager.addListener(this, InputCommand.Scream.name());
 
-        this.inputManager.addMapping("Attack", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        this.inputManager.addListener(this, "Attack");
+        this.inputManager.addMapping("ShootFireball", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        this.inputManager.addListener(this, "ShootFireball");
 
         this.inputManager.addMapping("R", new KeyTrigger(KeyInput.KEY_R));
         this.inputManager.addMapping("G", new KeyTrigger(KeyInput.KEY_G));
@@ -222,10 +222,10 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                         l.onPerformAction(ActionType.Scream);
                     }
                 }
-            } else if (name.equals("Attack")) {
-                if (player.get(ActionGroupComponent.class).contains(ActionType.Attack)) {
+            } else if (name.equals("ShootFireball")) {
+                if (player.get(ActionGroupComponent.class).contains(ActionType.ShootFireball)) {
                     for (PlayerInteractionListener l : listeners) {
-                        l.onPerformAction(ActionType.Attack);
+                        l.onPerformAction(ActionType.ShootFireball);
                     }
                 }
             }

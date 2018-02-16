@@ -16,6 +16,7 @@ public class ModelType {
     public static final String Paper = "Models/Paper/Paper.j3o";
     public static final String Campfire = "Models/Props/Campfire.j3o";
     public static final String Demon = "Models/Monster/Demon.j3o";
+    public static final String Fireball = "Models/Effects/Fireball.j3o";
 /*
     TestScene("Models/Plane.j3o"),
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),
