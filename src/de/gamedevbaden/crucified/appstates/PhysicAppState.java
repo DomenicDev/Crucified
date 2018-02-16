@@ -385,6 +385,7 @@ public class PhysicAppState extends AbstractAppState {
                     entitiesToRemove.add(e.getKey());
 
                     System.out.println(nonFireballResistentEntities.size());
+                    boolean hitPlayer = false;
                     for (Entity entity : nonFireballResistentEntities) {
                         CustomCharacterControl ccc = getCharacterControl(entity.getId());
                         com.jme3.bullet.objects.PhysicsRigidBody physicsRigidBody = ccc.getPhysicsRigidBody();
@@ -396,18 +397,18 @@ public class PhysicAppState extends AbstractAppState {
                             } else {
                                 entityData.setComponent(entity.getId(), new AliveComponent(newHealth));
                             }
+                            hitPlayer = true;
                             break;
-                        } else {
-                            // if no player was hit we create a little fire effect
-                            EntityId fire = entityData.createEntity();
-                            entityData.setComponents(fire,
-                                    new FireState(true),
-                                    new Transform(event.getPositionWorldOnA()),
-                                    new Decay(20000));
                         }
-
                     }
-
+                    if (!hitPlayer) {
+                        // if no player was hit we create a little fire effect
+                        EntityId fire = entityData.createEntity();
+                        entityData.setComponents(fire,
+                                new FireState(true),
+                                new Transform(event.getPositionWorldOnA()),
+                                new Decay(20000));
+                    }
 
                 }
             }
