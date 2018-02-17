@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
+import de.gamedevbaden.crucified.enums.ActionType;
 import de.gamedevbaden.crucified.enums.InputCommand;
 import de.gamedevbaden.crucified.game.GameSession;
 
@@ -109,6 +110,11 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     @Override
     public void onItemCraft(EntityId targetItem, EntityId ingredient) {
         gameSession.putItemToCraft(targetItem, ingredient);
+    }
+
+    @Override
+    public void onPerformAction(ActionType type) {
+        gameSession.performAction(type);
     }
 
     @Override

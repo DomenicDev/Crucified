@@ -1,6 +1,9 @@
 package de.gamedevbaden.crucified.controls;
 
-import com.jme3.animation.*;
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
+import com.jme3.animation.LoopMode;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -19,10 +22,6 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         super.setSpatial(spatial);
         if (spatial != null) {
             // setup
-
-            SkeletonControl skeletonControl = spatial.getControl(SkeletonControl.class);
-        //    skeletonControl.setHardwareSkinningPreferred(true);
-
             AnimControl control = spatial.getControl(AnimControl.class);
             this.wholeBody = control.createChannel();
             this.upperBody = control.createChannel();

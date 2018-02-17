@@ -22,9 +22,9 @@ public class Transform implements EntityComponent {
     }
 
     public Transform(Vector3f location) {
-        this.location = location;
+        this.location = location.clone();
         this.quaternion = new Quaternion();
-        this.scale = Vector3f.UNIT_XYZ;
+        this.scale = Vector3f.UNIT_XYZ.clone();
     }
 
     public Transform(Vector3f location, Quaternion quaternion, Vector3f scale) {

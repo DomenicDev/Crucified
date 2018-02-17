@@ -39,7 +39,7 @@ public class HeadMovingAppState extends AbstractAppState {
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Human), SkeletonComponent.class, PhysicsCharacterControl.class);
+        this.players = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.HUMAN), SkeletonComponent.class, PhysicsCharacterControl.class);
         for (Entity entity : players) {
             addHeadControl(entity);
         }

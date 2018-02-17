@@ -4,6 +4,8 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
+import de.gamedevbaden.crucified.appstates.action.ActionHandlerAppState;
+import de.gamedevbaden.crucified.appstates.action.ActionSystemAppState;
 import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.ArtifactContainerAppState;
@@ -44,8 +46,9 @@ public class GameInitializer {
         stateManager.attach(new VisualStoringAppState());
         stateManager.attach(new VisualEquipmentAppState());
         stateManager.attach(new CameraAppState());
-        stateManager.attach(new CharacterAnimationAppState());
         stateManager.attach(new DemonAnimationAppState());
+        stateManager.attach(new CharacterAnimationAppState());
+
         stateManager.attach(new ShadowRendererAppState(stateManager.getApplication().getAssetManager(), stateManager.getApplication().getViewPort()));
         stateManager.attach(new VisualFlashLightAppState());
         stateManager.attach(new HeadMovingAppState());
@@ -103,6 +106,8 @@ public class GameInitializer {
         stateManager.attach(new TestCoopDoorTask());
         stateManager.attach(new StoryManager());
         stateManager.attach(new ArtifactContainerAppState());
+        stateManager.attach(new ActionSystemAppState());
+        stateManager.attach(new ActionHandlerAppState());
         stateManager.attach(new GameLogicAppState());
     }
 

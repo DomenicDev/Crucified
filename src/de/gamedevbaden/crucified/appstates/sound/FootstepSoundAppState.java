@@ -16,6 +16,7 @@ import de.gamedevbaden.crucified.appstates.view.ModelViewAppState;
 import de.gamedevbaden.crucified.controls.FootstepSoundControl;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.FootstepEmitter;
+import de.gamedevbaden.crucified.es.components.Model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class FootstepSoundAppState extends AbstractAppState {
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.players = entityData.getEntities(FootstepEmitter.class, CharacterMovementState.class);
+        this.players = entityData.getEntities(FootstepEmitter.class, CharacterMovementState.class, Model.class);
 
         for (Entity entity : players) {
             addFootstepControl(entity);

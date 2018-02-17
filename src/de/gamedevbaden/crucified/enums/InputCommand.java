@@ -14,7 +14,8 @@ public enum InputCommand {
     Left(KeyInput.KEY_A),
     Right(KeyInput.KEY_D),
     Shift(KeyInput.KEY_LSHIFT),
-    Interaction(KeyInput.KEY_F);
+    Interaction(KeyInput.KEY_F),
+    Scream(KeyInput.KEY_V);
 
     private int keyCode;
     private boolean pressed;

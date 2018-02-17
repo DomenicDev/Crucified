@@ -4,10 +4,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
-import de.gamedevbaden.crucified.enums.ModelType;
-import de.gamedevbaden.crucified.enums.SkeletonType;
-import de.gamedevbaden.crucified.enums.Sound;
-import de.gamedevbaden.crucified.enums.Type;
+import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.es.utils.physics.CollisionShapeType;
 
@@ -37,16 +34,19 @@ public class EntityFactory {
     public static EntityId createPlayer(EntityData entityData) {
         EntityId player = entityData.createEntity();
         entityData.setComponents(player,
+                new SkeletonComponent(SkeletonType.HUMAN),
                 new Model(ModelType.Player),
-                new Transform(new Vector3f(0, 5, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                new Transform(new Vector3f(0, 30, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
-                new SkeletonComponent(SkeletonType.Human),
-                new AliveComponent(),
+                new AliveComponent(100),
                 new FootstepEmitter(),
                 new PlayerControlled(),
+                new ExplosionImpactComponent(),
                 new CharacterMovementState(),
                 new CanPickupArtifactCompont(),
-                new Container());
+                new Container(),
+                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
+        );
 
         return player;
     }
@@ -54,13 +54,15 @@ public class EntityFactory {
     public static EntityId createDemon(EntityData entityData) {
         EntityId monster = entityData.createEntity();
         entityData.setComponents(monster,
+                new SkeletonComponent(SkeletonType.DEMON),
                 new Model(ModelType.Demon),
-                new Transform(new Vector3f(0,10,0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
+                new Transform(new Vector3f(0, 50, 0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
-                new SkeletonComponent(SkeletonType.Demon),
                 new FootstepEmitter(),
                 new PlayerControlled(),
-                new CharacterMovementState()
+                new AliveComponent(100),
+                new CharacterMovementState(),
+                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
         );
         return monster;
     }

@@ -4,11 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.scene.Spatial;
-import com.simsilica.es.Entity;
-import com.simsilica.es.EntityData;
-import com.simsilica.es.EntityId;
-import com.simsilica.es.EntitySet;
-import com.simsilica.es.filter.FieldFilter;
+import com.simsilica.es.*;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.controls.DemonAnimationControl;
 import de.gamedevbaden.crucified.enums.SkeletonType;
@@ -27,7 +23,7 @@ public class DemonAnimationAppState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
-        this.monsters = entityData.getEntities(new FieldFilter<>(SkeletonComponent.class, "skeletonType", SkeletonType.Demon), SkeletonComponent.class, Model.class, CharacterMovementState.class);
+        this.monsters = entityData.getEntities(Filters.fieldEquals(SkeletonComponent.class, "skeletonType", SkeletonType.DEMON), SkeletonComponent.class, Model.class, CharacterMovementState.class);
 
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
 
@@ -42,6 +38,8 @@ public class DemonAnimationAppState extends AbstractAppState {
     public void update(float tpf) {
 
         if (monsters.applyChanges()) {
+
+            System.out.println(Thread.currentThread().getName());
 
             for (Entity entity : monsters.getAddedEntities()) {
                 addControl(entity);

@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.game;
 
 import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.ActionType;
 
 /**
  * This listener informs about in-game actions and interactions.
@@ -28,5 +29,7 @@ public interface GameEventListener {
     void onItemPutForCraft(EntityId itemToCraft, EntityId ingredient);
 
     void onPutArtifactIntoContainer(EntityId containerId, EntityId artifactId);
+
+    void onPerformAction(EntityId performerId, ActionType actionType);
 
 }

@@ -39,22 +39,27 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     private HashMap<HostedConnection, GameSession> gameSessionHashMap = new HashMap<>();
     private RmiHostedService rmiService;
 
+    private Application app;
+
     public GameServer(int port) {
         this.port = port;
     }
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        this.app = app;
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
 
         try {
 
+
             this.server = Network.createServer(port);
 
             NetworkUtils.initEntityDataSerializers();
             NetworkUtils.initMessageSerializers();
+
 
             this.server.addConnectionListener(this);
             this.server.addMessageListener(this);
@@ -65,6 +70,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
             this.server.getServices().addService(new RpcHostedService());
             this.server.getServices().addService(rmiService);
             this.server.start();
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -85,12 +91,15 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         return server;
     }
 
+    private int playerCounter = 0;
     @Override
     public void connectionAdded(Server server, HostedConnection conn) {
 
         System.out.println("Client #" + conn.getId() + " has connected!");
 
-        EntityId player = EntityFactory.createPlayer(entityData);
+        EntityId player = (playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
+
+        System.out.println(player);
 
         // create a game session for this player
         GameSession session = gameSessionManager.createSession(player);
@@ -134,6 +143,4 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
         super.cleanup();
     }
-
-
 }

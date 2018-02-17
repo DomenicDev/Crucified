@@ -3,6 +3,7 @@ package de.gamedevbaden.crucified.net;
 
 import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.EnumSerializer;
+import com.jme3.network.serializing.serializers.FieldSerializer;
 import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
 import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
@@ -41,9 +42,14 @@ public class NetworkUtils {
         Serializer.registerClass(FireState.class);
         Serializer.registerClass(ItemType.class, new EnumSerializer());
         Serializer.registerClass(ItemComponent.class);
-        Serializer.registerClass(SkeletonType.class, new EnumSerializer());
-        Serializer.registerClass(SkeletonComponent.class);
+        Serializer.registerClass(SkeletonComponent.class, new FieldSerializer());
         Serializer.registerClass(FootstepEmitter.class);
+        Serializer.registerClass(ActionType.class, new EnumSerializer());
+        Serializer.registerClass(ActionGroupComponent.class);
+        Serializer.registerClass(ActionComponent.class);
+        Serializer.registerClass(DummyComponent.class);
+        Serializer.registerClass(AliveComponent.class);
+        Serializer.registerClass(Fireball.class);
     }
 
     /**

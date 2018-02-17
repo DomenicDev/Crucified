@@ -6,6 +6,7 @@ import de.gamedevbaden.crucified.enums.GameDecisionType;
 import de.gamedevbaden.crucified.enums.PaperScript;
 import de.gamedevbaden.crucified.enums.Scene;
 import de.gamedevbaden.crucified.game.GameCommander;
+import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
 
@@ -35,6 +36,6 @@ public class ServerGameCommander implements GameCommander {
 
     @Override
     public void onGameDecided(GameDecisionType decisionType) {
-
+        conn.send(new GameDecidedMessage(decisionType));
     }
 }

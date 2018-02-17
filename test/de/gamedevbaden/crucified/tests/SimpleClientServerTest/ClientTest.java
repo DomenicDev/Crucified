@@ -12,6 +12,9 @@ import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 import de.gamedevbaden.crucified.utils.GameInitializer;
 import de.gamedevbaden.crucified.utils.GameOptions;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created by Domenic on 26.04.2017.
  */
@@ -23,6 +26,7 @@ public class ClientTest extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        Logger.getLogger("").setLevel(Level.FINE);
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 

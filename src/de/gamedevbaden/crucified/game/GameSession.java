@@ -3,6 +3,7 @@ package de.gamedevbaden.crucified.game;
 import com.jme3.math.Vector3f;
 import com.jme3.network.service.rmi.Asynchronous;
 import com.simsilica.es.EntityId;
+import de.gamedevbaden.crucified.enums.ActionType;
 
 /**
  * {@link GameSession} provides the fundamental methods for player interaction in the game world.
@@ -85,5 +86,14 @@ public interface GameSession {
      * @param ingredient the item (entity) which is needed for crafting
      */
     void putItemToCraft(EntityId itemToCraft, EntityId ingredient);
+
+    /**
+     * This will make the entity perform the specified action
+     * unless the entity does not contain this type of action
+     * in the {@link de.gamedevbaden.crucified.es.components.ActionGroupComponent}
+     *
+     * @param actionType the action to perform
+     */
+    void performAction(ActionType actionType);
 
 }
