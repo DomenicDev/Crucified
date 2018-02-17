@@ -364,7 +364,7 @@ public class PhysicAppState extends AbstractAppState {
     private void fireFireball(Entity entity) {
         RigidBodyControl rigidBody = getRigidBodyControl(entity.getId());
         rigidBody.setGravity(new Vector3f(0, 0, 0));
-        rigidBody.setLinearVelocity(entity.get(Fireball.class).getDirection().normalize().multLocal(10));
+        rigidBody.setLinearVelocity(entity.get(Fireball.class).getDirection().normalize().multLocal(25));
         fireballListener.flyingFireballs.put(entity.getId(), rigidBody);
     }
 
