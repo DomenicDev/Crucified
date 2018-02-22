@@ -22,22 +22,18 @@ public class NiftyAppState extends AbstractAppState implements ActionListener{
 
     private GuiEventListener listener;
 
-    public enum NiftyScreen {
-
-        MainMenu("mainMenu"),
-        SettingsScreen("settingsScreen"),
-        NetworkGameScreen("networkGameScreen"),
-        ConnectionScreen("connectionScreen");
-
-        NiftyScreen(String screenId) {
-            this.screenId = screenId;
+    public <T extends ScreenController> T getController(Class<T> c) {
+        for (NiftyScreen s : NiftyScreen.values()) {
+            String id = s.getScreenId();
+            Screen screen = nifty.getScreen(id);
+            if (screen != null) {
+                ScreenController controller = screen.getScreenController();
+                if (c.isAssignableFrom(controller.getClass())) {
+                    return (T) controller;
+                }
+            }
         }
-
-        private String screenId;
-
-        public String getScreenId() {
-            return screenId;
-        }
+        return null;
     }
 
     public NiftyAppState(GuiEventListener listener) {
@@ -91,18 +87,23 @@ public class NiftyAppState extends AbstractAppState implements ActionListener{
         }
     }
 
-    private <T extends ScreenController> T getController(Class<T> c) {
-        for (NiftyScreen s : NiftyScreen.values()) {
-            String id = s.getScreenId();
-            Screen screen = nifty.getScreen(id);
-            if (screen != null) {
-                ScreenController controller = screen.getScreenController();
-                if (c.isAssignableFrom(controller.getClass())) {
-                    return (T) controller;
-                }
-            }
+    public enum NiftyScreen {
+
+        MainMenu("mainMenu"),
+        SettingsScreen("settingsScreen"),
+        NetworkGameScreen("networkGameScreen"),
+        ConnectionScreen("connectionScreen"),
+        EmptyScreen("emptyScreen");
+
+        NiftyScreen(String screenId) {
+            this.screenId = screenId;
         }
-        return null;
+
+        private String screenId;
+
+        public String getScreenId() {
+            return screenId;
+        }
     }
 
     public void goToScreen(NiftyScreen screen) {

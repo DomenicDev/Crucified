@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class SceneEntityLoader extends AbstractAppState {
 
-    public static Scene sceneToLoad = Scene.FinalIslandScene;
+    public static Scene sceneToLoad = Scene.GameLogicTestScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;
@@ -116,9 +116,9 @@ public class SceneEntityLoader extends AbstractAppState {
                 if (spatial.getParent() instanceof AssetLinkNode) spatial = spatial.getParent();
                 StaticPhysicsSceneObjectUserData.PhysicsShapeType type = userData.getShapeType();
                 if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.BoxShape) {
-                    physicAppState.addStaticPhysicalObject(spatial, CollisionShapeType.BOX_COLLISION_SHAPE);
+                    stateManager.getState(PhysicAppState.class).addStaticPhysicalObject(spatial, CollisionShapeType.BOX_COLLISION_SHAPE);
                 } else if (type == StaticPhysicsSceneObjectUserData.PhysicsShapeType.MeshShape) {
-                    physicAppState.addStaticPhysicalObject(spatial, CollisionShapeType.MESH_COLLISION_SHAPE);
+                    stateManager.getState(PhysicAppState.class).addStaticPhysicalObject(spatial, CollisionShapeType.MESH_COLLISION_SHAPE);
                 }
             }
         });

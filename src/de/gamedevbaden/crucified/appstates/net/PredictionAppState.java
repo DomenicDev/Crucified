@@ -124,6 +124,8 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         characterControl.getPhysicsRigidBody().setPhysicsLocation(transform.getTranslation());
         characterControl.getPhysicsRigidBody().setPhysicsRotation(transform.getRotation());
 
+        characterControl.warp(transform.getTranslation());
+
         return characterControl;
     }
 
@@ -264,11 +266,11 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
                 if (closestLocalPosition.distance(serverLocation) > 5f) {
                     // we directly apply the server position because of too high de-synchronization
-                    playerCharacterControl.getPhysicsRigidBody().setPhysicsLocation(serverLocation);
+                    playerCharacterControl.warp(serverLocation);
 
                     // delete all local position entries
                     positionList.clear();
-                    needToInterpolate = true;
+                    needToInterpolate = false;
 
                 } else if (closestLocalPosition.distance(serverLocation) >= 0.1f) {
                     // slight difference we interpolate to the servers location

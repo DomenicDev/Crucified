@@ -6,7 +6,10 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.system.AppSettings;
 import de.gamedevbaden.crucified.enums.Quality;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class SettingsAppState extends AbstractAppState {
@@ -40,7 +43,7 @@ public class SettingsAppState extends AbstractAppState {
             e.printStackTrace();
         }
 
-        applyToAppSettings();
+        //    applyToAppSettings();
 
         super.initialize(stateManager, app);
     }

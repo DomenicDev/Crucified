@@ -23,16 +23,13 @@ import java.util.HashMap;
 public class PlayerInputControlAppState extends AbstractAppState {
 
     private EntitySet playerControlledEntities;
-    private HashMap<EntityId, PlayerInputCollector> inputCollectorHashMap;
-    private HashMap<EntityId, ArrayList<InputChangeListener>> inputChangeListenerHashMap;
+    private HashMap<EntityId, PlayerInputCollector> inputCollectorHashMap = new HashMap<>();
+    private HashMap<EntityId, ArrayList<InputChangeListener>> inputChangeListenerHashMap = new HashMap<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.playerControlledEntities = entityData.getEntities(PlayerControlled.class);
-
-        this.inputCollectorHashMap = new HashMap<>();
-        this.inputChangeListenerHashMap = new HashMap<>();
 
         for (Entity entity : playerControlledEntities) {
             addInputCollector(entity);
@@ -125,10 +122,7 @@ public class PlayerInputControlAppState extends AbstractAppState {
         this.playerControlledEntities = null;
 
         this.inputCollectorHashMap.clear();
-        this.inputCollectorHashMap = null;
-
         this.inputChangeListenerHashMap.clear();
-        this.inputChangeListenerHashMap = null;
 
         super.cleanup();
     }

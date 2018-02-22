@@ -14,6 +14,8 @@ import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
+import de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
@@ -38,6 +40,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     private GameCommanderHolder commanderHolder;
     private HashMap<HostedConnection, GameSession> gameSessionHashMap = new HashMap<>();
     private RmiHostedService rmiService;
+    private AppStateManager stateManager;
 
     private Application app;
 
@@ -48,6 +51,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = app;
+        this.stateManager = stateManager;
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
@@ -87,7 +91,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         }
     }
 
-    private Server getServer() {
+    public Server getServer() {
         return server;
     }
 
@@ -114,6 +118,11 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         commanderHolder.add(player, commander);
 
         gameSessionHashMap.put(conn, session);
+
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+            niftyAppState.getController(NetworkGameScreenController.class).setSecondPlayerConnected(true);
+        }
     }
 
     @Override
@@ -123,7 +132,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
     @Override
     public void messageReceived(HostedConnection source, Message m) {
-        if (m instanceof ReadyForGameStartMessage) {
+        if (false && m instanceof ReadyForGameStartMessage) {
             ReadyForGameStartMessage rm = (ReadyForGameStartMessage) m;
             if (rm.isReady()) {
                 EntityId playerId = gameSessionHashMap.get(source).getPlayer();

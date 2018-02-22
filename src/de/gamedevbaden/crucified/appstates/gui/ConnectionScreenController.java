@@ -21,6 +21,7 @@ public class ConnectionScreenController implements ScreenController {
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
         this.nifty = nifty;
         this.ipTextField = screen.findNiftyControl("ipTextField", TextField.class);
+        this.ipTextField.setText("localhost");
     }
 
     @Override

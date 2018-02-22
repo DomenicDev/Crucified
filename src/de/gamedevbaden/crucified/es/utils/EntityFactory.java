@@ -31,12 +31,11 @@ public class EntityFactory {
 
     }
 
-    public static EntityId createPlayer(EntityData entityData) {
-        EntityId player = entityData.createEntity();
+    public static EntityId createPlayer(EntityData entityData, EntityId player) {
         entityData.setComponents(player,
                 new SkeletonComponent(SkeletonType.HUMAN),
                 new Model(ModelType.Player),
-                new Transform(new Vector3f(0, 30, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                new Transform(new Vector3f(0, 5, 0), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new AliveComponent(100),
                 new FootstepEmitter(),
@@ -51,12 +50,17 @@ public class EntityFactory {
         return player;
     }
 
+    public static EntityId createPlayer(EntityData entityData) {
+        EntityId player = entityData.createEntity();
+        return createPlayer(entityData, player);
+    }
+
     public static EntityId createDemon(EntityData entityData) {
         EntityId monster = entityData.createEntity();
         entityData.setComponents(monster,
                 new SkeletonComponent(SkeletonType.DEMON),
                 new Model(ModelType.Demon),
-                new Transform(new Vector3f(0, 50, 0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
+                new Transform(new Vector3f(0, 5, 0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new FootstepEmitter(),
                 new PlayerControlled(),

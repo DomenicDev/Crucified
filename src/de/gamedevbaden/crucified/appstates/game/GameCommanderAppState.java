@@ -46,11 +46,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private Node rootNode;
     private Camera cam;
     private SimpleApplication app;
-    private ShadowRendererAppState shadowRendererAppState;
-    private TerrainGrassGeneratorAppState terrainGrassGeneratorAppState;
     private HudAppState hudAppState;
     private GameWorldPagingManager pagingManager;
     private PredictionAppState predictionAppState;
+    private AppStateManager stateManager;
 
     // scripts
     private Properties scripts;
@@ -72,10 +71,9 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     public void initialize(AppStateManager stateManager, Application app) {
         this.assetManager = app.getAssetManager();
         this.cam = app.getCamera();
+        this.stateManager = stateManager;
         this.rootNode = ((SimpleApplication) app).getRootNode();
-        this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
         this.hudAppState = stateManager.getState(HudAppState.class);
-        this.terrainGrassGeneratorAppState = stateManager.getState(TerrainGrassGeneratorAppState.class);
         this.rootNode.attachChild(mainWorldNode);
         this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
         this.predictionAppState = stateManager.getState(PredictionAppState.class);
@@ -145,7 +143,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // create shadows
         for (Light light : mainWorldNode.getLocalLightList()) {
             if (light instanceof DirectionalLight) {
-                shadowRendererAppState.addShadowRenderer((DirectionalLight) light);
+                stateManager.getState(ShadowRendererAppState.class).addShadowRenderer((DirectionalLight) light);
             }
         }
 
@@ -155,7 +153,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
                 if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
                     int grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
                     TerrainQuad terrain = (TerrainQuad) spatial;
-                    Node grassNode = terrainGrassGeneratorAppState.createGrassForTerrain(terrain, grassTextureIndex);
+                    Node grassNode = stateManager.getState(TerrainGrassGeneratorAppState.class).createGrassForTerrain(terrain, grassTextureIndex);
                     grassNode.setCullHint(Spatial.CullHint.Always);
 
                     System.out.println(grassNode.getChildren().size());
@@ -177,13 +175,13 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         }
 
         // we need to add local physics if we run a client
-        if (predictionAppState != null) {
-            predictionAppState.initStaticPhysicalObjects(world);
+        if (stateManager.getState(PredictionAppState.class) != null) {
+            stateManager.getState(PredictionAppState.class).initStaticPhysicalObjects(world);
         }
 
         // create chunks for game world
-        List<WorldChunk> chunks = pagingManager.createChunksForGameWorld(world, 7, assetManager);
-        pagingManager.setChunks(chunks);
+        List<WorldChunk> chunks = stateManager.getState(GameWorldPagingManager.class).createChunksForGameWorld(world, 7, assetManager);
+        stateManager.getState(GameWorldPagingManager.class).setChunks(chunks);
 
 
         // play predefined audio nodes

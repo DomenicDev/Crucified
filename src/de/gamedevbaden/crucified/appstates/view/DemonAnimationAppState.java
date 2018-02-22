@@ -39,8 +39,6 @@ public class DemonAnimationAppState extends AbstractAppState {
 
         if (monsters.applyChanges()) {
 
-            System.out.println(Thread.currentThread().getName());
-
             for (Entity entity : monsters.getAddedEntities()) {
                 addControl(entity);
             }

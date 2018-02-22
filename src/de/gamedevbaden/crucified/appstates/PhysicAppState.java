@@ -384,7 +384,6 @@ public class PhysicAppState extends AbstractAppState {
                     entityData.removeEntity(e.getKey());
                     entitiesToRemove.add(e.getKey());
 
-                    System.out.println(nonFireballResistentEntities.size());
                     boolean hitPlayer = false;
                     for (Entity entity : nonFireballResistentEntities) {
                         CustomCharacterControl ccc = getCharacterControl(entity.getId());
