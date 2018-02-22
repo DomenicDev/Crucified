@@ -12,6 +12,10 @@ public class GameConstants {
     public static final String GAME_NAME = "CRUCIFIED";
     public static final float VERSION = 0.14f;
 
+    // ------------- MULTIPLAYER --------------------- //
+
+    public static final int DEFAULT_PORT = 5555;
+
     //------------ USER DATA NAMES ---------------------//
 
     public static final String USER_DATA_ENTITY_TYPE = "type";

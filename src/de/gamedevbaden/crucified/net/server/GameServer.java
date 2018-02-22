@@ -42,6 +42,8 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     private RmiHostedService rmiService;
     private AppStateManager stateManager;
 
+    private EntityId secondPlayer;
+
     private Application app;
 
     public GameServer(int port) {
@@ -101,12 +103,12 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
         System.out.println("Client #" + conn.getId() + " has connected!");
 
-        EntityId player = (playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
+        this.secondPlayer = entityData.createEntity(); //(playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
 
-        System.out.println(player);
+        System.out.println(secondPlayer);
 
         // create a game session for this player
-        GameSession session = gameSessionManager.createSession(player);
+        GameSession session = gameSessionManager.createSession(secondPlayer);
 
         // share this GameSession object so the client can access it
         RmiRegistry rmi = rmiService.getRmiRegistry(conn);
@@ -115,7 +117,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         // create a server side game commander which basically sends commands to the client
         // the client also has one
         GameCommander commander = new ServerGameCommander(conn);
-        commanderHolder.add(player, commander);
+        commanderHolder.add(secondPlayer, commander);
 
         gameSessionHashMap.put(conn, session);
 
@@ -123,6 +125,10 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         if (niftyAppState != null) {
             niftyAppState.getController(NetworkGameScreenController.class).setSecondPlayerConnected(true);
         }
+    }
+
+    public EntityId getSecondPlayer() {
+        return secondPlayer;
     }
 
     @Override

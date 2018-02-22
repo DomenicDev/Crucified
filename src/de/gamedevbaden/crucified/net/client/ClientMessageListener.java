@@ -55,7 +55,9 @@ public class ClientMessageListener implements MessageListener<Client> {
         }
 
         if (m instanceof StartGameMessage) {
-            app.getStateManager().getState(MainGameAppState.class).startGame();
+            this.app.enqueue(() -> {
+                app.getStateManager().getState(MainGameAppState.class).startGame();
+            });
         }
     }
 }

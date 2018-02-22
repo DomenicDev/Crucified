@@ -10,6 +10,7 @@ import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.ArtifactContainerAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.GameLogicAppState;
+import de.gamedevbaden.crucified.appstates.gamelogic.GameStartupAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;

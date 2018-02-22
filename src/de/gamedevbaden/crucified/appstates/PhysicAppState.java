@@ -317,6 +317,7 @@ public class PhysicAppState extends AbstractAppState {
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
         characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
+        System.out.println("Start pos: " + entity.get(Transform.class).getTranslation());
         characterControl.setWalkDirection(pcc.getWalkDirection());
         characterControl.setViewDirection(pcc.getViewDirection());
         addPhysicsControl(characterControl);

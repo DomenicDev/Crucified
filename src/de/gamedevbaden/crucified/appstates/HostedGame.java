@@ -1,6 +1,7 @@
 package de.gamedevbaden.crucified.appstates;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.EntityData;
@@ -9,6 +10,8 @@ import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventHandler;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
+import de.gamedevbaden.crucified.appstates.gamelogic.GameStartupAppState;
+import de.gamedevbaden.crucified.appstates.gamelogic.PlayerHolderAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
@@ -34,7 +37,7 @@ public class HostedGame extends AbstractGame {
         EntityData entityData = entityDataState.getEntityData();
 
         // create game commander handler
-        GameCommanderAppState commanderAppState = new GameCommanderAppState();
+        GameCommanderAppState commanderAppState = new GameCommanderAppState((SimpleApplication) stateManager.getApplication());
         stateManager.attach(commanderAppState);
 
         // load test scene
@@ -72,6 +75,8 @@ public class HostedGame extends AbstractGame {
 
         stateManager.attach(new GameEventHandler(stateManager.getState(GameSessionManager.class)));
 
+        stateManager.attach(new PlayerHolderAppState(localPlayer, stateManager.getState(GameServer.class).getSecondPlayer()));
+
         GameInitializer.initGameLogicAppStates(stateManager);
         GameInitializer.initViewAppStates(stateManager);
         GameInitializer.initSoundAppStates(stateManager);
@@ -85,19 +90,31 @@ public class HostedGame extends AbstractGame {
     private class Loader extends AbstractAppState {
         @Override
         public void initialize(AppStateManager stateManager, Application app) {
-            EntityFactory.createPlayer(stateManager.getState(EntityDataState.class).getEntityData(), localPlayer);
+
+            stateManager.attach(new GameStartupAppState());
 
             stateManager.getState(SceneEntityLoader.class).createEntitiesFromScene(sceneToLoad);
+
+
 
             for (GameCommander commander : stateManager.getState(GameCommanderHolder.class).getAll()) {
                 commander.loadScene(SceneEntityLoader.sceneToLoad);
             }
 
-            stateManager.getState(GameServer.class).getServer().broadcast(new StartGameMessage());
+
 
             GameInitializer.initFirstPersonCameraView(stateManager);
 
             stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
+
+            stateManager.attach(new Loader2());
+        }
+    }
+
+    private class Loader2 extends AbstractAppState {
+        @Override
+        public void initialize(AppStateManager stateManager, Application app) {
+            stateManager.getState(GameServer.class).getServer().broadcast(new StartGameMessage());
         }
     }
 }

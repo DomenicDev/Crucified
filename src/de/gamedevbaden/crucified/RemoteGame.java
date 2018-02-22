@@ -7,6 +7,7 @@ import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
+import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
@@ -16,6 +17,7 @@ public class RemoteGame extends AbstractGame {
 
     private GameClient client;
     private GameCommanderAppState commander;
+    private GameSession gameSession;
 
     public RemoteGame(GameClient client) {
         this.client = client;
@@ -31,14 +33,12 @@ public class RemoteGame extends AbstractGame {
         stateManager.attach(commander);
 
         EntityData entityData = client.getEntityData();
-        GameSession gameSession = client.getGameSession();
+        this.gameSession = client.getGameSession();
 
         // create entity data state with remote entity data
         stateManager.attach(new EntityDataState(entityData));
 
-        // create our game session app states
-        stateManager.attach(new PlayerInteractionState());
-        stateManager.attach(new GameEventAppState());
+
 
         // init game and view states
         // init game and view states
@@ -52,15 +52,24 @@ public class RemoteGame extends AbstractGame {
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initFirstPersonCameraView(stateManager);
 
-
         client.sendMessage(new ReadyForGameStartMessage(true));
     }
 
     @Override
     public void onGameStart() {
+
+        // create our game session app states
+        stateManager.attach(new PlayerInteractionState());
+
+
+
+
+        stateManager.attach(new GameEventAppState());
         //     GameInitializer.initInputAppStates(stateManager);
         //     GameInitializer.initClientStatesWithGameSessionDependency(stateManager, stateManager.getState(GameSessionAppState.class).getGameSession());
         //     GameInitializer.initFirstPersonCameraView(stateManager);
+
+        stateManager.getState(PredictionAppState.class).initPredictionForPlayer();
 
         stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
     }

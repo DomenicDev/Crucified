@@ -31,11 +31,11 @@ public class EntityFactory {
 
     }
 
-    public static EntityId createPlayer(EntityData entityData, EntityId player) {
+    public static EntityId createPlayer(EntityData entityData, EntityId player, Vector3f startPos) {
         entityData.setComponents(player,
                 new SkeletonComponent(SkeletonType.HUMAN),
                 new Model(ModelType.Player),
-                new Transform(new Vector3f(0, 5, 0), new Quaternion(), new Vector3f(1, 1, 1)),
+                new Transform(startPos.clone(), new Quaternion(), new Vector3f(1, 1, 1)),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new AliveComponent(100),
                 new FootstepEmitter(),
@@ -52,15 +52,14 @@ public class EntityFactory {
 
     public static EntityId createPlayer(EntityData entityData) {
         EntityId player = entityData.createEntity();
-        return createPlayer(entityData, player);
+        return createPlayer(entityData, player, new Vector3f());
     }
 
-    public static EntityId createDemon(EntityData entityData) {
-        EntityId monster = entityData.createEntity();
+    public static EntityId createDemon(EntityData entityData, EntityId monster, Vector3f startPos) {
         entityData.setComponents(monster,
                 new SkeletonComponent(SkeletonType.DEMON),
                 new Model(ModelType.Demon),
-                new Transform(new Vector3f(0, 5, 0), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
+                new Transform(startPos.clone(), new Quaternion(), Vector3f.UNIT_XYZ.clone()),
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new FootstepEmitter(),
                 new PlayerControlled(),
@@ -69,6 +68,22 @@ public class EntityFactory {
                 new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
         );
         return monster;
+    }
+
+    public static EntityId createDemon(EntityData entityData) {
+        EntityId monster = entityData.createEntity();
+        return createDemon(entityData, monster, new Vector3f());
+    }
+
+    public static void createArtifact(EntityData entityData, Vector3f artifactPos) {
+        EntityId artifact = entityData.createEntity();
+        entityData.setComponents(artifact,
+                new Transform(artifactPos),
+                new Pickable(),
+                new ArtifactComponent(),
+                new ItemComponent(ItemType.Artifact),
+                new Model(ModelType.Artifact)
+        );
     }
 
     public static EntityId createEntityType(EntityData entityData, Type type) {
@@ -104,5 +119,6 @@ public class EntityFactory {
                 return null;
         }
     }
+
 
 }
