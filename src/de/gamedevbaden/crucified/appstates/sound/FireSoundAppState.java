@@ -86,6 +86,7 @@ public class FireSoundAppState extends AbstractAppState {
 
     private void removeAudio(Entity entity) {
         AudioNode audioNode = audios.remove(entity.getId());
+        audioNode.stop();
         audioNode.removeFromParent();
     }
 
