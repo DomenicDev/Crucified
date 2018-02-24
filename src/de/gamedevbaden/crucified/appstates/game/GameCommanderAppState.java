@@ -15,7 +15,10 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import de.gamedevbaden.crucified.appstates.CameraAppState;
+import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
@@ -209,9 +212,23 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     public void onGameDecided(GameDecisionType decisionType) {
         // Todo
         System.out.println(decisionType);
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+          //  niftyAppState.showPopup(decisionType);
+            niftyAppState.showGameOverScreen(decisionType);
+        }
+
+        stateManager.detach(stateManager.getState(CameraAppState.class));
+        stateManager.detach(stateManager.getState(PlayerInteractionState.class));
     }
 
     public Node getMainWorldNode() {
         return mainWorldNode;
+    }
+
+    @Override
+    public void cleanup() {
+        this.mainWorldNode.removeFromParent();
+        super.cleanup();
     }
 }

@@ -83,6 +83,7 @@ public class HostedGame extends AbstractGame {
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initInputAppStates(stateManager);
 
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
 
         stateManager.attach(new Loader());
     }
@@ -116,5 +117,34 @@ public class HostedGame extends AbstractGame {
         public void initialize(AppStateManager stateManager, Application app) {
             stateManager.getState(GameServer.class).getServer().broadcast(new StartGameMessage());
         }
+    }
+
+    @Override
+    public void cleanup() {
+        stateManager.detach(stateManager.getState(GameServer.class));
+        stateManager.detach(stateManager.getState(EntityDataState.class));
+        stateManager.detach(stateManager.getState(GameCommanderAppState.class));
+        stateManager.detach(stateManager.getState(SceneEntityLoader.class));
+        stateManager.detach(stateManager.getState(GameSessionManager.class));
+        stateManager.detach(stateManager.getState(GameCommanderHolder.class));
+
+        // init game logic states
+        GameInitializer.removeEssentialAppStates(stateManager);
+        GameInitializer.removeGameSessionRelatedAppStates(stateManager);
+
+
+        stateManager.detach(stateManager.getState(PlayerInteractionState.class));
+        stateManager.detach(stateManager.getState(GameEventAppState.class));
+
+        stateManager.detach(stateManager.getState(GameEventHandler.class));
+
+        stateManager.detach(stateManager.getState(PlayerHolderAppState.class));
+
+        GameInitializer.removeGameLogicAppStates(stateManager);
+        GameInitializer.removeViewAppStates(stateManager);
+        GameInitializer.removeSoundAppStates(stateManager);
+        GameInitializer.removePlayerStates(stateManager);
+        GameInitializer.removeInputAppStates(stateManager);
+        super.cleanup();
     }
 }

@@ -5,6 +5,7 @@ import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import de.gamedevbaden.crucified.MainGameAppState;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
@@ -30,6 +31,7 @@ public class ClientMessageListener implements MessageListener<Client> {
     @Override
     public void messageReceived(Client source, Message m) {
         if (m instanceof LoadLevelMessage) {
+            app.getStateManager().getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
             this.app.enqueue(() -> {
                 LoadLevelMessage lm = (LoadLevelMessage) m;
                 gameCommander.loadScene(lm.getScene());

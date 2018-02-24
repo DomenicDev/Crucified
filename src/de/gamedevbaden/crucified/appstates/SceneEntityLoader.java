@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public class SceneEntityLoader extends AbstractAppState {
 
-    public static Scene sceneToLoad = Scene.FinalIslandScene;
+    public static Scene sceneToLoad = Scene.GameLogicTestScene;
     private static Logger log = Logger.getLogger(SceneEntityLoader.class.getName());
     private EntityData entityData;
     private AppStateManager stateManager;

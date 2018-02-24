@@ -47,18 +47,18 @@ public class GameStartupAppState extends AbstractAppState {
             artifactPositions.remove(x);
         }
 
-        // Todo: set start position for players...
+   /*     // Todo: set start position for players...
           Vector3f[][] startPositions = new Vector3f[][] {
                 {new Vector3f(-19.920132f, 12.266039f, 52.698334f), new Vector3f(-4.485677f, 12.948147f, -130.6954f)},
                 {new Vector3f(15.484093f, 12.042202f, 158.9679f), new Vector3f(-153.5913f, 10.669474f, -91.215935f)},
                 {new Vector3f(100.89399f, 24.614304f, 69.54313f), new Vector3f(37.130386f, 50.90343f, -82.32215f)},
                 {new Vector3f(150.73814f, 21.07069f, -122.06702f),	new Vector3f(-77.181366f, 13.087656f, -23.556862f)}
         };
-
-     /*   Vector3f[][] startPositions = new Vector3f[][] {
+*/
+        Vector3f[][] startPositions = new Vector3f[][] {
                 {new Vector3f(0,8,0), new Vector3f(5, 5, 0)},
                 {new Vector3f(10, 5, 3), new Vector3f(1, 5, 0)}
-        }; */
+        };
 
         Random m = new Random();
         int x = m.nextInt(1);

@@ -4,9 +4,11 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.network.*;
+import com.jme3.network.serializing.Serializer;
 import com.jme3.network.service.rmi.RmiHostedService;
 import com.jme3.network.service.rmi.RmiRegistry;
 import com.jme3.network.service.rpc.RpcHostedService;
+import com.jme3.network.service.serializer.ServerSerializerRegistrationsService;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
@@ -59,8 +61,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
 
         try {
-
-
+            Serializer.initialize();
             this.server = Network.createServer(port);
 
             NetworkUtils.initEntityDataSerializers();
@@ -149,7 +150,8 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
     @Override
     public void cleanup() {
-        if (server != null) {
+        if (server != null && server.isRunning()) {
+            server.getServices().removeService(server.getServices().getService(ServerSerializerRegistrationsService.class));
             server.close();
         }
 

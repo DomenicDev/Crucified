@@ -73,4 +73,26 @@ public class RemoteGame extends AbstractGame {
 
         stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
     }
+
+    @Override
+    public void cleanup() {
+        stateManager.detach(client);
+        stateManager.detach(stateManager.getState(GameCommanderAppState.class));
+        stateManager.detach(stateManager.getState(EntityDataState.class));
+
+        GameInitializer.removeEssentialAppStates(stateManager);
+        GameInitializer.removeInputAppStates(stateManager);
+        GameInitializer.removeGameSessionRelatedAppStates(stateManager);
+        GameInitializer.removeViewAppStates(stateManager);
+        GameInitializer.removeSoundAppStates(stateManager);
+        GameInitializer.removeClientAppStates(stateManager);
+        GameInitializer.removeClientStatesWithGameSessionDependency(stateManager);
+        GameInitializer.removePlayerStates(stateManager);
+        GameInitializer.removeFirstPersonCameraView(stateManager);
+
+        stateManager.detach(stateManager.getState(PlayerInteractionState.class));
+        stateManager.detach(stateManager.getState(GameEventAppState.class));
+
+        super.cleanup();
+    }
 }

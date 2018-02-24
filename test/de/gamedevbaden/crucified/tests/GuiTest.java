@@ -50,6 +50,7 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
     @Override
     public void cancelNetworkGame() {
         mainGameAppState.closeExistingGame();
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
     }
 
     @Override

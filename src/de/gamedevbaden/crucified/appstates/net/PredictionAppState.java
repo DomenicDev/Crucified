@@ -550,8 +550,10 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             bulletAppState.getPhysicsSpace().remove(playerCharacterControl);
         }
 
-        this.player.release();
-        this.player = null;
+        if (player != null) {
+            this.player.release();
+            this.player = null;
+        }
 
         this.staticRigidBodies.release();
         this.staticRigidBodies.clear();
