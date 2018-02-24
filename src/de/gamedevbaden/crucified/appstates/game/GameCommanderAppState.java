@@ -103,6 +103,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
         System.out.println("Load Scene: " + scene);
 
+        if (stateManager.getState(NiftyAppState.class) != null) {
+            app.getStateManager().getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
+        }
+
         Node world = (Node) assetManager.loadModel(scene.getScenePath());
         this.mainWorldNode.attachChild(world);
         // we want all objects (nodes, geometry) with an EntityType user data
@@ -196,6 +200,17 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             }
         });
 
+       stateManager.attach(new ScreenChanger());
+    }
+
+    private class ScreenChanger extends AbstractAppState {
+        @Override
+        public void initialize(AppStateManager stateManager, Application app) {
+            NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+            if (niftyAppState != null) {
+                niftyAppState.goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
+            }
+        }
     }
 
     @Override

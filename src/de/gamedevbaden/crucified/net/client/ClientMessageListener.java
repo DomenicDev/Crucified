@@ -31,7 +31,6 @@ public class ClientMessageListener implements MessageListener<Client> {
     @Override
     public void messageReceived(Client source, Message m) {
         if (m instanceof LoadLevelMessage) {
-            app.getStateManager().getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
             this.app.enqueue(() -> {
                 LoadLevelMessage lm = (LoadLevelMessage) m;
                 gameCommander.loadScene(lm.getScene());
