@@ -228,7 +228,7 @@ public class GameWorldPagingManager extends AbstractAppState {
 
                 // visualize the chunk area (for debugging)
                 BoundingBox chunkArea = new BoundingBox(chunkCenter, halfWidthOfChunk, halfWorldSizeY, halfHeightOfChunk);
-                gameWorld.attachChild(visualizeBoundingBox(chunkArea, assetManager, ColorRGBA.Blue));
+         //       gameWorld.attachChild(visualizeBoundingBox(chunkArea, assetManager, ColorRGBA.Blue));
 
                 // we create a new chunk for this area
                 WorldChunk chunk = new WorldChunk(gameWorld, chunkArea, new ChunkPosition(xPos, yPos));
