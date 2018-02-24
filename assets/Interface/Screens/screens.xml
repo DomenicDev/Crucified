@@ -335,4 +335,27 @@
         </layer>
     </screen>
 
+    <screen id="reallyReturnToMainMenuScreen" controller="de.gamedevbaden.crucified.appstates.gui.ReturnToMainMenuScreenController">
+        <layer childLayout="center" align="center" valign="center">
+            <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+                <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                    <text id="question" style="setting#text" text="${dialog.sureToCancel}"/>
+                </panel>
+                <panel id="buttonPanel" childLayout="horizontal" width="60%" height="25%" align="center" valign="center">
+                    <panel id="yesPanel" childLayout="center">
+                        <control id="yesButton" name="button" style="customButton" label="${dialog.yes}" valign="top">
+                            <interact onClick="yes()"/>
+                        </control>
+                    </panel>
+                    <panel width="5%"/>
+                    <panel id="noPanel" childLayout="center">
+                        <control id="noButton" name="button" style="customButton" label="${dialog.no}" valign="top">
+                            <interact onClick="no()"/>
+                        </control>
+                    </panel>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
+
 </nifty>

@@ -94,19 +94,13 @@ public class HostedGame extends AbstractGame {
 
             stateManager.attach(new GameStartupAppState());
 
-            stateManager.getState(SceneEntityLoader.class).createEntitiesFromScene(sceneToLoad);
-
-
-
             for (GameCommander commander : stateManager.getState(GameCommanderHolder.class).getAll()) {
-                commander.loadScene(SceneEntityLoader.sceneToLoad);
+                if (commander != stateManager.getState(GameCommanderAppState.class)) {
+                    commander.loadScene(SceneEntityLoader.sceneToLoad);
+                }
             }
 
-
-
-            GameInitializer.initFirstPersonCameraView(stateManager);
-
-            stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
+            stateManager.getState(SceneEntityLoader.class).createEntitiesFromScene(sceneToLoad);
 
             stateManager.attach(new Loader2());
         }
@@ -115,6 +109,11 @@ public class HostedGame extends AbstractGame {
     private class Loader2 extends AbstractAppState {
         @Override
         public void initialize(AppStateManager stateManager, Application app) {
+            stateManager.getState(GameCommanderAppState.class).loadScene(sceneToLoad);
+
+            GameInitializer.initFirstPersonCameraView(stateManager);
+
+            stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
             stateManager.getState(GameServer.class).getServer().broadcast(new StartGameMessage());
         }
     }

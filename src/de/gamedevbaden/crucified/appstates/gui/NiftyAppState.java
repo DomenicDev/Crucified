@@ -24,6 +24,7 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
     private Nifty nifty;
 
     private Element popupPlayerWins, popupMonsterWins;
+    private Element popupReturnToMainMenu;
 
     private InputManager inputManager;
 
@@ -62,13 +63,15 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
                 new SettingsScreenController(settingsAppState),
                 new NetworkGameScreenController(listener),
                 new ConnectionScreenController(listener),
-                new GameOverGuiController(listener));
+                new GameOverGuiController(listener),
+                new ReturnToMainMenuScreenController(listener, inputManager));
 
         this.nifty.setDebugOptionPanelColors(false); // for debugging
 
         // create popups
         this.popupMonsterWins = nifty.createPopup("popupMonsterWin");
         this.popupPlayerWins = nifty.createPopup("popupPlayerWin");
+        this.popupReturnToMainMenu = nifty.createPopup("popupReallyCancel");
 
 
         // remove default escape action
@@ -98,6 +101,8 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
             getController(NetworkGameScreenController.class).cancel();
         } else if (currentScreenId.equals(NiftyScreen.ConnectionScreen.getScreenId())) {
             getController(ConnectionScreenController.class).cancel();
+        } else if (currentScreenId.equals(NiftyScreen.EmptyScreen.screenId)) {
+            goToScreen(NiftyScreen.ReturnToMainMenuScreen);
         }
     }
 
@@ -109,7 +114,8 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
         ConnectionScreen("connectionScreen"),
         EmptyScreen("emptyScreen"),
         LoadingScreen("loadingScreen"),
-        GameOverScreen("gameOverScreen");
+        GameOverScreen("gameOverScreen"),
+        ReturnToMainMenuScreen("reallyReturnToMainMenuScreen");
 
         NiftyScreen(String screenId) {
             this.screenId = screenId;
