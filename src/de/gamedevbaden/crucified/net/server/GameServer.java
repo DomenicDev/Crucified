@@ -151,6 +151,9 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     @Override
     public void cleanup() {
         if (server != null && server.isRunning()) {
+            for (HostedConnection conn : server.getConnections()) {
+                conn.close("Server is shutting down!");
+            }
             server.getServices().removeService(server.getServices().getService(ServerSerializerRegistrationsService.class));
             server.close();
         }

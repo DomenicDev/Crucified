@@ -6,6 +6,7 @@ import com.jme3.app.state.AppStateManager;
 import de.gamedevbaden.crucified.appstates.AbstractGame;
 import de.gamedevbaden.crucified.appstates.HostedGame;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.net.client.GameClient;
 
 public class MainGameAppState extends AbstractAppState {
@@ -32,6 +33,7 @@ public class MainGameAppState extends AbstractAppState {
             stateManager.detach(game);
             game = null;
         }
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
     }
 
     public void startGame() {

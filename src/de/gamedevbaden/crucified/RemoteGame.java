@@ -1,5 +1,8 @@
 package de.gamedevbaden.crucified;
 
+import com.jme3.network.Client;
+import com.jme3.network.ClientStateListener;
+import com.jme3.network.ErrorListener;
 import com.simsilica.es.EntityData;
 import de.gamedevbaden.crucified.appstates.AbstractGame;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
@@ -30,6 +33,27 @@ public class RemoteGame extends AbstractGame {
 
     @Override
     public void setupGame() {
+        // add error listener to client so we close everything properly
+        this.client.getClient().addErrorListener(new ErrorListener<Client>() {
+            @Override
+            public void handleError(Client source, Throwable t) {
+                stateManager.getState(MainGameAppState.class).closeExistingGame();
+                client.getClient().close();
+            }
+        });
+
+        this.client.getClient().addClientStateListener(new ClientStateListener() {
+            @Override
+            public void clientConnected(Client c) {
+
+            }
+
+            @Override
+            public void clientDisconnected(Client c, DisconnectInfo info) {
+                stateManager.getState(MainGameAppState.class).closeExistingGame();
+            }
+        });
+
         stateManager.attach(commander);
 
         EntityData entityData = client.getEntityData();
