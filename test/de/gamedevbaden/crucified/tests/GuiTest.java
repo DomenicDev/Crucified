@@ -58,4 +58,14 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
     public void startNetworkGame() {
         mainGameAppState.startGame();
     }
+
+    @Override
+    public void showCredits() {
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.CreditsScreen);
+    }
+
+    @Override
+    public void backToMainMenu() {
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
+    }
 }

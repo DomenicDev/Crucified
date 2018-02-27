@@ -120,13 +120,6 @@
                 <panel id="emptyPanelTop" childLayout="center" width="100%" height="*"/>
                 <!-- in the following we add several buttons -->
                 <panel id="buttonPanel" childLayout="vertical" align="center" valign="center" width="30%" height="40%">
-                    <panel id="startGamePanel" childLayout="center" align="center" valign="center" width="90%"
-                           height="*">
-                        <control id="startGameButton" name="button" style="customButton"
-                                 label="${dialog.startSingleplayerGame}">
-                            <interact onClick="startSingleplayerGame()"/>
-                        </control>
-                    </panel>
                     <panel id="hostGamePanel" childLayout="center" align="center" valign="center" width="90%"
                            height="*">
                         <control id="hostGameButton" name="button" style="customButton" label="${dialog.hostCoopGame}">
@@ -222,6 +215,36 @@
                     <panel id="cancelButtonPanel" childLayout="center" align="center" valign="center">
                         <control id="cancelButton" name="button" style="customButton" label="${dialog.cancel}">
                             <interact onClick="cancel()"/>
+                        </control>
+                    </panel>
+
+                </panel>
+                <panel id="emptyPanelBottom" width="100%" height="5%"/>
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- credits screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="creditsScreen" controller="de.gamedevbaden.crucified.appstates.gui.CreditsScreenController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title"/>
+                </panel>
+                <panel id="emptyPanelTop" width="100%" height="*"/>
+
+                <panel id="mainSettingsPanel" style="nifty-panel" valign="center" align="center" childLayout="vertical"
+                       width="40%" height="65%">
+                    <control id="credits" name="label" width="100%" height="100%"/>
+                </panel>
+
+                <panel id="buttonPanel" childLayout="horizontal" width="50%" height="10%" valign="center"
+                       align="center">
+                    <panel id="returnButtonPanel" childLayout="center" align="center" valign="center">
+                        <control id="returnButton" name="button" style="customButton" label="${dialog.return}">
+                            <interact onClick="backToMainMenu()"/>
                         </control>
                     </panel>
 

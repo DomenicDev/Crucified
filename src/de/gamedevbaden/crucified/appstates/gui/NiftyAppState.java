@@ -64,7 +64,8 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
                 new NetworkGameScreenController(listener),
                 new ConnectionScreenController(listener),
                 new GameOverGuiController(listener),
-                new ReturnToMainMenuScreenController(listener, inputManager));
+                new ReturnToMainMenuScreenController(listener, inputManager),
+                new CreditsScreenController(listener));
 
         this.nifty.setDebugOptionPanelColors(false); // for debugging
 
@@ -112,6 +113,7 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
         SettingsScreen("settingsScreen"),
         NetworkGameScreen("networkGameScreen"),
         ConnectionScreen("connectionScreen"),
+        CreditsScreen("creditsScreen"),
         EmptyScreen("emptyScreen"),
         LoadingScreen("loadingScreen"),
         GameOverScreen("gameOverScreen"),
