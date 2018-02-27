@@ -17,9 +17,7 @@ import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
-import de.gamedevbaden.crucified.appstates.sound.FireSoundAppState;
-import de.gamedevbaden.crucified.appstates.sound.FootstepSoundAppState;
-import de.gamedevbaden.crucified.appstates.sound.SoundAppState;
+import de.gamedevbaden.crucified.appstates.sound.*;
 import de.gamedevbaden.crucified.appstates.story.StoryManager;
 import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
@@ -103,12 +101,18 @@ public class GameInitializer {
         stateManager.attach(new FootstepSoundAppState());
         stateManager.attach(new SoundAppState());
         stateManager.attach(new FireSoundAppState());
+        stateManager.attach(new FireballSoundAppState());
+        stateManager.attach(new HitSoundAppState());
+        stateManager.attach(new DarkAmbienceMusicAppState());
     }
 
     public static void removeSoundAppStates(AppStateManager stateManager) {
         stateManager.detach(stateManager.getState(FootstepSoundAppState.class));
         stateManager.detach(stateManager.getState(SoundAppState.class));
         stateManager.detach(stateManager.getState(FireSoundAppState.class));
+        stateManager.detach(stateManager.getState(FireballSoundAppState.class));
+        stateManager.detach(stateManager.getState(HitSoundAppState.class));
+        stateManager.detach(stateManager.getState(DarkAmbienceMusicAppState.class));
     }
 
     public static void initFirstPersonCameraView(AppStateManager stateManager) {

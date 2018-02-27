@@ -407,7 +407,15 @@ public class PhysicAppState extends AbstractAppState {
                         entityData.setComponents(fire,
                                 new FireState(true),
                                 new Transform(event.getPositionWorldOnA()),
-                                new Decay(20000));
+                                new Decay(20000),
+                                new HitComponent(HitComponent.HIT_GROUND));
+                    } else {
+                        // if a player was hit we create a sound
+                        EntityId hit = entityData.createEntity();
+                        entityData.setComponents(hit,
+                                new Transform(event.getPositionWorldOnA()),
+                                new HitComponent(HitComponent.HIT_PLAYER),
+                                new Decay(5000));
                     }
 
                 }
