@@ -51,6 +51,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
     private ModelLoaderAppState modelLoader;
     private Camera cam;
 
+    private EntityData entityData;
     private EntitySet staticRigidBodies;
     private EntitySet physicCharacters; // could be players or monsters
     private EntitySet terrains; // terrain is handles differently and not part of a model
@@ -98,13 +99,11 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         this.playerModel = stateManager.getState(ModelViewAppState.class).getSpatial(playerId);
         this.modelLoader = stateManager.getState(ModelLoaderAppState.class);
 
-        EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
+        this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.staticRigidBodies = entityData.getEntities(new FieldFilter<>(PhysicsRigidBody.class, "mass", 0f), Model.class, PhysicsRigidBody.class, Transform.class);
         this.physicCharacters = entityData.getEntities(Model.class, PhysicsCharacterControl.class, Transform.class);
         this.terrains = entityData.getEntities(PhysicsTerrain.class, Transform.class);
-        this.player = entityData.watchEntity(playerId, Transform.class);
 
-        this.playerCharacterControl = createCharacterControl();
 
         // register input for walk direction apply
         this.inputManager = app.getInputManager();
@@ -116,13 +115,17 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         super.initialize(stateManager, app);
     }
 
-    private CustomCharacterControl createCharacterControl() {
+    public void initPredictionForPlayer() {
+        this.player = entityData.watchEntity(playerId, Transform.class);
+        this.playerCharacterControl = createCharacterControl(player);
+    }
+
+    private CustomCharacterControl createCharacterControl(Entity entity) {
         CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
         bulletAppState.getPhysicsSpace().add(characterControl);
 
-        Transform transform = this.player.get(Transform.class);
-        characterControl.getPhysicsRigidBody().setPhysicsLocation(transform.getTranslation());
-        characterControl.getPhysicsRigidBody().setPhysicsRotation(transform.getRotation());
+        Transform transform = entity.get(Transform.class);
+        characterControl.warp(transform.getTranslation());
 
         return characterControl;
     }
@@ -206,7 +209,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
                 // the own player is handled differently
                 if (!entity.getId().equals(this.playerId)) {
 
-                    CustomCharacterControl control = createCharacterControl();
+                    CustomCharacterControl control = createCharacterControl(entity);
                     characterControlHashMap.put(entity.getId(), control);
                     updateCharacterControl(entity);
                 }
@@ -238,7 +241,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
         //********** PREDICTION FOR OWN PLAYER ****************//
 
 
-        if (playerModel != null) {
+        if (player != null && playerModel != null) {
 
             // if cam direction has changed we might need to refresh the walk direction vector
             if (!lastCamLocation.equals(cam.getDirection())) {
@@ -264,11 +267,11 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
                 if (closestLocalPosition.distance(serverLocation) > 5f) {
                     // we directly apply the server position because of too high de-synchronization
-                    playerCharacterControl.getPhysicsRigidBody().setPhysicsLocation(serverLocation);
+                    playerCharacterControl.warp(serverLocation);
 
                     // delete all local position entries
                     positionList.clear();
-                    needToInterpolate = true;
+                    needToInterpolate = false;
 
                 } else if (closestLocalPosition.distance(serverLocation) >= 0.1f) {
                     // slight difference we interpolate to the servers location
@@ -547,8 +550,10 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             bulletAppState.getPhysicsSpace().remove(playerCharacterControl);
         }
 
-        this.player.release();
-        this.player = null;
+        if (player != null) {
+            this.player.release();
+            this.player = null;
+        }
 
         this.staticRigidBodies.release();
         this.staticRigidBodies.clear();

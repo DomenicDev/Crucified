@@ -21,6 +21,7 @@ public class ConnectionScreenController implements ScreenController {
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
         this.nifty = nifty;
         this.ipTextField = screen.findNiftyControl("ipTextField", TextField.class);
+        this.ipTextField.setText("localhost");
     }
 
     @Override
@@ -39,6 +40,6 @@ public class ConnectionScreenController implements ScreenController {
     }
 
     public void cancel() {
-        this.nifty.gotoScreen(NiftyAppState.NiftyScreen.MainMenu.getScreenId());
+        listener.cancelNetworkGame();
     }
 }

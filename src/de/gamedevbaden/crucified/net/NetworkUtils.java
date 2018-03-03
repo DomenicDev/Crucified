@@ -6,10 +6,7 @@ import com.jme3.network.serializing.serializers.EnumSerializer;
 import com.jme3.network.serializing.serializers.FieldSerializer;
 import de.gamedevbaden.crucified.enums.*;
 import de.gamedevbaden.crucified.es.components.*;
-import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
-import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
-import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
-import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
+import de.gamedevbaden.crucified.net.messages.*;
 
 /**
  * This class provides util methods for networked game sessions.
@@ -50,6 +47,7 @@ public class NetworkUtils {
         Serializer.registerClass(DummyComponent.class);
         Serializer.registerClass(AliveComponent.class);
         Serializer.registerClass(Fireball.class);
+        Serializer.registerClass(HitComponent.class);
     }
 
     /**
@@ -63,6 +61,7 @@ public class NetworkUtils {
         Serializer.registerClass(ReadNoteMessage.class);
         Serializer.registerClass(GameDecisionType.class, new EnumSerializer());
         Serializer.registerClass(GameDecidedMessage.class);
+        Serializer.registerClass(StartGameMessage.class);
     }
 
 }

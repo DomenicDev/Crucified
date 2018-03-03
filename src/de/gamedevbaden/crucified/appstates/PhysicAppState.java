@@ -317,6 +317,7 @@ public class PhysicAppState extends AbstractAppState {
         PhysicsCharacterControl pcc = entity.get(PhysicsCharacterControl.class);
         CustomCharacterControl characterControl = new CustomCharacterControl(PhysicConstants.HUMAN_RADIUS, PhysicConstants.HUMAN_HEIGHT, PhysicConstants.HUMAN_WEIGHT);
         characterControl.getPhysicsRigidBody().setPhysicsLocation(entity.get(Transform.class).getTranslation());
+        System.out.println("Start pos: " + entity.get(Transform.class).getTranslation());
         characterControl.setWalkDirection(pcc.getWalkDirection());
         characterControl.setViewDirection(pcc.getViewDirection());
         addPhysicsControl(characterControl);
@@ -384,7 +385,6 @@ public class PhysicAppState extends AbstractAppState {
                     entityData.removeEntity(e.getKey());
                     entitiesToRemove.add(e.getKey());
 
-                    System.out.println(nonFireballResistentEntities.size());
                     boolean hitPlayer = false;
                     for (Entity entity : nonFireballResistentEntities) {
                         CustomCharacterControl ccc = getCharacterControl(entity.getId());
@@ -407,7 +407,15 @@ public class PhysicAppState extends AbstractAppState {
                         entityData.setComponents(fire,
                                 new FireState(true),
                                 new Transform(event.getPositionWorldOnA()),
-                                new Decay(20000));
+                                new Decay(20000),
+                                new HitComponent(HitComponent.HIT_GROUND));
+                    } else {
+                        // if a player was hit we create a sound
+                        EntityId hit = entityData.createEntity();
+                        entityData.setComponents(hit,
+                                new Transform(event.getPositionWorldOnA()),
+                                new HitComponent(HitComponent.HIT_PLAYER),
+                                new Decay(5000));
                     }
 
                 }

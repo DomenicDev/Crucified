@@ -63,7 +63,8 @@ public class CameraAppState extends AbstractAppState implements AnalogListener, 
 
     @Override
     public void cleanup() {
-        resetCamera();
+   //     resetCamera();
+        inputManager.setCursorVisible(true);
         for (String mapping : mappings) {
             inputManager.deleteMapping(mapping);
         }

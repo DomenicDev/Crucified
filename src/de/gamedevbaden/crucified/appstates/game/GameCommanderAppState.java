@@ -15,7 +15,10 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import de.gamedevbaden.crucified.appstates.CameraAppState;
+import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.paging.WorldChunk;
@@ -46,11 +49,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     private Node rootNode;
     private Camera cam;
     private SimpleApplication app;
-    private ShadowRendererAppState shadowRendererAppState;
-    private TerrainGrassGeneratorAppState terrainGrassGeneratorAppState;
     private HudAppState hudAppState;
     private GameWorldPagingManager pagingManager;
     private PredictionAppState predictionAppState;
+    private AppStateManager stateManager;
 
     // scripts
     private Properties scripts;
@@ -70,12 +72,12 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        this.app = (SimpleApplication) app;
         this.assetManager = app.getAssetManager();
         this.cam = app.getCamera();
+        this.stateManager = stateManager;
         this.rootNode = ((SimpleApplication) app).getRootNode();
-        this.shadowRendererAppState = stateManager.getState(ShadowRendererAppState.class);
         this.hudAppState = stateManager.getState(HudAppState.class);
-        this.terrainGrassGeneratorAppState = stateManager.getState(TerrainGrassGeneratorAppState.class);
         this.rootNode.attachChild(mainWorldNode);
         this.pagingManager = stateManager.getState(GameWorldPagingManager.class);
         this.predictionAppState = stateManager.getState(PredictionAppState.class);
@@ -100,6 +102,10 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     public void loadScene(Scene scene) {
 
         System.out.println("Load Scene: " + scene);
+
+        if (stateManager.getState(NiftyAppState.class) != null) {
+            app.getStateManager().getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
+        }
 
         Node world = (Node) assetManager.loadModel(scene.getScenePath());
         this.mainWorldNode.attachChild(world);
@@ -145,17 +151,17 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // create shadows
         for (Light light : mainWorldNode.getLocalLightList()) {
             if (light instanceof DirectionalLight) {
-                shadowRendererAppState.addShadowRenderer((DirectionalLight) light);
+                stateManager.getState(ShadowRendererAppState.class).addShadowRenderer((DirectionalLight) light);
             }
         }
 
         // add grass to terrain
         for (Spatial spatial : world.getChildren()) {
-            if (spatial instanceof TerrainQuad) {
+            if (false && spatial instanceof TerrainQuad) {
                 if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
                     int grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
                     TerrainQuad terrain = (TerrainQuad) spatial;
-                    Node grassNode = terrainGrassGeneratorAppState.createGrassForTerrain(terrain, grassTextureIndex);
+                    Node grassNode = stateManager.getState(TerrainGrassGeneratorAppState.class).createGrassForTerrain(terrain, grassTextureIndex);
                     grassNode.setCullHint(Spatial.CullHint.Always);
 
                     System.out.println(grassNode.getChildren().size());
@@ -177,13 +183,13 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         }
 
         // we need to add local physics if we run a client
-        if (predictionAppState != null) {
-            predictionAppState.initStaticPhysicalObjects(world);
+        if (stateManager.getState(PredictionAppState.class) != null) {
+            stateManager.getState(PredictionAppState.class).initStaticPhysicalObjects(world);
         }
 
         // create chunks for game world
-        List<WorldChunk> chunks = pagingManager.createChunksForGameWorld(world, 7, assetManager);
-        pagingManager.setChunks(chunks);
+        List<WorldChunk> chunks = stateManager.getState(GameWorldPagingManager.class).createChunksForGameWorld(world, 7, assetManager);
+        stateManager.getState(GameWorldPagingManager.class).setChunks(chunks);
 
 
         // play predefined audio nodes
@@ -194,6 +200,17 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             }
         });
 
+       stateManager.attach(new ScreenChanger());
+    }
+
+    private class ScreenChanger extends AbstractAppState {
+        @Override
+        public void initialize(AppStateManager stateManager, Application app) {
+            NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+            if (niftyAppState != null) {
+                niftyAppState.goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
+            }
+        }
     }
 
     @Override
@@ -210,9 +227,23 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     public void onGameDecided(GameDecisionType decisionType) {
         // Todo
         System.out.println(decisionType);
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+          //  niftyAppState.showPopup(decisionType);
+            niftyAppState.showGameOverScreen(decisionType);
+        }
+
+        stateManager.detach(stateManager.getState(CameraAppState.class));
+        stateManager.detach(stateManager.getState(PlayerInteractionState.class));
     }
 
     public Node getMainWorldNode() {
         return mainWorldNode;
+    }
+
+    @Override
+    public void cleanup() {
+        this.mainWorldNode.removeFromParent();
+        super.cleanup();
     }
 }

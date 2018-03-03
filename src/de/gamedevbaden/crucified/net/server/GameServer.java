@@ -4,9 +4,11 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.network.*;
+import com.jme3.network.serializing.Serializer;
 import com.jme3.network.service.rmi.RmiHostedService;
 import com.jme3.network.service.rmi.RmiRegistry;
 import com.jme3.network.service.rpc.RpcHostedService;
+import com.jme3.network.service.serializer.ServerSerializerRegistrationsService;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
@@ -14,6 +16,8 @@ import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
+import de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
@@ -38,6 +42,9 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     private GameCommanderHolder commanderHolder;
     private HashMap<HostedConnection, GameSession> gameSessionHashMap = new HashMap<>();
     private RmiHostedService rmiService;
+    private AppStateManager stateManager;
+
+    private EntityId secondPlayer;
 
     private Application app;
 
@@ -48,13 +55,13 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = app;
+        this.stateManager = stateManager;
         this.entityData = (ObservableEntityData) stateManager.getState(EntityDataState.class).getEntityData();
         this.gameSessionManager = stateManager.getState(GameSessionManager.class);
         this.commanderHolder = stateManager.getState(GameCommanderHolder.class);
 
         try {
-
-
+            Serializer.initialize();
             this.server = Network.createServer(port);
 
             NetworkUtils.initEntityDataSerializers();
@@ -87,7 +94,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         }
     }
 
-    private Server getServer() {
+    public Server getServer() {
         return server;
     }
 
@@ -97,12 +104,12 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
         System.out.println("Client #" + conn.getId() + " has connected!");
 
-        EntityId player = (playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
+        this.secondPlayer = entityData.createEntity(); //(playerCounter++ % 2 == 0) ? EntityFactory.createDemon(entityData) : EntityFactory.createPlayer(entityData);
 
-        System.out.println(player);
+        System.out.println(secondPlayer);
 
         // create a game session for this player
-        GameSession session = gameSessionManager.createSession(player);
+        GameSession session = gameSessionManager.createSession(secondPlayer);
 
         // share this GameSession object so the client can access it
         RmiRegistry rmi = rmiService.getRmiRegistry(conn);
@@ -111,9 +118,18 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         // create a server side game commander which basically sends commands to the client
         // the client also has one
         GameCommander commander = new ServerGameCommander(conn);
-        commanderHolder.add(player, commander);
+        commanderHolder.add(secondPlayer, commander);
 
         gameSessionHashMap.put(conn, session);
+
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+            niftyAppState.getController(NetworkGameScreenController.class).setSecondPlayerConnected(true);
+        }
+    }
+
+    public EntityId getSecondPlayer() {
+        return secondPlayer;
     }
 
     @Override
@@ -123,7 +139,7 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
     @Override
     public void messageReceived(HostedConnection source, Message m) {
-        if (m instanceof ReadyForGameStartMessage) {
+        if (false && m instanceof ReadyForGameStartMessage) {
             ReadyForGameStartMessage rm = (ReadyForGameStartMessage) m;
             if (rm.isReady()) {
                 EntityId playerId = gameSessionHashMap.get(source).getPlayer();
@@ -134,7 +150,11 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
 
     @Override
     public void cleanup() {
-        if (server != null) {
+        if (server != null && server.isRunning()) {
+            for (HostedConnection conn : server.getConnections()) {
+                conn.close("Server is shutting down!");
+            }
+            server.getServices().removeService(server.getServices().getService(ServerSerializerRegistrationsService.class));
             server.close();
         }
 

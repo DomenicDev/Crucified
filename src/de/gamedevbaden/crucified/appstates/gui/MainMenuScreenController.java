@@ -33,7 +33,7 @@ public class MainMenuScreenController implements ScreenController {
     }
 
     public void showCredits() {
-        // todo
+        guiEventListener.showCredits();
     }
 
     public void quitGame() {

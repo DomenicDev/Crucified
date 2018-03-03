@@ -14,4 +14,8 @@ public interface GuiEventListener {
 
     void startNetworkGame();
 
+    void showCredits();
+
+    void backToMainMenu();
+
 }

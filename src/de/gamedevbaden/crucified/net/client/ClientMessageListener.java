@@ -4,10 +4,13 @@ import com.jme3.app.Application;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
+import de.gamedevbaden.crucified.MainGameAppState;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.net.messages.GameDecidedMessage;
 import de.gamedevbaden.crucified.net.messages.LoadLevelMessage;
 import de.gamedevbaden.crucified.net.messages.ReadNoteMessage;
+import de.gamedevbaden.crucified.net.messages.StartGameMessage;
 
 /**
  * Receives messages from the server and calls the relevant app states
@@ -52,5 +55,10 @@ public class ClientMessageListener implements MessageListener<Client> {
             });
         }
 
+        if (m instanceof StartGameMessage) {
+            this.app.enqueue(() -> {
+                app.getStateManager().getState(MainGameAppState.class).startGame();
+            });
+        }
     }
 }

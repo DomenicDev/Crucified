@@ -51,7 +51,7 @@ public class NetworkGameScreenController implements ScreenController {
     public void setSecondPlayerConnected(boolean connected) {
         if (connected) {
             this.secondPlayerStateLabel.setText("Remote player has connected. Ready for Game start!");
-            this.startGameButton.activate();
+            this.startGameButton.enable();
         } else {
             this.secondPlayerStateLabel.setText("Waiting for another Player ....");
             this.startGameButton.disable();

@@ -41,6 +41,7 @@ public class GameLogicAppState extends AbstractAppState {
 
         if (artifacts.applyChanges()) {
 
+            System.out.println(artifacts.size());
             if (artifacts.size() == 0) {
                 // human player wins
                 setGameDecided(GameDecisionType.HumanPlayersWin);

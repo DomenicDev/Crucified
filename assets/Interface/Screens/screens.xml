@@ -45,7 +45,7 @@
                         <interact onClick="yes()"/>
                     </control>
                 </panel>
-                <panel width="5%" />
+                <panel width="5%"/>
                 <panel id="noPanel" childLayout="center">
                     <control id="noButton" name="button" style="customButton" label="${dialog.no}" valign="top">
                         <interact onClick="no()"/>
@@ -56,10 +56,56 @@
     </popup>
 
 
+    <popup id="popupMonsterWin" childLayout="center" backgroundColor="#000a">
+        <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+            <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                <text id="successText" style="setting#text" text="${dialog.monsterWin}"/>
+            </panel>
+            <panel id="okButtonPanel" childLayout="center" width="60%" height="25%" align="center" valign="center">
+                <control id="okButton" name="button" style="customButton" label="${dialog.okay}" valign="top">
+                    <interact onClick="gameOverPopup()"/>
+                </control>
+            </panel>
+        </panel>
+    </popup>
+
+    <popup id="popupPlayerWin" childLayout="center" backgroundColor="#000a">
+        <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+            <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                <text id="successText" style="setting#text" text="${dialog.playerWin}"/>
+            </panel>
+            <panel id="okButtonPanel" childLayout="center" width="60%" height="25%" align="center" valign="center">
+                <control id="okButton" name="button" style="customButton" label="${dialog.okay}" valign="top">
+                    <interact onClick="gameOverPopup()"/>
+                </control>
+            </panel>
+        </panel>
+    </popup>
+
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <!-- empty screen -->
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="emptyScreen"/>
+
+    <screen id="loadingScreen">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title" text="Loading..."/>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="hudScreen">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+
+                </panel>
+            </panel>
+        </layer>
+    </screen>
 
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
@@ -74,13 +120,6 @@
                 <panel id="emptyPanelTop" childLayout="center" width="100%" height="*"/>
                 <!-- in the following we add several buttons -->
                 <panel id="buttonPanel" childLayout="vertical" align="center" valign="center" width="30%" height="40%">
-                    <panel id="startGamePanel" childLayout="center" align="center" valign="center" width="90%"
-                           height="*">
-                        <control id="startGameButton" name="button" style="customButton"
-                                 label="${dialog.startSingleplayerGame}">
-                            <interact onClick="startSingleplayerGame()"/>
-                        </control>
-                    </panel>
                     <panel id="hostGamePanel" childLayout="center" align="center" valign="center" width="90%"
                            height="*">
                         <control id="hostGameButton" name="button" style="customButton" label="${dialog.hostCoopGame}">
@@ -186,6 +225,36 @@
     </screen>
 
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- credits screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="creditsScreen" controller="de.gamedevbaden.crucified.appstates.gui.CreditsScreenController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title"/>
+                </panel>
+                <panel id="emptyPanelTop" width="100%" height="*"/>
+
+                <panel id="mainSettingsPanel" style="nifty-panel" valign="center" align="center" childLayout="vertical"
+                       width="40%" height="65%">
+                    <control id="credits" name="label" width="100%" height="100%"/>
+                </panel>
+
+                <panel id="buttonPanel" childLayout="horizontal" width="50%" height="10%" valign="center"
+                       align="center">
+                    <panel id="returnButtonPanel" childLayout="center" align="center" valign="center">
+                        <control id="returnButton" name="button" style="customButton" label="${dialog.return}">
+                            <interact onClick="backToMainMenu()"/>
+                        </control>
+                    </panel>
+
+                </panel>
+                <panel id="emptyPanelBottom" width="100%" height="5%"/>
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <!-- HOST NETWORK GAME SCREEN -->
     <!-- +++++++++++++++++++++++++++++++++++++++ -->
     <screen id="networkGameScreen" controller="de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController">
@@ -202,26 +271,29 @@
                               align="left"/>
                     </panel>
                     <panel id="playerStatePanel" childLayout="center" align="left" height="20%">
-                        <control id="playerStateLabel" name="label" text="Waiting for Player..." align="left" width="100%" height="100%" />
+                        <control id="playerStateLabel" name="label" text="Waiting for Player..." align="left"
+                                 width="100%" height="100%"/>
                     </panel>
 
-                    <panel width="*" height="*" />
+                    <panel width="*" height="*"/>
 
                     <panel id="buttonPanel" childLayout="horizontal" height="20%">
                         <panel id="startGameButtonPanel" childLayout="center">
-                            <control id="startGameButton" childLayout="center" name="button" style="customButton" label="${dialog.startNetworkGame}">
-                                <interact onClick="startNetworkGame()" />
+                            <control id="startGameButton" childLayout="center" name="button" style="customButton"
+                                     label="${dialog.startNetworkGame}">
+                                <interact onClick="startNetworkGame()"/>
                             </control>
                         </panel>
-                        <panel width="10%" />
+                        <panel width="10%"/>
                         <panel id="cancelButtonPanel" childLayout="center">
-                            <control id="cancelButton" childLayout="center" name="button" style="customButton" label="${dialog.cancel}">
-                                <interact onClick="cancel()" />
+                            <control id="cancelButton" childLayout="center" name="button" style="customButton"
+                                     label="${dialog.cancel}">
+                                <interact onClick="cancel()"/>
                             </control>
                         </panel>
                     </panel>
                 </panel>
-                <panel height="5%" />
+                <panel height="5%"/>
             </panel>
         </layer>
     </screen>
@@ -236,29 +308,75 @@
                     <control id="title" name="label" style="title"/>
                 </panel>
                 <panel id="emptyPanelTop" width="100%" height="*"/>
-                <panel width="40%" height="35%" childLayout="vertical" align="center" valign="center" style="nifty-panel">
+                <panel width="40%" height="35%" childLayout="vertical" align="center" valign="center"
+                       style="nifty-panel">
                     <panel id="textPanel" childLayout="center" align="left">
-                        <control id="enterIpLabel" name="label" text="${dialog.enterIp}" />
+                        <control id="enterIpLabel" name="label" text="${dialog.enterIp}"/>
                     </panel>
                     <panel id="textFieldPanel" childLayout="center" align="left">
-                        <control id="ipTextField" name="textfield" />
+                        <control id="ipTextField" name="textfield"/>
                     </panel>
-                    <panel height="*" />
+                    <panel height="*"/>
                     <panel id="buttonPanel" childLayout="horizontal" height="20%">
                         <panel childLayout="center">
                             <control id="connectButton" name="button" style="customButton" label="${dialog.connect}">
-                                <interact onClick="connect()" />
+                                <interact onClick="connect()"/>
                             </control>
                         </panel>
-                        <panel width="5%" />
+                        <panel width="5%"/>
                         <panel childLayout="center">
                             <control id="cancelButton" name="button" style="customButton" label="${dialog.cancel}">
-                                <interact onClick="cancel()" />
+                                <interact onClick="cancel()"/>
                             </control>
                         </panel>
                     </panel>
                 </panel>
-                <panel height="2%" />
+                <panel height="2%"/>
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="gameOverScreen" controller="de.gamedevbaden.crucified.appstates.gui.GameOverGuiController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="100%">
+                    <panel width="40%" height="30%" childLayout="vertical" align="center" valign="center"
+                           style="nifty-panel">
+                        <panel id="textPanel" childLayout="center" align="left" width="100%" height="50%">
+                            <control id="infoText" name="label" text="The game is over." width="100%" height="100%"/>
+                        </panel>
+                        <panel id="buttonPanel" childLayout="horizontal" height="20%">
+                            <panel childLayout="center">
+                                <control id="closeButton" name="button" style="customButton" label="${dialog.return}" width="30%">
+                                    <interact onClick="returnToMainMenu()"/>
+                                </control>
+                            </panel>
+                        </panel>
+                    </panel>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="reallyReturnToMainMenuScreen" controller="de.gamedevbaden.crucified.appstates.gui.ReturnToMainMenuScreenController">
+        <layer childLayout="center" align="center" valign="center">
+            <panel id="mainContentPanel" childLayout="vertical" width="25%" height="15%" style="nifty-panel">
+                <panel id="textPanel" childLayout="center" width="*" height="*" valign="center" align="center">
+                    <text id="question" style="setting#text" text="${dialog.sureToCancel}"/>
+                </panel>
+                <panel id="buttonPanel" childLayout="horizontal" width="60%" height="25%" align="center" valign="center">
+                    <panel id="yesPanel" childLayout="center">
+                        <control id="yesButton" name="button" style="customButton" label="${dialog.yes}" valign="top">
+                            <interact onClick="yes()"/>
+                        </control>
+                    </panel>
+                    <panel width="5%"/>
+                    <panel id="noPanel" childLayout="center">
+                        <control id="noButton" name="button" style="customButton" label="${dialog.no}" valign="top">
+                            <interact onClick="no()"/>
+                        </control>
+                    </panel>
+                </panel>
             </panel>
         </layer>
     </screen>
