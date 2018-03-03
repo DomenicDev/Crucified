@@ -30,7 +30,7 @@ public class CreditsScreenController implements ScreenController {
             String text = "";
             String line;
             while ((line = br.readLine()) != null) {
-                text += line += "\n";
+                text += line + System.getProperty("line.separator");
             }
             credits.getRenderer(TextRenderer.class).setText(text);
 
