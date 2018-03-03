@@ -44,7 +44,7 @@ public class EntityFactory {
                 new CharacterMovementState(),
                 new CanPickupArtifactCompont(),
                 new Container(),
-                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
+                new ActionGroupComponent() // empty
         );
 
         return player;
@@ -63,6 +63,7 @@ public class EntityFactory {
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new FootstepEmitter(),
                 new PlayerControlled(),
+                new CantSeeArtifactComponent(),
                 new AliveComponent(100),
                 new CharacterMovementState(),
                 new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)

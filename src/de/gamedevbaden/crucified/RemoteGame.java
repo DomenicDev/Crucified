@@ -11,6 +11,7 @@ import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
+import de.gamedevbaden.crucified.appstates.view.ArtifactHiderAppState;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.client.GameClient;
 import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
@@ -86,6 +87,7 @@ public class RemoteGame extends AbstractGame {
         stateManager.attach(new PlayerInteractionState());
 
 
+        stateManager.attach(new ArtifactHiderAppState());
 
 
         stateManager.attach(new GameEventAppState());
@@ -102,7 +104,9 @@ public class RemoteGame extends AbstractGame {
     public void cleanup() {
         stateManager.detach(client);
         stateManager.detach(stateManager.getState(GameCommanderAppState.class));
+        stateManager.detach(stateManager.getState(ArtifactHiderAppState.class));
         stateManager.detach(stateManager.getState(EntityDataState.class));
+
 
         GameInitializer.removeEssentialAppStates(stateManager);
         GameInitializer.removeInputAppStates(stateManager);

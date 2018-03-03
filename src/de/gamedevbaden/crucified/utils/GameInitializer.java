@@ -1,9 +1,7 @@
 package de.gamedevbaden.crucified.utils;
 
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import de.gamedevbaden.crucified.appstates.*;
 import de.gamedevbaden.crucified.appstates.action.ActionHandlerAppState;
@@ -12,13 +10,11 @@ import de.gamedevbaden.crucified.appstates.cooptasks.TestCoopDoorTask;
 import de.gamedevbaden.crucified.appstates.game.GameSessionAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.ArtifactContainerAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.GameLogicAppState;
-import de.gamedevbaden.crucified.appstates.gamelogic.GameStartupAppState;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.net.MovementInterpolator;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.paging.GameWorldPagingManager;
 import de.gamedevbaden.crucified.appstates.sound.*;
-import de.gamedevbaden.crucified.appstates.story.StoryManager;
 import de.gamedevbaden.crucified.appstates.view.*;
 import de.gamedevbaden.crucified.game.GameSession;
 

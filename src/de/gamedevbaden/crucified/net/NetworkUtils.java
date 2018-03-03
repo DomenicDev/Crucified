@@ -48,6 +48,8 @@ public class NetworkUtils {
         Serializer.registerClass(AliveComponent.class);
         Serializer.registerClass(Fireball.class);
         Serializer.registerClass(HitComponent.class);
+        Serializer.registerClass(ArtifactComponent.class);
+        Serializer.registerClass(CantSeeArtifactComponent.class);
     }
 
     /**

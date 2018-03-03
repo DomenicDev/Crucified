@@ -57,7 +57,7 @@ public class FireballSoundAppState extends AbstractAppState {
 
     private void addFireballSound(Entity entity) {
         Transform t = entity.get(Transform.class);
-        AudioNode audioNode = new AudioNode(assetManager, "Sounds/SoundEffects/fireball.WAV", AudioData.DataType.Buffer);
+        AudioNode audioNode = new AudioNode(assetManager, "Sounds/SoundEffects/fireball.wav", AudioData.DataType.Buffer);
         audioNode.setVolume(0.4f);
         audioNode.setPositional(true);
         audioNode.setLocalTranslation(t.getTranslation());

@@ -21,6 +21,7 @@ public class ActionGroupComponent implements EntityComponent {
     }
 
     public boolean contains(ActionType type) {
+        if (actions == null) return false;
         for (ActionType t : actions) {
             if (t == type) {
                 return true;
