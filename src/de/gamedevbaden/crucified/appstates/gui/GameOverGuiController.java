@@ -15,6 +15,8 @@ public class GameOverGuiController implements ScreenController {
 
     private Element infoText;
 
+    private GameDecisionType type;
+
     public GameOverGuiController(GuiEventListener listener) {
         this.listener = listener;
     }
@@ -22,24 +24,32 @@ public class GameOverGuiController implements ScreenController {
     @Override
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
         this.infoText = screen.findElementById("infoText");
+        refreshText();
     }
 
     public void setGameOver(GameDecisionType type) {
-        if (type == GameDecisionType.MonsterWins) {
-            infoText.getRenderer(TextRenderer.class).setText("The monster won the game!");
-        } else {
-            infoText.getRenderer(TextRenderer.class).setText("The survivor won the game!");
-        }
+        this.type = type;
+        refreshText();
     }
 
     @Override
     public void onStartScreen() {
-
+        refreshText();
     }
 
     @Override
     public void onEndScreen() {
 
+    }
+
+    private void refreshText() {
+        if (type != null && infoText != null) {
+            if (type == GameDecisionType.MonsterWins) {
+                infoText.getRenderer(TextRenderer.class).setText("The monster won the game!");
+            } else {
+                infoText.getRenderer(TextRenderer.class).setText("The survivor won the game!");
+            }
+        }
     }
 
     // called by nifty

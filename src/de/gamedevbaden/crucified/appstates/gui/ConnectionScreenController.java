@@ -40,6 +40,6 @@ public class ConnectionScreenController implements ScreenController {
     }
 
     public void cancel() {
-        this.nifty.gotoScreen(NiftyAppState.NiftyScreen.MainMenu.getScreenId());
+        listener.cancelNetworkGame();
     }
 }

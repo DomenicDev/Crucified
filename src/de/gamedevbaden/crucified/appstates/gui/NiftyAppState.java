@@ -142,7 +142,7 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
     public void showGameOverScreen(GameDecisionType type) {
         inputManager.setCursorVisible(true);
         goToScreen(NiftyScreen.GameOverScreen);
-     //   getController(GameOverGuiController.class).setGameOver(type);
+        getController(GameOverGuiController.class).setGameOver(type);
     }
 
     /**
