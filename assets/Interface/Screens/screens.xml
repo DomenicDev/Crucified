@@ -270,6 +270,9 @@
                         <text id="serverStartedInfoText" style="setting#text" text="${dialog.serverStarted}"
                               align="left"/>
                     </panel>
+                    <panel id="localIpPanel" childLayout="center" align="left" height="20%">
+                        <control id="ipLabel" name="label" width="100%" height="100%"/>
+                    </panel>
                     <panel id="playerStatePanel" childLayout="center" align="left" height="20%">
                         <control id="playerStateLabel" name="label" text="Waiting for Player..." align="left"
                                  width="100%" height="100%"/>

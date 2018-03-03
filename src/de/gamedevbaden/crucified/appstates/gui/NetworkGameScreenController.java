@@ -4,10 +4,13 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 import javax.annotation.Nonnull;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class NetworkGameScreenController implements ScreenController {
 
@@ -30,6 +33,14 @@ public class NetworkGameScreenController implements ScreenController {
         this.secondPlayerStateLabel = nifty.getCurrentScreen().findNiftyControl("playerStateLabel", Label.class);
         this.startGameButton = nifty.getCurrentScreen().findNiftyControl("startGameButton", Button.class);
         this.sureAboutExitPopup = nifty.createPopup("popupReallyCancel");
+
+        // local ip
+        Element ipLabel = screen.findElementById("ipLabel");
+        try {
+            ipLabel.getRenderer(TextRenderer.class).setText("Local IP-Address: " + InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
