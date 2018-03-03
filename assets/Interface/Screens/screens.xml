@@ -10,6 +10,7 @@
     <useStyles filename="Interface/Styles/mainPanelStyle.xml"/>
     <useStyles filename="Interface/Styles/titleStyle.xml"/>
     <useStyles filename="Interface/Styles/optionElement.xml"/>
+    <useStyles filename="Interface/Styles/biggerTextStyle.xml"/>
 
     <resourceBundle id="dialog" filename="Interface/dialogs/dialog"/>
 
@@ -131,6 +132,13 @@
                         <control id="connectToGameButton" name="button" style="customButton"
                                  label="${dialog.connectToCoopGame}">
                             <interact onClick="connectToGame()"/> <!-- opens new screen -->
+                        </control>
+                    </panel>
+                    <panel id="instructionsPanel" childLayout="center" align="center" valign="center" width="90%"
+                           height="*">
+                        <control id="instructionsPanel" name="button" style="customButton"
+                                 label="${dialog.instructions}">
+                            <interact onClick="showInstructions()"/> <!-- opens new screen -->
                         </control>
                     </panel>
                     <panel id="optionsPanel" childLayout="center" align="center" valign="center" width="90%" height="*">
@@ -271,7 +279,7 @@
                               align="left"/>
                     </panel>
                     <panel id="localIpPanel" childLayout="center" align="left" height="20%">
-                        <control id="ipLabel" name="label" width="100%" height="100%"/>
+                        <control id="ipLabel" name="label" width="100%" height="100%" align="left"/>
                     </panel>
                     <panel id="playerStatePanel" childLayout="center" align="left" height="20%">
                         <control id="playerStateLabel" name="label" text="Waiting for Player..." align="left"
@@ -335,6 +343,37 @@
                     </panel>
                 </panel>
                 <panel height="2%"/>
+            </panel>
+        </layer>
+    </screen>
+
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- INSTRUCTION SCREEN -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="instructionScreen" controller="de.gamedevbaden.crucified.appstates.gui.InstructionScreenController">
+        <layer id="mainLayer" width="100%" height="100%" childLayout="center" align="center" valign="center">
+            <panel id="mainPanel" style="mainPanelStyle">
+                <panel id="titlePanel" valign="center" align="center" childLayout="center" width="100%" height="25%">
+                    <control id="title" name="label" style="title"/>
+                </panel>
+                <panel id="emptyPanelTop" width="100%" height="*"/>
+
+                <panel id="mainSettingsPanel" style="nifty-panel" valign="center" align="center" childLayout="vertical"
+                       width="40%" height="65%">
+                    <control id="instructions" name="label" width="100%" height="100%" style="biggerText"/>
+                </panel>
+
+                <panel id="buttonPanel" childLayout="horizontal" width="50%" height="10%" valign="center"
+                       align="center">
+                    <panel id="returnButtonPanel" childLayout="center" align="center" valign="center">
+                        <control id="returnButton" name="button" style="customButton" label="${dialog.return}">
+                            <interact onClick="backToMainMenu()"/>
+                        </control>
+                    </panel>
+
+                </panel>
+                <panel id="emptyPanelBottom" width="100%" height="5%"/>
             </panel>
         </layer>
     </screen>

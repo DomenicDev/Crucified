@@ -8,24 +8,21 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class CreditsScreenController implements ScreenController {
+public class InstructionScreenController implements ScreenController {
 
     private GuiEventListener listener;
 
-    public CreditsScreenController(GuiEventListener listener) {
+    public InstructionScreenController(GuiEventListener listener) {
         this.listener = listener;
     }
 
     @Override
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
-        Element credits = screen.findElementById("credits");
+        Element instructionsLabel = screen.findElementById("instructions");
+        String text = HelperMethods.getTextFromFile("docs/Instructions.txt");
+        instructionsLabel.getRenderer(TextRenderer.class).setText(text);
 
-        String text = HelperMethods.getTextFromFile("docs/Credits.txt");
-        credits.getRenderer(TextRenderer.class).setText(text);
     }
 
     @Override
@@ -39,6 +36,6 @@ public class CreditsScreenController implements ScreenController {
     }
 
     public void backToMainMenu() {
-        listener.backToMainMenu();
+        this.listener.backToMainMenu();
     }
 }

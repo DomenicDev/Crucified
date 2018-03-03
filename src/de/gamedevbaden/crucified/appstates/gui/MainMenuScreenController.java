@@ -40,6 +40,10 @@ public class MainMenuScreenController implements ScreenController {
         this.guiEventListener.exitGame();
     }
 
+    public void showInstructions() {
+        guiEventListener.showInstructions();
+    }
+
     @Override
     public void bind(@Nonnull Nifty nifty, @Nonnull Screen screen) {
         this.nifty = nifty;

@@ -18,4 +18,6 @@ public interface GuiEventListener {
 
     void backToMainMenu();
 
+    void showInstructions();
+
 }

@@ -68,4 +68,9 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
     public void backToMainMenu() {
         stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
     }
+
+    @Override
+    public void showInstructions() {
+        stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.InstructionsScreen);
+    }
 }

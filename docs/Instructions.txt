@@ -1,0 +1,29 @@
+INSTRUCTIONS
+
+PLAYING AS MONSTER
+
+Your goal is to kill the human player. 
+The demon can throw fireballs at the player to hurt and eventually kill him.
+The demon has to kill the player before all artifacts have been destroyed.
+The artifacts are not visible to the demon.
+
+
+PLAYING THE SURVIVOR
+
+The goal of the human player is to find and destroy all artifacts.
+The human player has to throw the artifacts into the containers (old stone ruins).
+Those containers can be found all around the map.
+Only one artifact can be thrown into one ruins container.
+Artifacts can be found all around the map.
+
+
+
+DEMON CONTROLS
+
+Left click - Throwing fireball
+
+
+HUMAN CONTROLS
+
+F Key - Pick up items and throwing artifacts into container
+
