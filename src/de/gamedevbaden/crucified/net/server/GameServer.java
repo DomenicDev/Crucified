@@ -18,7 +18,6 @@ import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
 import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
-import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.NetworkUtils;
@@ -135,6 +134,11 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
     @Override
     public void connectionRemoved(Server server, HostedConnection conn) {
         entityData.removeEntity(gameSessionHashMap.get(conn).getPlayer());
+
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+            niftyAppState.getController(NetworkGameScreenController.class).setSecondPlayerConnected(false);
+        }
     }
 
     @Override

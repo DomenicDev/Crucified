@@ -13,6 +13,8 @@ import de.gamedevbaden.crucified.game.GameSession;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The default implementation of our game client.
@@ -105,6 +107,7 @@ public class GameClient extends AbstractAppState implements ClientStateListener 
     public void cleanup() {
         if (client != null && client.isConnected()) {
             client.close();
+            Logger.getLogger(GameClient.class.getName()).log(Level.INFO, "Client is closing.");
         }
         super.cleanup();
     }

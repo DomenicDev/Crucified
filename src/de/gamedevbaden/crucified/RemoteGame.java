@@ -9,6 +9,7 @@ import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.game.GameEventAppState;
+import de.gamedevbaden.crucified.appstates.gui.ConnectionScreenController;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
 import de.gamedevbaden.crucified.appstates.view.ArtifactHiderAppState;
@@ -46,7 +47,10 @@ public class RemoteGame extends AbstractGame {
         this.client.getClient().addClientStateListener(new ClientStateListener() {
             @Override
             public void clientConnected(Client c) {
-
+                NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+                if (niftyAppState != null) {
+                    niftyAppState.getController(ConnectionScreenController.class).setHasConnected();
+                }
             }
 
             @Override

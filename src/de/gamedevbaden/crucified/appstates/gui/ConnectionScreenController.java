@@ -2,6 +2,7 @@ package de.gamedevbaden.crucified.appstates.gui;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
@@ -12,6 +13,7 @@ public class ConnectionScreenController implements ScreenController {
     private Nifty nifty;
     private TextField ipTextField;
     private GuiEventListener listener;
+    private Element connectButton;
 
     ConnectionScreenController(GuiEventListener listener) {
         this.listener = listener;
@@ -22,6 +24,7 @@ public class ConnectionScreenController implements ScreenController {
         this.nifty = nifty;
         this.ipTextField = screen.findNiftyControl("ipTextField", TextField.class);
         this.ipTextField.setText("localhost");
+        this.connectButton = screen.findElementById("connectButton");
     }
 
     @Override
@@ -41,5 +44,9 @@ public class ConnectionScreenController implements ScreenController {
 
     public void cancel() {
         listener.cancelNetworkGame();
+    }
+
+    public void setHasConnected() {
+        connectButton.disable();
     }
 }

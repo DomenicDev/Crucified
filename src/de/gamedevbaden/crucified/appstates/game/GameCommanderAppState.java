@@ -225,8 +225,6 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
     @Override
     public void onGameDecided(GameDecisionType decisionType) {
-        // Todo
-        System.out.println(decisionType);
         NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
         if (niftyAppState != null) {
           //  niftyAppState.showPopup(decisionType);

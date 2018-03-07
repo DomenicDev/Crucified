@@ -46,6 +46,7 @@ public class MainGameAppState extends AbstractAppState {
         GameCommanderAppState commander = new GameCommanderAppState();
         GameClient client = new GameClient();
         if (client.connect(address, 5555, stateManager.getApplication(), commander)) {
+            stateManager.attach(client);
             this.game = new RemoteGame(client, commander);
             stateManager.attach(game);
         }
