@@ -47,7 +47,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         if (state == CharacterMovementState.MOVING_FORWARD || state == CharacterMovementState.MOVING_FORWARD_LEFT || state == CharacterMovementState.MOVING_FORWARD_RIGHT) {
            setAnimation(DemonAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) {
-            setReverseAnimation(DemonAnimation.Walk, lowerBody, upperBody);
+            setAnimation(DemonAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_LEFT) {
             setAnimation(DemonAnimation.Walk, lowerBody, upperBody);
         } else if (state == CharacterMovementState.MOVING_RIGHT) {
@@ -55,7 +55,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         } else if (state == CharacterMovementState.RUNNING_FORWARD || state == CharacterMovementState.RUNNING_FORWARD_LEFT || state == CharacterMovementState.RUNNING_FORWARD_RIGHT) {
             setAnimation(DemonAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) {
-            setReverseAnimation(DemonAnimation.Run, lowerBody, upperBody);
+            setAnimation(DemonAnimation.Run, lowerBody, upperBody);
         } else if (state == CharacterMovementState.IDLE) {
             setAnimation(DemonAnimation.Idle, lowerBody, upperBody);
         }
@@ -81,6 +81,7 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
         }
     }
 
+    /*
     private void setReverseAnimation(DemonAnimation anim, AnimChannel... channels) {
         if (anim == null || anim.getAnimName() == null || channels == null || isAnimationForChannels(anim.getAnimName(), channels)) {
             return;
@@ -89,10 +90,12 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             if (channel != null) {
                 channel.setAnim(anim.getAnimName(), anim.getBlendTime());
                 channel.setLoopMode(LoopMode.DontLoop);
-                channel.setSpeed(-1 * anim.getSpeed()); // we need to negate the speed, that will play it reverse
+                channel.setSpeed(anim.getSpeed()); // we need to negate the speed, that will play it reverse
             }
         }
     }
+    */
+
 
     /**
      * Go through the given channels and look if they execute the same animation
@@ -121,10 +124,10 @@ public class DemonAnimationControl extends AbstractControl implements AnimEventL
             channel.setAnim(DemonAnimation.Walk.getAnimName());
         } else if ((state == CharacterMovementState.MOVING_BACK || state == CharacterMovementState.MOVING_BACK_LEFT || state == CharacterMovementState.MOVING_BACK_RIGHT) && animName.equals(DemonAnimation.Walk.getAnimName())) {
             channel.setAnim(DemonAnimation.Walk.getAnimName());
-            channel.setSpeed(-1);
+            //channel.setSpeed(-1);
         } else if ((state == CharacterMovementState.RUNNING_BACK || state == CharacterMovementState.RUNNING_BACK_LEFT || state == CharacterMovementState.RUNNING_BACK_RIGHT) && animName.equals(DemonAnimation.Run.getAnimName())) {
             channel.setAnim(DemonAnimation.Run.getAnimName());
-            channel.setSpeed(-1);
+            //channel.setSpeed(-1);
         } else if (state == CharacterMovementState.MOVING_LEFT) {
             channel.setAnim(DemonAnimation.Walk.getAnimName());
         } else if (state == CharacterMovementState.MOVING_RIGHT) {
