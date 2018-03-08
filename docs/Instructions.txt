@@ -26,4 +26,5 @@ Left click - Throwing fireball
 HUMAN CONTROLS
 
 F Key - Pick up items and throwing artifacts into container
+R Key - Toggle headlamp
 
