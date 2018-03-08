@@ -47,12 +47,31 @@ public class EntityFactory {
                 new ActionGroupComponent() // empty
         );
 
+        // create flashlight for player and attach it to the player
+        EntityId flashlight = createFlashlight(entityData);
+        entityData.setComponents(flashlight,
+                new StoredIn(player),
+                new EquippedBy(player)
+        );
+
         return player;
     }
 
     public static EntityId createPlayer(EntityData entityData) {
         EntityId player = entityData.createEntity();
         return createPlayer(entityData, player, new Vector3f());
+    }
+
+    public static EntityId createFlashlight(EntityData entityData) {
+        EntityId flashlight = entityData.createEntity();
+        entityData.setComponents(flashlight,
+                new Equipable(),
+                new Transform(Vector3f.ZERO.clone()),
+                new FlashLight(false),
+                new ItemComponent(ItemType.Flashlight),
+                new Model(ModelType.Headlamp)
+        );
+        return flashlight;
     }
 
     public static EntityId createDemon(EntityData entityData, EntityId monster, Vector3f startPos) {

@@ -98,7 +98,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed) {
-                    if (name.equals("R")) {
+               /*     if (name.equals("R")) {
                         if (equippedItem != null) {
                             for (PlayerInteractionListener l : listeners) {
                                 l.onItemUnequipped(equippedItem);
@@ -120,7 +120,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                             storedItem = null;
                             equippedItem = null;
                         }
-                    } else if (name.equals("K")) {
+                    } else */ if (name.equals("R")) {
 
                         // toggle flashlight
                         EntityId flashLight = inventoryState.getFlashlight();

@@ -191,7 +191,6 @@ public class PhysicAppState extends AbstractAppState {
 
         }
 
-
         // apply new transforms for rigid bodies
         for (Entity entity : rigidBodies) {
             com.jme3.bullet.objects.PhysicsRigidBody rigidBody = rigidBodyControls.get(entity.getId());
