@@ -12,6 +12,7 @@ import com.jme3.network.service.serializer.ServerSerializerRegistrationsService;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.ObservableEntityData;
 import com.simsilica.es.server.EntityDataHostedService;
+import de.gamedevbaden.crucified.MainGameAppState;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.GameCommanderHolder;
 import de.gamedevbaden.crucified.appstates.SceneEntityLoader;
@@ -139,6 +140,9 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         if (niftyAppState != null) {
             niftyAppState.getController(NetworkGameScreenController.class).setSecondPlayerConnected(false);
         }
+
+        // we close the game
+        stateManager.getState(MainGameAppState.class).closeExistingGame();
     }
 
     @Override
