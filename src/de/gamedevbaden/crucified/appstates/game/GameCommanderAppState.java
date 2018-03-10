@@ -183,8 +183,8 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
             FogFilter fogFilter = fpp.getFilter(FogFilter.class);
             if (fogFilter != null) {
-                fogFilter.setFogColor(ColorRGBA.Black);
-                fogFilter.setFogDensity(0.7f);
+                fogFilter.setFogColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0));
+                fogFilter.setFogDensity(1.5f);
                 fogFilter.setFogDistance(1000);
                 fogFilter.setEnabled(true);
             }
