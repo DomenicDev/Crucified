@@ -64,7 +64,13 @@ public class SceneEntityLoader extends AbstractAppState {
     public void createEntitiesFromScene(Scene scene) {
         // The initialization is done in several steps:
 
-        Node gameWorld = (Node) assetManager.loadModel(scene.getScenePath());
+        Node gameWorld;
+        ScenePreloader scenePreloader = stateManager.getState(ScenePreloader.class);
+        if (scene == Scene.FinalIslandScene && scenePreloader != null) {
+            gameWorld = scenePreloader.getScene();
+        } else {
+            gameWorld = (Node) assetManager.loadModel(scene.getScenePath());
+        }
 
         // 1. Create a HashMap to store the reference of a spatial (with entity data)
         // this map is filled when calling initEntities()

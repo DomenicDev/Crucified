@@ -19,6 +19,7 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import de.gamedevbaden.crucified.appstates.CameraAppState;
 import de.gamedevbaden.crucified.appstates.PlayerInteractionState;
+import de.gamedevbaden.crucified.appstates.ScenePreloader;
 import de.gamedevbaden.crucified.appstates.gui.HudAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.appstates.net.PredictionAppState;
@@ -109,7 +110,14 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
             app.getStateManager().getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.LoadingScreen);
         }
 
-        Node world = (Node) assetManager.loadModel(scene.getScenePath());
+
+        Node world;
+        ScenePreloader scenePreloader = stateManager.getState(ScenePreloader.class);
+        if (scenePreloader != null) {
+            world = scenePreloader.getScene();
+        } else {
+            world = (Node) assetManager.loadModel(scene.getScenePath());
+        }
         this.mainWorldNode.attachChild(world);
         // we want all objects (nodes, geometry) with an EntityType user data
         // to be removed because they will
@@ -267,6 +275,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
     @Override
     public void cleanup() {
         this.mainWorldNode.removeFromParent();
+        this.app.getViewPort().clearProcessors();
         super.cleanup();
     }
 }
