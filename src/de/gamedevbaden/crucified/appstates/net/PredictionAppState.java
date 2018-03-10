@@ -369,6 +369,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
     }
 
     private void refreshWalkDirection() {
+        if (playerCharacterControl == null) return;
         int movementState = calculateMovementState(inputCollector);
         Vector3f walkDirection = calculateWalkDirection(movementState);
         playerCharacterControl.setWalkDirection(walkDirection);
