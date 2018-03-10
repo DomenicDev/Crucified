@@ -9,7 +9,9 @@ import com.jme3.audio.AudioNode;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
 import com.jme3.material.TechniqueDef;
+import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -179,7 +181,18 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // init filter if available --> need to be the last thing to add!
         if (scene.getFilterPath() != null) {
             FilterPostProcessor fpp = assetManager.loadFilter(scene.getFilterPath());
+            FogFilter fogFilter = fpp.getFilter(FogFilter.class);
+            if (fogFilter != null) {
+                fogFilter.setFogColor(ColorRGBA.Black);
+                fogFilter.setFogDensity(0.7f);
+                fogFilter.setFogDistance(1000);
+                fogFilter.setEnabled(true);
+            }
+
             app.getViewPort().addProcessor(fpp);
+
+
+        //    if (fogFilter != null) fogFilter.setEnabled(false);
         }
 
         // we need to add local physics if we run a client
@@ -190,6 +203,18 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
         // create chunks for game world
         List<WorldChunk> chunks = stateManager.getState(GameWorldPagingManager.class).createChunksForGameWorld(world, 7, assetManager);
         stateManager.getState(GameWorldPagingManager.class).setChunks(chunks);
+
+
+
+        // create fog
+   /*     if (scene == Scene.FinalIslandScene) {
+            FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+            FogFilter fog = new FogFilter(ColorRGBA.Black, 0.7f, 1000);
+            fpp.addFilter(fog);
+            app.getViewPort().addProcessor(fpp);
+        }
+*/
+
 
 
         // play predefined audio nodes
