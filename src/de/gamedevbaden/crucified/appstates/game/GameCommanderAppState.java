@@ -266,6 +266,12 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
         stateManager.detach(stateManager.getState(CameraAppState.class));
         stateManager.detach(stateManager.getState(PlayerInteractionState.class));
+        stateManager.detach(stateManager.getState(GameEventAppState.class));
+
+        PredictionAppState predictionAppState = stateManager.getState(PredictionAppState.class);
+        if (predictionAppState != null) {
+            stateManager.detach(predictionAppState);
+        }
     }
 
     public Node getMainWorldNode() {
