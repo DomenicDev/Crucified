@@ -155,5 +155,12 @@ public class GameSessionManager extends AbstractAppState {
             }
         }
 
+        @Override
+        public void setCurse() {
+            for (GameEventListener listener : listeners) {
+                listener.onSettingCurse(getPlayer());
+            }
+        }
+
     }
 }

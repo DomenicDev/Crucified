@@ -7,7 +7,9 @@ public enum ActionType {
 
     ShootFireball(3f),
 
-    Scream(1);
+    Scream(1),
+
+    ShowPlayer(30f);
 
     private float delay;
 

@@ -32,4 +32,5 @@ public interface GameEventListener {
 
     void onPerformAction(EntityId performerId, ActionType actionType);
 
+    void onSettingCurse(EntityId player);
 }

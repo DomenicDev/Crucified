@@ -96,4 +96,10 @@ public interface GameSession {
      */
     void performAction(ActionType actionType);
 
+    /**
+     * Sets a curse on the enemy (survivor)
+     * can only be executed by the monster
+     */
+    void setCurse();
+
 }

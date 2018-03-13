@@ -18,6 +18,7 @@ public class ModelType {
     public static final String Demon = "Models/Monster/Demon.j3o";
     public static final String Fireball = "Models/Effects/Fireball.j3o";
     public static final String Artifact = "Models/Artifacts/Cross.j3o";
+    public static final String Flare = "Models/Effects/Flare.j3o";
 /*
     TestScene("Models/Plane.j3o"),
     TestTerrain("Scenes/Terrains/TestTerrain.j3o"),

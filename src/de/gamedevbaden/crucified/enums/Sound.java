@@ -7,7 +7,8 @@ import com.jme3.audio.AudioData;
  */
 public enum Sound {
 
-    Miss("Sounds/miss.WAV", 3, AudioData.DataType.Buffer);
+    Miss("Sounds/miss.WAV", 3, AudioData.DataType.Buffer),
+    CosmicHit("Sounds/SoundEffects/CosmicHit.WAV", 3, AudioData.DataType.Buffer);
 
     private String audioPath;
     private float duration;

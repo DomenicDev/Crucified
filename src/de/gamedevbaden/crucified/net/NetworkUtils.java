@@ -50,6 +50,7 @@ public class NetworkUtils {
         Serializer.registerClass(HitComponent.class);
         Serializer.registerClass(ArtifactComponent.class);
         Serializer.registerClass(CantSeeArtifactComponent.class);
+        Serializer.registerClass(CurseComponent.class);
     }
 
     /**

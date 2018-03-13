@@ -66,6 +66,7 @@ public class GameInitializer {
         stateManager.attach(new VisualCraftingAppState());
         stateManager.attach(new FireEffectAppState());
         stateManager.attach(new FireLightAppState());
+        stateManager.attach(new CurseViewAppState());
         stateManager.attach(new GameWorldPagingManager());
 
         // gui app states
@@ -88,6 +89,7 @@ public class GameInitializer {
         stateManager.detach(stateManager.getState(VisualCraftingAppState.class));
         stateManager.detach(stateManager.getState(FireEffectAppState.class));
         stateManager.detach(stateManager.getState(FireLightAppState.class));
+        stateManager.detach(stateManager.getState(CurseViewAppState.class));
         stateManager.detach(stateManager.getState(GameWorldPagingManager.class));
 
         stateManager.detach(stateManager.getState(HudAppState.class));
@@ -166,6 +168,7 @@ public class GameInitializer {
         stateManager.attach(new ArtifactContainerAppState());
         stateManager.attach(new ActionSystemAppState());
         stateManager.attach(new ActionHandlerAppState());
+        stateManager.attach(new CurseEmitterAppState());
         stateManager.attach(new GameLogicAppState());
     }
 
@@ -191,6 +194,7 @@ public class GameInitializer {
         stateManager.detach(stateManager.getState(ArtifactContainerAppState.class));
         stateManager.detach(stateManager.getState(ActionSystemAppState.class));
         stateManager.detach(stateManager.getState(ActionHandlerAppState.class));
+        stateManager.detach(stateManager.getState(CurseEmitterAppState.class));
         stateManager.detach(stateManager.getState(GameLogicAppState.class));
     }
 

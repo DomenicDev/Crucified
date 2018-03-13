@@ -82,10 +82,11 @@ public class EntityFactory {
                 new PhysicsCharacterControl(new Vector3f(), Vector3f.UNIT_X),
                 new FootstepEmitter(),
                 new PlayerControlled(),
+                new CurseEmitterComponent(),
                 new CantSeeArtifactComponent(),
                 new AliveComponent(100),
                 new CharacterMovementState(),
-                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball)
+                new ActionGroupComponent(ActionType.Scream, ActionType.ShootFireball, ActionType.ShowPlayer)
         );
         return monster;
     }

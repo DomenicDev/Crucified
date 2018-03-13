@@ -167,7 +167,7 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
 
         // add grass to terrain
         for (Spatial spatial : world.getChildren()) {
-            if (spatial instanceof TerrainQuad) {
+            if (false && spatial instanceof TerrainQuad) {
                 if (spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX) != null) {
                     int grassTextureIndex = spatial.getUserData(GameConstants.USER_DATA_GRASS_TEXTURE_INDEX);
                     TerrainQuad terrain = (TerrainQuad) spatial;

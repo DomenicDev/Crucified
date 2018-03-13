@@ -25,12 +25,17 @@ public class ActionHandlerAppState extends AbstractAppState {
     private EntitySet screamingEntities;
     private EntitySet attackingEntities;
     private EntitySet alivePlayers;
+    private EntitySet showPlayerEntities;
+
+    private AppStateManager stateManager;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
+        this.stateManager = stateManager;
         this.entityData = stateManager.getState(EntityDataState.class).getEntityData();
         this.screamingEntities = entityData.getEntities(new FieldFilter<>(ActionComponent.class, "action", ActionType.Scream), ActionComponent.class, Transform.class);
         this.attackingEntities = entityData.getEntities(new FieldFilter<>(ActionComponent.class, "action", ActionType.ShootFireball), ActionComponent.class, PhysicsCharacterControl.class, Transform.class);
+        this.showPlayerEntities = entityData.getEntities(new FieldFilter<>(ActionComponent.class, "action", ActionType.ShowPlayer), ActionComponent.class);
         this.alivePlayers = entityData.getEntities(AliveComponent.class, Transform.class);
         super.initialize(stateManager, app);
     }
@@ -78,6 +83,12 @@ public class ActionHandlerAppState extends AbstractAppState {
             }
 
         }
+
+        if (showPlayerEntities.applyChanges()) {
+            for (Entity entity : showPlayerEntities.getAddedEntities()) {
+                performShowPlayerAction(entity);
+            }
+        }
     }
 
     private void createScream(Vector3f translation) {
@@ -102,5 +113,37 @@ public class ActionHandlerAppState extends AbstractAppState {
                 new Model(ModelType.Fireball),
                 new OnMovement(),
                 new Decay(10000));
+    }
+
+    private void performShowPlayerAction(Entity entity) {
+   /*     EntityId playerId = entity.getId();
+
+        PlayerHolderAppState playerHolderAppState = stateManager.getState(PlayerHolderAppState.class);
+        EntityId enemyId = playerHolderAppState.getPlayerOne().equals(playerId) ? playerHolderAppState.getPlayerTwo() : playerHolderAppState.getPlayerOne();
+
+
+        // we create a curse onto the survivor
+        // so the monster will be able to see where the player is
+        // even through walls, hills etc.
+        // but this stays only for some time
+        EntityId curse = entityData.createEntity();
+        entityData.setComponents(curse,
+                new CurseComponent(enemyId),
+                new Decay(5000)
+        );
+
+*/
+
+        /*
+        Transform enemyTransform = entityData.getComponent(enemyId, Transform.class);
+
+        EntityId particle = entityData.createEntity();
+        entityData.setComponents(particle,
+                new Transform(enemyTransform.getTranslation().add(0, 20, 0)),
+                new Model(ModelType.Flare),
+                new SoundComponent(Sound.CosmicHit, false, false),
+                new Decay(5000) // five seconds
+        );
+        */
     }
 }

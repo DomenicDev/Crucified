@@ -118,6 +118,11 @@ public class GameEventAppState extends AbstractAppState implements ActionListene
     }
 
     @Override
+    public void setCurse() {
+        gameSession.setCurse();
+    }
+
+    @Override
     public void cleanup() {
         this.inputManager.removeListener(this);
         super.cleanup();

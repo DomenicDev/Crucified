@@ -29,6 +29,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     private CraftingAppState craftingAppState;
     private ArtifactContainerAppState artifactContainerAppState;
     private ActionSystemAppState actionSystemAppState;
+    private CurseEmitterAppState curseEmitterAppState;
 
     public GameEventHandler(GameSessionManager gameSession) {
         gameSession.addGameEventListener(this);
@@ -45,6 +46,7 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
         this.craftingAppState = stateManager.getState(CraftingAppState.class);
         this.artifactContainerAppState = stateManager.getState(ArtifactContainerAppState.class);
         this.actionSystemAppState = stateManager.getState(ActionSystemAppState.class);
+        this.curseEmitterAppState = stateManager.getState(CurseEmitterAppState.class);
         super.initialize(stateManager, app);
     }
 
@@ -107,5 +109,10 @@ public class GameEventHandler extends AbstractAppState implements GameEventListe
     @Override
     public void onPerformAction(EntityId performerId, ActionType actionType) {
         actionSystemAppState.performAction(performerId, actionType);
+    }
+
+    @Override
+    public void onSettingCurse(EntityId player) {
+        curseEmitterAppState.cursePlayer(player);
     }
 }

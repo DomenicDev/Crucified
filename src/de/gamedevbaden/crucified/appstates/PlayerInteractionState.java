@@ -91,6 +91,9 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.inputManager.addMapping("ShootFireball", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         this.inputManager.addListener(this, "ShootFireball");
 
+        this.inputManager.addMapping("ShowPlayer", new KeyTrigger(KeyInput.KEY_G));
+        this.inputManager.addListener(this, "ShowPlayer");
+
         this.inputManager.addMapping("R", new KeyTrigger(KeyInput.KEY_R));
         this.inputManager.addMapping("G", new KeyTrigger(KeyInput.KEY_G));
         this.inputManager.addMapping("K", new KeyTrigger(KeyInput.KEY_K));
@@ -120,7 +123,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                             storedItem = null;
                             equippedItem = null;
                         }
-                    } else */ if (name.equals("R")) {
+                    } else */
+                    if (name.equals("R")) {
 
                         // toggle flashlight
                         EntityId flashLight = inventoryState.getFlashlight();
@@ -228,6 +232,10 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                         l.onPerformAction(ActionType.ShootFireball);
                     }
                 }
+            } else if (name.equals("ShowPlayer")) {
+                for (PlayerInteractionListener l : listeners) {
+                    l.setCurse();
+                }
             }
 
         }
@@ -270,6 +278,8 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         void onItemCraft(EntityId targetItem, EntityId ingredient);
 
         void onPerformAction(ActionType type);
+
+        void setCurse();
 
     }
 
