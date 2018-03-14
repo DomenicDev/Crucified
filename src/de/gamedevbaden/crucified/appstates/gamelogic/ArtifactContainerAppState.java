@@ -10,6 +10,7 @@ import com.simsilica.es.filter.FieldFilter;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
 import de.gamedevbaden.crucified.appstates.ItemStoreAppState;
 import de.gamedevbaden.crucified.enums.InteractionType;
+import de.gamedevbaden.crucified.enums.Sound;
 import de.gamedevbaden.crucified.es.components.*;
 
 public class ArtifactContainerAppState extends AbstractAppState {
@@ -49,6 +50,12 @@ public class ArtifactContainerAppState extends AbstractAppState {
             entityData.setComponents(fire,
                     new Transform(t.getTranslation(), t.getRotation(), t.getScale()),
                     new FireState(true));
+
+            // we also want to create a sound
+            EntityId sound = entityData.createEntity();
+            entityData.setComponents(sound,
+                    new SoundComponent(Sound.CosmicHit, false, false),
+                    new Decay(10000));
         }
     }
 
