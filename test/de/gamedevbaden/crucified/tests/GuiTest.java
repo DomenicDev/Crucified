@@ -1,6 +1,9 @@
 package de.gamedevbaden.crucified.tests;
 
+import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import de.gamedevbaden.crucified.MainGameAppState;
 import de.gamedevbaden.crucified.appstates.export.SettingsAppState;
 import de.gamedevbaden.crucified.appstates.gui.GuiEventListener;
@@ -20,11 +23,13 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
         flyCam.setEnabled(false);
 
 
-        stateManager.attach(new SettingsAppState());
-        stateManager.attach(new NiftyAppState(this));
+//        stateManager.attach(new SettingsAppState());
+//        stateManager.attach(new NiftyAppState(this));
+//
+//        this.mainGameAppState = new MainGameAppState();
+//        stateManager.attach(mainGameAppState);
 
-        this.mainGameAppState = new MainGameAppState();
-        stateManager.attach(mainGameAppState);
+        stateManager.attach(new Initializer());
     }
 
 
@@ -72,5 +77,37 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
     @Override
     public void showInstructions() {
         stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.InstructionsScreen);
+    }
+
+    private class Initializer extends AbstractAppState {
+
+        private int x;
+
+        @Override
+        public void initialize(AppStateManager stateManager, Application app) {
+            this.x = 0;
+            super.initialize(stateManager, app);
+        }
+
+        @Override
+        public void update(float tpf) {
+            switch (x++) {
+                case 0:
+                    stateManager.attach(new SettingsAppState());
+                    break;
+                case 1:
+                    stateManager.attach(new NiftyAppState(GuiTest.this));
+                    break;
+                case 2:
+                    mainGameAppState = new MainGameAppState();
+                    stateManager.attach(mainGameAppState);
+                    break;
+                case 3:
+                    stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
+                    break;
+                default:
+                    stateManager.detach(this);
+            }
+        }
     }
 }

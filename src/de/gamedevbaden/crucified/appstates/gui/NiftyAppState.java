@@ -58,7 +58,7 @@ public class NiftyAppState extends AbstractAppState implements ActionListener {
         app.getInputManager().setCursorVisible(true);
         this.niftyDisplay = new NiftyJmeDisplay(app.getAssetManager(), app.getInputManager(), app.getAudioRenderer(), app.getGuiViewPort());
         this.nifty = niftyDisplay.getNifty();
-        this.nifty.fromXml("Interface/Screens/screens.xml", NiftyScreen.MainMenu.getScreenId(),
+        this.nifty.fromXml("Interface/Screens/screens.xml", NiftyScreen.LoadingScreen.getScreenId(),
                 new MainMenuScreenController(listener),
                 new SettingsScreenController(settingsAppState),
                 new NetworkGameScreenController(listener),
