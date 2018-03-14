@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
@@ -263,6 +264,12 @@ public class GameCommanderAppState extends AbstractAppState implements GameComma
           //  niftyAppState.showPopup(decisionType);
             niftyAppState.showGameOverScreen(decisionType);
         }
+
+        // we want to play a sound
+        AudioNode endSound = new AudioNode(assetManager, "Sounds/SoundEffects/EndSound.ogg", AudioData.DataType.Stream);
+        endSound.setPositional(false);
+        mainWorldNode.attachChild(endSound);
+        endSound.play();
 
         stateManager.detach(stateManager.getState(CameraAppState.class));
         stateManager.detach(stateManager.getState(PlayerInteractionState.class));
