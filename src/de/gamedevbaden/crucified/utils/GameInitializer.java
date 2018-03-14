@@ -68,9 +68,14 @@ public class GameInitializer {
         stateManager.attach(new FireLightAppState());
         stateManager.attach(new CurseViewAppState());
         stateManager.attach(new GameWorldPagingManager());
+    }
 
-        // gui app states
+    public static void initHudAppStates(AppStateManager stateManager) {
         stateManager.attach(new HudAppState());
+    }
+
+    public static void removeHudAppStates(AppStateManager stateManager) {
+        stateManager.detach(stateManager.getState(HudAppState.class));
     }
 
     public static void removeViewAppStates(AppStateManager stateManager) {

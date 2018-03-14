@@ -86,6 +86,7 @@ public class RemoteGame extends AbstractGame {
     @Override
     public void onGameStart() {
         GameInitializer.initSoundAppStates(stateManager);
+        GameInitializer.initHudAppStates(stateManager);
 
         // create our game session app states
         stateManager.attach(new PlayerInteractionState());
@@ -116,6 +117,7 @@ public class RemoteGame extends AbstractGame {
         GameInitializer.removeInputAppStates(stateManager);
         GameInitializer.removeGameSessionRelatedAppStates(stateManager);
         GameInitializer.removeViewAppStates(stateManager);
+        GameInitializer.removeHudAppStates(stateManager);
         GameInitializer.removeSoundAppStates(stateManager);
         GameInitializer.removeClientAppStates(stateManager);
         GameInitializer.removeClientStatesWithGameSessionDependency(stateManager);

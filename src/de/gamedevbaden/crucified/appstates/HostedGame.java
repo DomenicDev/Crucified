@@ -13,7 +13,6 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.appstates.gamelogic.GameStartupAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.PlayerHolderAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
-import de.gamedevbaden.crucified.es.utils.EntityFactory;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.messages.StartGameMessage;
@@ -79,6 +78,7 @@ public class HostedGame extends AbstractGame {
 
         GameInitializer.initGameLogicAppStates(stateManager);
         GameInitializer.initViewAppStates(stateManager);
+        GameInitializer.initHudAppStates(stateManager);
         GameInitializer.initSoundAppStates(stateManager);
         GameInitializer.initPlayerStates(stateManager);
         GameInitializer.initInputAppStates(stateManager);
@@ -141,6 +141,7 @@ public class HostedGame extends AbstractGame {
 
         GameInitializer.removeGameLogicAppStates(stateManager);
         GameInitializer.removeViewAppStates(stateManager);
+        GameInitializer.removeHudAppStates(stateManager);
         GameInitializer.removeSoundAppStates(stateManager);
         GameInitializer.removePlayerStates(stateManager);
         GameInitializer.removeInputAppStates(stateManager);
