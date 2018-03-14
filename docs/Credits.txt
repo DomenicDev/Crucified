@@ -4,6 +4,7 @@ Domenic Cassisi
 Supporter
 Davis Rollmann
 Jan von Pichowski
+Florian Hauger
 
 GUI
 Nifty Gui
