@@ -14,6 +14,6 @@ public class ScenePreloader extends AbstractAppState {
     }
 
     public Node getScene() {
-        return scene;
+        return (Node) scene.clone();
     }
 }
