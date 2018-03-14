@@ -61,7 +61,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
 
     private WatchedEntity player;
 
-    private ArrayList<PlayerInteractionListener> listeners;
+    private ArrayList<PlayerInteractionListener> listeners = new ArrayList<>();
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -77,7 +77,6 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.modelViewAppState = stateManager.getState(ModelViewAppState.class);
         this.inventoryState = stateManager.getState(PlayerInventoryState.class);
         this.rootNode = ((SimpleApplication) app).getRootNode();
-        this.listeners = new ArrayList<>();
 
         this.ray = new Ray();
         this.ray.setLimit(4f);
@@ -252,7 +251,7 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
         this.ray = null;
 
         this.listeners.clear();
-        this.listeners = null;
+
         this.inputManager.removeListener(this);
 
         super.cleanup();
