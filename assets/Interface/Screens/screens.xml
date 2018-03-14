@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+>
 
     <useStyles filename="nifty-default-styles.xml"/>
     <useControls filename="nifty-default-controls.xml"/>
@@ -278,12 +278,30 @@
                         <text id="serverStartedInfoText" style="setting#text" text="${dialog.serverStarted}"
                               align="left"/>
                     </panel>
-                    <panel id="localIpPanel" childLayout="center" align="left" height="20%">
+                    <panel id="localIpPanel" childLayout="center" align="left" height="10%">
                         <control id="ipLabel" name="label" width="100%" height="100%" align="left"/>
                     </panel>
                     <panel id="playerStatePanel" childLayout="center" align="left" height="20%">
                         <control id="playerStateLabel" name="label" text="Waiting for Player..." align="left"
                                  width="100%" height="100%"/>
+                    </panel>
+
+                    <panel id="playerTypePanel" childLayout="center" align="center" height="20%">
+                        <control id="typeGroup" name="radioButtonGroup"/>
+                        <panel childLayout="horizontal">
+                            <control name="label" text="You play as:" />
+                            <panel childLayout="vertical">
+                                <panel childLayout="horizontal">
+                                    <control name="label" text="Survivor" width="100px"/>
+                                    <control name="radioButton" id="survivorType" group="typeGroup" />
+                                </panel>
+                                <panel childLayout="horizontal">
+                                    <control name="label" text="Monster" width="100px"/>
+                                    <control name="radioButton" id="monsterType" group="typeGroup" />
+                                </panel>
+                            </panel>
+
+                        </panel>
                     </panel>
 
                     <panel width="*" height="*"/>

@@ -16,6 +16,10 @@ public class PlayerHolderAppState extends AbstractAppState {
         this.playerTwo = playerTwo;
     }
 
+    /**
+     * this is the host
+     * @return
+     */
     public EntityId getPlayerOne() {
         return playerOne;
     }
@@ -24,6 +28,10 @@ public class PlayerHolderAppState extends AbstractAppState {
         this.playerOne = playerOne;
     }
 
+    /**
+     * this is the client
+     * @return
+     */
     public EntityId getPlayerTwo() {
         return playerTwo;
     }

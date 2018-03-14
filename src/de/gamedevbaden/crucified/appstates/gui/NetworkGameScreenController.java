@@ -1,8 +1,10 @@
 package de.gamedevbaden.crucified.appstates.gui;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.Label;
+import de.lessvoid.nifty.controls.RadioButtonGroupStateChangedEvent;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
@@ -23,6 +25,8 @@ public class NetworkGameScreenController implements ScreenController {
     private Button startGameButton;
     private Element sureAboutExitPopup;
 
+    private boolean selectedSurvivor = true;
+
     public NetworkGameScreenController(GuiEventListener listener) {
         this.guiEventListener = listener;
     }
@@ -41,6 +45,7 @@ public class NetworkGameScreenController implements ScreenController {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -67,6 +72,23 @@ public class NetworkGameScreenController implements ScreenController {
             this.secondPlayerStateLabel.setText("Waiting for another Player ....");
             this.startGameButton.disable();
         }
+    }
+
+    @NiftyEventSubscriber(id="typeGroup")
+    public void onRadioGroupChanged(final String id, final RadioButtonGroupStateChangedEvent event) {
+        if (event.getSelectedId().equals("survivorType")) {
+            this.selectedSurvivor = true;
+        } else if (event.getSelectedId().equals("monsterType")) {
+            this.selectedSurvivor = false;
+        }
+    }
+
+    /**
+     * @return true if he wants to play the survivor
+     * otherwise it's the monster
+     */
+    public boolean doesHostWantToPlaySurvivor() {
+        return this.selectedSurvivor;
     }
 
     /**

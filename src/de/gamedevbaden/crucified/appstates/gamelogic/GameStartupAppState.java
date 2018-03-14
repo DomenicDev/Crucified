@@ -7,6 +7,8 @@ import com.jme3.math.Vector3f;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import de.gamedevbaden.crucified.appstates.EntityDataState;
+import de.gamedevbaden.crucified.appstates.gui.NetworkGameScreenController;
+import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.es.utils.EntityFactory;
 
 import java.util.ArrayList;
@@ -64,8 +66,21 @@ public class GameStartupAppState extends AbstractAppState {
         EntityId playerOne = playerHolder.getPlayerOne();
         EntityId playerTwo = playerHolder.getPlayerTwo();
 
-        EntityFactory.createPlayer(stateManager.getState(EntityDataState.class).getEntityData(), playerOne, pos[0]);
-        EntityFactory.createDemon(stateManager.getState(EntityDataState.class).getEntityData(), playerTwo, pos[1]);
+        NiftyAppState niftyAppState = stateManager.getState(NiftyAppState.class);
+        if (niftyAppState != null) {
+            NetworkGameScreenController controller = niftyAppState.getController(NetworkGameScreenController.class);
+            if (controller.doesHostWantToPlaySurvivor()) {
+                EntityFactory.createPlayer(stateManager.getState(EntityDataState.class).getEntityData(), playerOne, pos[0]);
+                EntityFactory.createDemon(stateManager.getState(EntityDataState.class).getEntityData(), playerTwo, pos[1]);
+            } else {
+                EntityFactory.createPlayer(stateManager.getState(EntityDataState.class).getEntityData(), playerTwo, pos[0]);
+                EntityFactory.createDemon(stateManager.getState(EntityDataState.class).getEntityData(), playerOne, pos[1]);
+            }
+        } else {
+            // default
+            EntityFactory.createPlayer(stateManager.getState(EntityDataState.class).getEntityData(), playerOne, pos[0]);
+            EntityFactory.createDemon(stateManager.getState(EntityDataState.class).getEntityData(), playerTwo, pos[1]);
+        }
 
         System.out.println(pos[0] + "  " + pos[1]);
 
