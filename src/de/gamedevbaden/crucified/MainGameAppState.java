@@ -7,6 +7,7 @@ import de.gamedevbaden.crucified.appstates.AbstractGame;
 import de.gamedevbaden.crucified.appstates.HostedGame;
 import de.gamedevbaden.crucified.appstates.ScenePreloader;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
+import de.gamedevbaden.crucified.appstates.gui.ConnectionScreenController;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 import de.gamedevbaden.crucified.net.client.GameClient;
 
@@ -50,6 +51,10 @@ public class MainGameAppState extends AbstractAppState {
         GameClient client = new GameClient();
         if (client.connect(address, 5555, stateManager.getApplication(), commander)) {
             stateManager.attach(client);
+
+            // update gui
+            stateManager.getState(NiftyAppState.class).getController(ConnectionScreenController.class).setConnected(true);
+
             this.game = new RemoteGame(client, commander);
             stateManager.attach(game);
         }

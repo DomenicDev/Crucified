@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui"
 >
 
     <useStyles filename="nifty-default-styles.xml"/>
@@ -344,6 +344,10 @@
                     </panel>
                     <panel id="textFieldPanel" childLayout="center" align="left">
                         <control id="ipTextField" name="textfield"/>
+                    </panel>
+                    <panel height="5%"/>
+                    <panel childLayout="center" height="10%">
+                        <control id="statusLabel" name="label" text="" width="100%" height="100%"/>
                     </panel>
                     <panel height="*"/>
                     <panel id="buttonPanel" childLayout="horizontal" height="20%">
