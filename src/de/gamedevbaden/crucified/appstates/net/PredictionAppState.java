@@ -116,7 +116,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
     }
 
     public void initPredictionForPlayer() {
-        this.player = entityData.watchEntity(playerId, Transform.class);
+        this.player = entityData.watchEntity(playerId, Transform.class, WalkComponent.class);
         this.playerCharacterControl = createCharacterControl(player);
     }
 
@@ -438,8 +438,10 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
 
         Vector3f walkDirection = new Vector3f();
 
-        float runningMultSpeed = 3f;
-        float walkingMultSpeed = 1.5f;
+        WalkComponent walk = player.get(WalkComponent.class);
+
+        float runningMultSpeed = walk.getRunSpeed();
+        float walkingMultSpeed = walk.getWalkSpeed();
 
         switch (movementState) {
             case CharacterMovementState.IDLE:

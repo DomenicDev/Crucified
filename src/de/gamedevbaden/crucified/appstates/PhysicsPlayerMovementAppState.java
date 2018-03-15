@@ -10,6 +10,7 @@ import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
 import de.gamedevbaden.crucified.es.components.CharacterMovementState;
 import de.gamedevbaden.crucified.es.components.PhysicsCharacterControl;
+import de.gamedevbaden.crucified.es.components.WalkComponent;
 
 /**
  * This AppState turns the state of {@link CharacterMovementState} into a walk direction for physic control.
@@ -24,7 +25,7 @@ public class PhysicsPlayerMovementAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         EntityData entityData = stateManager.getState(EntityDataState.class).getEntityData();
         // get all physical player controlled entities
-        this.physicalPlayers = entityData.getEntities(PhysicsCharacterControl.class, CharacterMovementState.class);
+        this.physicalPlayers = entityData.getEntities(PhysicsCharacterControl.class, CharacterMovementState.class, WalkComponent.class);
 
         super.initialize(stateManager, app);
     }
@@ -77,8 +78,10 @@ public class PhysicsPlayerMovementAppState extends AbstractAppState {
 
         Vector3f walkDirection = new Vector3f();
 
-        float runningMultSpeed = 5f;
-        float walkingMultSpeed = 3f;
+        WalkComponent walk = entity.get(WalkComponent.class);
+
+        float runningMultSpeed = walk.getRunSpeed();
+        float walkingMultSpeed = walk.getWalkSpeed();
 
         switch (movementState.getMovementState()) {
             case CharacterMovementState.IDLE:
