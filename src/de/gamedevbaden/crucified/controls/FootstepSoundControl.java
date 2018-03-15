@@ -141,7 +141,8 @@ public class FootstepSoundControl extends AbstractControl {
                 currentFootstepSound.setLooping(false);
                 currentFootstepSound.setPositional(true);
                 currentFootstepSound.setLocalTranslation(0, 0, 0);
-                currentFootstepSound.setRefDistance(5f);
+                currentFootstepSound.setRefDistance(3f);
+                currentFootstepSound.setMaxDistance(1000);
                 ((Node) spatial).attachChild(currentFootstepSound);
                 currentFootstepSound.play();
 
