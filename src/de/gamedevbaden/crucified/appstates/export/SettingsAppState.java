@@ -52,7 +52,8 @@ public class SettingsAppState extends AbstractAppState {
         appSettings.setResolution(getWidth(), getHeight());
         appSettings.setVSync(isVSyncEnabled());
         appSettings.setFullscreen(isFullscreen());
-        appSettings.setSamples(getSamples(getShadowQuality()));
+        appSettings.setSamples(2); // always will stay the same (because of bug in
+        appSettings.setGammaCorrection(true); // force gamma correction
 
         appSettings.setBitsPerPixel(24); // hard coded
         appSettings.setFrequency(60); // hard coded, we have to set it otherwise app crashes

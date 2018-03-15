@@ -4,32 +4,42 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.system.AppSettings;
 import de.gamedevbaden.crucified.MainGameAppState;
 import de.gamedevbaden.crucified.appstates.export.SettingsAppState;
 import de.gamedevbaden.crucified.appstates.gui.GuiEventListener;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
 
-public class GuiTest extends SimpleApplication implements GuiEventListener {
+import java.awt.*;
+
+public class MainGame extends SimpleApplication implements GuiEventListener {
 
     private MainGameAppState mainGameAppState;
 
     public static void main(String[] args) {
-        new GuiTest().start();
+        MainGame app = new MainGame();
+        AppSettings settings = new AppSettings(true);
+
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int width = gd.getDisplayMode().getWidth();
+        int height = gd.getDisplayMode().getHeight();
+
+        settings.setResolution(width, height);
+        settings.setGammaCorrection(true);
+        settings.setFullscreen(true);
+        settings.setSamples(2);
+        settings.setVSync(true);
+
+        app.setShowSettings(false);
+        app.setSettings(settings);
+        app.start();
     }
 
     @Override
     public void simpleInitApp() {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
-
         setDisplayStatView(false);
-
-
-//        stateManager.attach(new SettingsAppState());
-//        stateManager.attach(new NiftyAppState(this));
-//
-//        this.mainGameAppState = new MainGameAppState();
-//        stateManager.attach(mainGameAppState);
 
         stateManager.attach(new Initializer());
     }
@@ -98,7 +108,7 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
                     stateManager.attach(new SettingsAppState());
                     break;
                 case 1:
-                    stateManager.attach(new NiftyAppState(GuiTest.this));
+                    stateManager.attach(new NiftyAppState(MainGame.this));
                     break;
                 case 2:
                     mainGameAppState = new MainGameAppState();
