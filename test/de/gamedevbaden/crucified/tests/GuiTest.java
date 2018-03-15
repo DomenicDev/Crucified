@@ -22,6 +22,8 @@ public class GuiTest extends SimpleApplication implements GuiEventListener {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
 
+        setDisplayStatView(false);
+
 
 //        stateManager.attach(new SettingsAppState());
 //        stateManager.attach(new NiftyAppState(this));
