@@ -457,7 +457,7 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             case CharacterMovementState.MOVING_BACK_LEFT:
                 return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection).normalizeLocal().multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_BACK_RIGHT:
-                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).multLocal(walkingMultSpeed);
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).normalizeLocal().multLocal(walkingMultSpeed);
             case CharacterMovementState.MOVING_LEFT:
                 return walkDirection.addLocal(leftDirection);
             case CharacterMovementState.MOVING_RIGHT:
@@ -465,15 +465,15 @@ public class PredictionAppState extends AbstractAppState implements ActionListen
             case CharacterMovementState.RUNNING_FORWARD:
                 return walkDirection.addLocal(viewDirection).multLocal(runningMultSpeed);
             case CharacterMovementState.RUNNING_FORWARD_LEFT:
-                return walkDirection.addLocal(viewDirection).addLocal(leftDirection).multLocal(runningMultSpeed);
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection).normalizeLocal().multLocal(runningMultSpeed);
             case CharacterMovementState.RUNNING_FORWARD_RIGHT:
-                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal()).multLocal(runningMultSpeed);
+                return walkDirection.addLocal(viewDirection).addLocal(leftDirection.negateLocal()).normalizeLocal().multLocal(runningMultSpeed);
             case CharacterMovementState.RUNNING_BACK:
                 return walkDirection.addLocal(viewDirection.negateLocal()).multLocal(runningMultSpeed);
             case CharacterMovementState.RUNNING_BACK_LEFT:
-                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection).multLocal(runningMultSpeed);
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection).normalizeLocal().multLocal(runningMultSpeed);
             case CharacterMovementState.RUNNING_BACK_RIGHT:
-                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).multLocal(runningMultSpeed);
+                return walkDirection.addLocal(viewDirection.negateLocal()).addLocal(leftDirection.negateLocal()).normalizeLocal().multLocal(runningMultSpeed);
             default:
                 return walkDirection;
         }
