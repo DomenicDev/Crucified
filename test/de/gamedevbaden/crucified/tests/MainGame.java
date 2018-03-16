@@ -28,7 +28,7 @@ public class MainGame extends SimpleApplication implements GuiEventListener {
         settings.setGammaCorrection(true);
         settings.setFullscreen(true);
         settings.setSamples(1);
-        settings.setVSync(true);
+        settings.setVSync(false);
 
         app.setShowSettings(false);
         app.setSettings(settings);
