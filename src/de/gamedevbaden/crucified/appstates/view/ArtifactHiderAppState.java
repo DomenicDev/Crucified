@@ -32,6 +32,10 @@ public class ArtifactHiderAppState extends AbstractAppState {
         if (entityData.getComponent(player, CantSeeArtifactComponent.class) != null) {
             // we are the demon so we hide all artifact
             artifacts = entityData.getEntities(Model.class, ArtifactComponent.class);
+
+            for (Entity entity : artifacts) {
+                hideArtifact(entity);
+            }
         }
 
         super.initialize(stateManager, app);
@@ -43,14 +47,18 @@ public class ArtifactHiderAppState extends AbstractAppState {
         if (artifacts != null && artifacts.applyChanges()) {
 
             for (Entity entity : artifacts.getAddedEntities()) {
-                Spatial model = modelViewAppState.getSpatial(entity.getId());
-                if (model != null) {
-                    model.setCullHint(Spatial.CullHint.Always);
-                }
+                hideArtifact(entity);
             }
 
         }
 
+    }
+
+    private void hideArtifact(Entity entity) {
+        Spatial model = modelViewAppState.getSpatial(entity.getId());
+        if (model != null) {
+            model.setCullHint(Spatial.CullHint.Always);
+        }
     }
 
     @Override

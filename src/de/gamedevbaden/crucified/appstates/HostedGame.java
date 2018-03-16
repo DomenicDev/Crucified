@@ -13,6 +13,7 @@ import de.gamedevbaden.crucified.appstates.game.GameSessionManager;
 import de.gamedevbaden.crucified.appstates.gamelogic.GameStartupAppState;
 import de.gamedevbaden.crucified.appstates.gamelogic.PlayerHolderAppState;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
+import de.gamedevbaden.crucified.appstates.view.ArtifactHiderAppState;
 import de.gamedevbaden.crucified.game.GameCommander;
 import de.gamedevbaden.crucified.game.GameSession;
 import de.gamedevbaden.crucified.net.messages.StartGameMessage;
@@ -115,6 +116,8 @@ public class HostedGame extends AbstractGame {
 
             stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.EmptyScreen);
             stateManager.getState(GameServer.class).getServer().broadcast(new StartGameMessage());
+
+            stateManager.attach(new ArtifactHiderAppState());
         }
     }
 
@@ -126,6 +129,7 @@ public class HostedGame extends AbstractGame {
         stateManager.detach(stateManager.getState(SceneEntityLoader.class));
         stateManager.detach(stateManager.getState(GameSessionManager.class));
         stateManager.detach(stateManager.getState(GameCommanderHolder.class));
+        stateManager.detach(stateManager.getState(ArtifactHiderAppState.class));
 
         // init game logic states
         GameInitializer.removeEssentialAppStates(stateManager);

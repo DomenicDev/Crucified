@@ -59,7 +59,7 @@ public class GameStartupAppState extends AbstractAppState {
         };
 */
         Random m = new Random();
-        int x = m.nextInt(1);
+        int x = m.nextInt(3);
         Vector3f[] pos = startPositions[x];
 
         PlayerHolderAppState playerHolder = stateManager.getState(PlayerHolderAppState.class);
