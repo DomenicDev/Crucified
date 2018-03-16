@@ -21,11 +21,11 @@ Artifacts can be found all around the map.
 
 DEMON CONTROLS
 
-Left click - Throwing fireball (every 3 seconds available)
-G Key - Wallhack for 5 seconds (every 30 seconds available)
+Left click - Throw fireball (available every 3 seconds)
+G Key - Wallhack for 5 seconds (available every 30 seconds)
 
 HUMAN CONTROLS
 
-F Key - Pick up items and throwing artifacts into container
+F Key - Pick up items and throw artifacts into container
 R Key - Toggle headlamp
 
