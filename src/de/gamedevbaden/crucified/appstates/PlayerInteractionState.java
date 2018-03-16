@@ -4,7 +4,6 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -172,50 +171,52 @@ public class PlayerInteractionState extends AbstractAppState implements ActionLi
                 rootNode.collideWith(ray, results);
 
                 if (results.size() > 0) {
-                    CollisionResult closest = results.getClosestCollision();
-                    if (closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID) instanceof Long) {
-                        long id = closest.getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID);
-                        EntityId entityId = new EntityId(id);
+                    for (int i = 0; i < results.size(); i++) {
+                        if (results.getCollision(i).getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID) instanceof Long) {
+                            long id = results.getCollision(i).getGeometry().getParent().getUserData(GameConstants.USER_DATA_ENTITY_ID);
+                            EntityId entityId = new EntityId(id);
 
-                        if (containers.containsId(entityId)) {
-                            // we check if this an artifact container
-                            Container c = containers.getEntity(entityId).get(Container.class);
-                            if (c.getTypeToStore() == ItemType.Artifact) {
-                                // we now check if the player has an artifact
-                                EntityId artifactId = inventoryState.getNextOfType(ItemType.Artifact);
-                                if (artifactId != null) {
-                                    for (PlayerInteractionListener listener : listeners) {
-                                        listener.onPutArtifactIntoContainer(entityId, artifactId);
+                            if (containers.containsId(entityId)) {
+                                // we check if this an artifact container
+                                Container c = containers.getEntity(entityId).get(Container.class);
+                                if (c.getTypeToStore() == ItemType.Artifact) {
+                                    // we now check if the player has an artifact
+                                    EntityId artifactId = inventoryState.getNextOfType(ItemType.Artifact);
+                                    if (artifactId != null) {
+                                        for (PlayerInteractionListener listener : listeners) {
+                                            listener.onPutArtifactIntoContainer(entityId, artifactId);
+                                        }
                                     }
                                 }
-                            }
-                        } else if (entitiesToCraft.containsId(entityId)) {
-                            NeedToBeCrafted craftComponent = entitiesToCraft.getEntity(entityId).get(NeedToBeCrafted.class);
-                            Map<ItemType, Integer> neededItems = craftComponent.getNeededItems();
-                            for (ItemType type : neededItems.keySet()) {
-                                EntityId ingredient = inventoryState.getNextOfType(type);
-                                if (ingredient != null) {
-                                    for (PlayerInteractionListener l : listeners) {
-                                        l.onItemCraft(entityId, ingredient);
+                            } else if (entitiesToCraft.containsId(entityId)) {
+                                NeedToBeCrafted craftComponent = entitiesToCraft.getEntity(entityId).get(NeedToBeCrafted.class);
+                                Map<ItemType, Integer> neededItems = craftComponent.getNeededItems();
+                                for (ItemType type : neededItems.keySet()) {
+                                    EntityId ingredient = inventoryState.getNextOfType(type);
+                                    if (ingredient != null) {
+                                        for (PlayerInteractionListener l : listeners) {
+                                            l.onItemCraft(entityId, ingredient);
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
-                            }
-                        } else if (interactableEntities.containsId(entityId)) {
-                            for (PlayerInteractionListener listener : listeners) {
-                                listener.onInteractionWith(entityId);
-                            }
-                        } else if (pickables.containsId(entityId)) {
-                            for (PlayerInteractionListener listener : listeners) {
-                                listener.onItemPickup(entityId);
-                            }
-                            // TODO: REMOVE THIS CODE --> MOVE TO ANOTHER APP STATE MAYBE ???
-                            if (equipables.containsId(entityId)) {
+                            } else if (interactableEntities.containsId(entityId)) {
                                 for (PlayerInteractionListener listener : listeners) {
-                                    equippedItem = entityId;
-                                    listener.onItemEquipped(entityId);
+                                    listener.onInteractionWith(entityId);
+                                }
+                            } else if (pickables.containsId(entityId)) {
+                                for (PlayerInteractionListener listener : listeners) {
+                                    listener.onItemPickup(entityId);
+                                }
+                                // TODO: REMOVE THIS CODE --> MOVE TO ANOTHER APP STATE MAYBE ???
+                                if (equipables.containsId(entityId)) {
+                                    for (PlayerInteractionListener listener : listeners) {
+                                        equippedItem = entityId;
+                                        listener.onItemEquipped(entityId);
+                                    }
                                 }
                             }
+                            break;
                         }
                     }
                 }

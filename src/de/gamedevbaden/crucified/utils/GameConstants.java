@@ -26,6 +26,7 @@ public class GameConstants {
     public static final String USER_DATA_STATIC_PHYSICAL_OBJECT = "staticPhysicalObject";
     public static final String USER_DATA_PAGING_OPTIONS = "pagingOptions";
     public static final String USER_DATA_GRASS_TEXTURE_INDEX = "grassTextureIndex";
+    public static final String USER_DATA_IGNORE_RAY_CAST = "ignoreRayCast";
 
     // ----------------- OTHER CONSTANTS ---------------- //
 
