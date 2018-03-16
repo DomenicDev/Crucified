@@ -24,6 +24,7 @@ public class MainGame extends SimpleApplication implements GuiEventListener {
         int width = gd.getDisplayMode().getWidth();
         int height = gd.getDisplayMode().getHeight();
 
+        settings.setTitle("Crucified v1.0");
         settings.setResolution(width, height);
         settings.setGammaCorrection(true);
         settings.setFullscreen(true);
