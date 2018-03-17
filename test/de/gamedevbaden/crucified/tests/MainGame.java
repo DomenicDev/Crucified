@@ -41,6 +41,7 @@ public class MainGame extends SimpleApplication implements GuiEventListener {
         setPauseOnLostFocus(false);
         flyCam.setEnabled(false);
         setDisplayStatView(false);
+        setDisplayFps(false);
 
         stateManager.attach(new Initializer());
     }
