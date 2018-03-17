@@ -26,6 +26,7 @@ import de.gamedevbaden.crucified.net.messages.ReadyForGameStartMessage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 /**
  * This class manages the server.
@@ -142,7 +143,11 @@ public class GameServer extends AbstractAppState implements ConnectionListener, 
         }
 
         // we close the game
-        stateManager.getState(MainGameAppState.class).closeExistingGame();
+        app.enqueue((Callable) () -> {
+            stateManager.getState(MainGameAppState.class).closeExistingGame();
+            return null;
+        });
+
     }
 
     @Override
