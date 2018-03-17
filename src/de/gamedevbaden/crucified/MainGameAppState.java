@@ -9,6 +9,7 @@ import de.gamedevbaden.crucified.appstates.ScenePreloader;
 import de.gamedevbaden.crucified.appstates.game.GameCommanderAppState;
 import de.gamedevbaden.crucified.appstates.gui.ConnectionScreenController;
 import de.gamedevbaden.crucified.appstates.gui.NiftyAppState;
+import de.gamedevbaden.crucified.appstates.sound.MainMenuMusicAppState;
 import de.gamedevbaden.crucified.net.client.GameClient;
 
 public class MainGameAppState extends AbstractAppState {
@@ -21,6 +22,7 @@ public class MainGameAppState extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         this.stateManager = stateManager;
         this.stateManager.attach(new ScenePreloader(app.getAssetManager()));
+        this.stateManager.attach(new MainMenuMusicAppState());
         super.initialize(stateManager, app);
     }
 
@@ -38,9 +40,11 @@ public class MainGameAppState extends AbstractAppState {
             game = null;
         }
         stateManager.getState(NiftyAppState.class).goToScreen(NiftyAppState.NiftyScreen.MainMenu);
+        stateManager.getState(MainMenuMusicAppState.class).play();
     }
 
     public void startGame() {
+        stateManager.getState(MainMenuMusicAppState.class).stop();
         if (game != null) {
             game.onGameStart();
         }
